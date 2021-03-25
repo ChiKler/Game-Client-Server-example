@@ -8,6 +8,11 @@ import { sleep } from "../vendor/utility/sleep.ts";
 
 // @ts-ignore
 import { Status } from 'https://deno.land/std@0.91.0/http/http_status.ts';
+// @ts-ignore
+import { WebSocket, isWebSocketCloseEvent } from "https://deno.land/std@0.91.0/ws/mod.ts";
+
+// @ts-ignore
+import { User } from "../SERVER/User.ts";
 
 
 
@@ -37,7 +42,7 @@ export class GameMap
   };
   
   
-  static connect_player = function(g_GameMaps : Map<GameMap_ID, GameMap>, p_GameMap_ID : GameMap_ID, player : Player) : { status : Status }
+  static connect_player(g_GameMaps : Map<GameMap_ID, GameMap>, p_GameMap_ID : GameMap_ID, player : Player) : { status : Status }
   {
     if (g_GameMaps.get(p_GameMap_ID) == undefined)
     {
@@ -53,7 +58,7 @@ export class GameMap
     };
   };
   
-  static disconnect_player = function(g_GameMaps : Map<GameMap_ID, GameMap>, uuID : string) : { status : Status }
+  static disconnect_player(g_GameMaps : Map<GameMap_ID, GameMap>, uuID : string) : { status : Status }
   {
     const l_GameMap_IDs = [...g_GameMaps.keys()];
     let l_GameMap_ID : GameMap_ID;
@@ -87,6 +92,23 @@ export class GameMap
       
       return ({ status: Status.NotImplemented });
       return ({ status: Status.OK });
+    };
+  };
+  
+  handle_socket_messages = async (user : User) : Promise<void> =>
+  {
+    for await (const msg_str of user.player.ws)
+    {
+      if(isWebSocketCloseEvent(msg_str))
+      {
+        // ...
+        
+        break;
+      }
+      else
+      {
+        // recieve and handle socket messages
+      };
     };
   };
   
