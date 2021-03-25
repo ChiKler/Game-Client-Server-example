@@ -91,8 +91,8 @@ export class User
     if (ReVa__GameMap__disconnect_player.status == Status.OK)
     {
       g_Users.delete(uuID);
-       // @ts-ignore
-       g_Users.get(uuID).#isConnected = false;
+      // @ts-ignore
+      g_Users.get(uuID).#isConnected = false;
     };
     
     return ({ status: ReVa__GameMap__disconnect_player.status });
