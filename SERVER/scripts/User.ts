@@ -27,27 +27,29 @@ export class User {
     p__GameMap_ID: GameMap_ID,
     g__Users: Map<string, User>,
     uuID: string,
+    wasUserAlreadyConnected: boolean,
   ): { status: Status } {
-    // @ts-ignore
-    const l__GameMap__connect_player__ReVa = GameMap.connect_player(
-      g__GameMaps,
-      p__GameMap_ID,
+    if (wasUserAlreadyConnected) {
+      return ({ status: Status.OK });
+    } else {
       // @ts-ignore
-      g__Users.get(uuID).player,
-    );
-
-    if (l__GameMap__connect_player__ReVa.status == Status.OK) {
-      // @ts-ignore
-      g__GameMaps.get(GameMap_ID.Sandbox).handle_socket_messages(
+      const l__GameMap__connect_player__ReVa = GameMap.connect_player(
+        g__GameMaps,
+        p__GameMap_ID,
         // @ts-ignore
-        g__Users.get(uuID),
+        g__Users.get(uuID).player,
       );
+
+      if (l__GameMap__connect_player__ReVa.status == Status.OK) {
+        // @ts-ignore
+        g__GameMaps.get(GameMap_ID.Sandbox).handle_socket_messages(
+          // @ts-ignore
+          g__Users.get(uuID),
+        );
+      }
+
+      return ({ status: l__GameMap__connect_player__ReVa.status });
     }
-
-    // @ts-ignore
-    g__Users.get(uuID).#isConnected = true;
-
-    return ({ status: l__GameMap__connect_player__ReVa.status });
   }
   static connect(
     g__GameMaps: Map<GameMap_ID, GameMap>,
@@ -82,15 +84,19 @@ export class User {
 
     g__Users.set(uuID, new User(uuID, ssID, player));
 
-    const ReVa__User__connect_player = User.connect_player(
+    const l__User__connect_player__ReVa = User.connect_player(
       g__GameMaps,
       p__GameMap_ID,
       g__Users,
       uuID,
+      wasUserAlreadyConnected,
     );
 
+    // @ts-ignore
+    g__Users.get(uuID).#isConnected = true;
+
     return ({
-      status: ReVa__User__connect_player.status,
+      status: l__User__connect_player__ReVa.status,
       wasUserAlreadyConnected,
       player_ws__old,
     });
@@ -123,13 +129,13 @@ export class User {
       return ({ status: Status.NotFound });
     } // @ts-ignore
     else if (g__Users.get(uuID).#isConnected) {
-      const ReVa__User__disconnect_player = User.disconnect_player(
+      const l__User__disconnect_player__ReVa = User.disconnect_player(
         g__GameMaps,
         g__Users,
         uuID,
       );
 
-      return ({ status: ReVa__User__disconnect_player.status });
+      return ({ status: l__User__disconnect_player__ReVa.status });
     } else {
       return ({ status: Status.Conflict });
     }
