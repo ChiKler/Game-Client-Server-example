@@ -45,7 +45,10 @@ export class User
     if (ReVa__GameMap__connect_player.status == Status.OK)
     {
       // @ts-ignore
-      // g_GameMaps.get(GameMap_ID.Sandbox).handle_socket_messages(g_Users.get(uuID));
+      g_Users.get(uuID).#isConnected = true;
+      
+      // @ts-ignore
+      g_GameMaps.get(GameMap_ID.Sandbox).handle_socket_messages(g_Users.get(uuID));
     };
     
     return ({ status: ReVa__GameMap__connect_player.status });
@@ -74,10 +77,8 @@ export class User
       player = new Player(uuID, player_ws__new);
     };
     
-    g_Users.set(uuID, new User(uuID, ssID, player));
-    // @ts-ignore
-    g_Users.get(uuID).#isConnected = true;
     
+    g_Users.set(uuID, new User(uuID, ssID, player));
     
     const ReVa__User__connect_player = User.connect_player(g_GameMaps, p_GameMap_ID, g_Users, uuID);
     
