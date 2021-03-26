@@ -67,7 +67,17 @@ export class GameMap {
       if (isToBeDisconnected) {
         this.GameMap_ID__target = undefined;
       } else {
-        this.GameMap_ID__target = GameMap_ID__target;
+        if (GameMap_ID__target == undefined) {
+          try {
+            throw new TypeError(
+              "Invalid GameMap.Players_BufferOut__data__Ty constructor call. The argument GameMap_ID__target needs to be provided when the argument isToBeDisconnected is false.",
+            );
+          } catch (err) {
+            console.error(err);
+          }
+        } else {
+          this.GameMap_ID__target = GameMap_ID__target;
+        }
       }
     }
   };
