@@ -11,9 +11,14 @@ function init() {
 
   g__ws_game__set();
 
-  ws_msg_recv(g__ws_game, "Player_WSMsg", Player_WSMsg_ID.Connection, (body) => {
-    // ...
-  });
+  ws_msg_recv(
+    g__ws_game,
+    "Player_WSMsg",
+    Player_WSMsg_ID.Connection,
+    (body) => {
+      // ...
+    },
+  );
   ws_msg_recv(g__ws_game, "Player_WSMsg", Player_WSMsg_ID.Sighting, (body) => {
     // ...
   });
