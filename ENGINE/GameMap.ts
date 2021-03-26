@@ -12,7 +12,7 @@ export enum GameMap_ID {
   Sandbox,
 }
 
-class PlayersBufferIn {
+class Players_BufferIn {
   #data: Array<Player>; // should use ArrayBuffer as buffer and Uint8Array as view
 
   constructor() {
@@ -28,7 +28,7 @@ class PlayersBufferIn {
   read(): void { // take callback, do forEach
   }
 }
-class PlayersBufferOut<
+class Players_BufferOut<
   T extends {
     player: Player;
     isToBeDisconnected: boolean;
@@ -62,8 +62,8 @@ export class GameMap {
 
   m__Players: Map<string, Player>;
 
-  m__PlayersBufferIn: PlayersBufferIn;
-  m__PlayersBufferOut: PlayersBufferOut;
+  m__Players_BufferIn: Players_BufferIn;
+  m__Players_BufferOut: Players_BufferOut;
 
   constructor(p__GameMap_ID: GameMap_ID) {
     this.m__GameMap_ID = p__GameMap_ID;
@@ -72,8 +72,8 @@ export class GameMap {
 
     this.m__Players = new Map<string, Player>();
 
-    this.m__PlayersBufferIn = new PlayersBufferIn();
-    this.m__PlayersBufferOut = new PlayersBufferOut();
+    this.m__Players_BufferIn = new Players_BufferIn();
+    this.m__Players_BufferOut = new Players_BufferOut();
   }
 
   static connect_player(
@@ -85,7 +85,7 @@ export class GameMap {
       return ({ status: Status.NotFound });
     } else {
       // @ts-ignore
-      this.m__PlayersBufferIn.pass(player);
+      this.m__Players_BufferIn.pass(player);
 
       return ({ status: Status.OK });
     }
@@ -118,7 +118,7 @@ export class GameMap {
       return ({ status: Status.NotFound });
     } else {
       // @ts-ignore
-      this.m__PlayersBufferOut.pass({
+      this.m__Players_BufferOut.pass({
         // @ts-ignore
         player: this.m__Players.get(uuID).player,
         isToBeDisconnected: true,
