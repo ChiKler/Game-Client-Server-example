@@ -1,17 +1,17 @@
-export const cvs = document.getElementById("canvas-GameMap-default");
-export const ctx = cvs.getContext("2d");
+export const g__cvs = document.getElementById("canvas-GameMap-default");
+export const g__ctx = g__cvs.getContext("2d");
 
 
-export let half_canvas_sizeX;
-export let half_canvas_sizeY;
+export let g__half_canvas_sizeX;
+export let g__half_canvas_sizeY;
 
 
-export function set_canvas()
+export function g__canvas__set()
 {
-    d9_ctx.canvas.width  = window.innerWidth ;
-    d9_ctx.canvas.height = window.innerHeight;
+    g__cvs.width  = window.innerWidth ;
+    g__cvs.height = window.innerHeight;
     
-    half_canvas_sizeX = d9_ctx.canvas.width /2;
-    half_canvas_sizeY = d9_ctx.canvas.height/2;
+    g__half_canvas_sizeX = g__cvs.width /2;
+    g__half_canvas_sizeY = g__cvs.height/2;
 };
-globalThis.set_canvas = set_canvas;
+globalThis.g__canvas__set = g__canvas__set;
