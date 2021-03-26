@@ -19,13 +19,60 @@ export class GameMap {
 
   m__Players: Map<string, Player>;
 
+  // @ts-ignore
+  m__PlayersBufferIn: GameMap.PlayersBufferIn;
+  // @ts-ignore
+  m__PlayersBufferOut: GameMap.PlayersBufferOut;
+
   constructor(p__GameMap_ID: GameMap_ID) {
     this.m__GameMap_ID = p__GameMap_ID;
 
     this.#isRunning = false;
 
     this.m__Players = new Map<string, Player>();
+
+    this.m__PlayersBufferIn = new GameMap.PlayersBufferIn();
+    this.m__PlayersBufferOut = new GameMap.PlayersBufferOut();
   }
+
+  static PlayersBufferIn = class {
+    #data: Array<Player>; // should use ArrayBuffer as buffer and Uint8Array as view
+
+    constructor() {
+      this.#data = new Array<Player>();
+    }
+
+    pass(player: Player): number {
+      return (this.#data.push(player));
+    }
+    take(): Player {
+      return (this.#data[this.#data.length - 1]);
+    }
+    read(): void { // take callback, do forEach
+    }
+  };
+  static PlayersBufferOut = class<
+    T extends {
+      player: Player;
+      isToBeDisconnected: boolean;
+      GameMap__target: GameMap_ID;
+    },
+  > {
+    #data: Array<T>; // should use ArrayBuffer as buffer and Uint8Array as view
+
+    constructor() {
+      this.#data = new Array<T>();
+    }
+
+    pass(t: T): number {
+      return (this.#data.push(t));
+    }
+    take(): T {
+      return (this.#data[this.#data.length - 1]);
+    }
+    read(): void { // take callback, do forEach
+    }
+  };
 
   static connect_player(
     g__GameMaps: Map<GameMap_ID, GameMap>,
@@ -35,9 +82,9 @@ export class GameMap {
     if (g__GameMaps.get(p__GameMap_ID) == undefined) {
       return ({ status: Status.NotFound });
     } else {
-      //this.m__Players_buffer_in.push(player);
+      // @ts-ignore
+      this.m__PlayersBufferIn.pass(player);
 
-      return ({ status: Status.NotImplemented });
       return ({ status: Status.OK });
     }
   }
@@ -68,9 +115,9 @@ export class GameMap {
     if (found == false) {
       return ({ status: Status.NotFound });
     } else {
-      //this.m__Players_buffer_out.push(g__GameMaps.get(l__GameMap_ID).m__Players.get(uuID));
+      // @ts-ignore
+      this.m__PlayersBufferOut.pass(player);
 
-      return ({ status: Status.NotImplemented });
       return ({ status: Status.OK });
     }
   }
