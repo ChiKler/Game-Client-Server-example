@@ -4,3 +4,5 @@
 * Update GameMap.update() to insert players to the buffer_out at the beginning of the loop and extract players from the buffer_in before the end of the loop
 * Create some ws messages
 * Replicate the bug
+
+* connect_user should be an independant petition to connect_player
