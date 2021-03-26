@@ -3,3 +3,5 @@
 * Replicate the bug
 
 * connect_user should be an independant petition to connect_player
+
+* solve bug: when a player is already in the GameMap and relogs, they don't receive the connection message on the client
