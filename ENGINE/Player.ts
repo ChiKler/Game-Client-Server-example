@@ -1,5 +1,12 @@
 import { WebSocket } from "https://deno.land/std@0.91.0/ws/mod.ts";
 
+export enum Player_WSMsg_ID {
+  Connection,
+  Sighting,
+  Vanishing,
+  Takedown,
+}
+
 export class Player {
   readonly uuID: string;
 

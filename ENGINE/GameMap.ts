@@ -1,4 +1,4 @@
-import { Player } from "./Player.ts";
+import { Player, Player_WSMsg_ID } from "./Player.ts";
 
 import { time_stamp } from "../vendor/utility/time_stamp.ts";
 import { sleep } from "../vendor/utility/sleep.ts";
@@ -7,6 +7,8 @@ import { Status } from "https://deno.land/std@0.91.0/http/http_status.ts";
 import { isWebSocketCloseEvent } from "https://deno.land/std@0.91.0/ws/mod.ts";
 
 import { User } from "../SERVER/scripts/User.ts";
+
+import { ws_msg_recv, ws_msg_send } from "../SERVER/scripts/websockets.ts";
 
 export enum GameMap_ID {
   Sandbox,
@@ -168,10 +170,26 @@ export class GameMap {
       (m__Players_BufferIn__take__ReVa = this.#m__Players_BufferIn.take()) !=
         undefined
     ) {
+      const player = m__Players_BufferIn__take__ReVa;
+
       this.#m__Players.set(
-        m__Players_BufferIn__take__ReVa.uuID,
-        m__Players_BufferIn__take__ReVa,
+        player.uuID,
+        player,
       );
+      ws_msg_send(player.ws, {
+        kind: "Player_WSMsg",
+        id: Player_WSMsg_ID.Connection,
+        body: { p__Player: player, p__GameMap_ID: this.m__GameMap_ID },
+      });
+      this.#m__Players.forEach((l__Player: Player) => {
+        if (l__Player.uuID != player.uuID) {
+          ws_msg_send(l__Player.ws, {
+            kind: "Player_WSMsg",
+            id: Player_WSMsg_ID.Sighting,
+            body: { p__Player: player },
+          });
+        }
+      });
     }
 
     if (elapsed_ms() > max_ms) {
