@@ -1,4 +1,3 @@
-* Use Deno fmt to make the code more univeraslly readable (add commands in run.bat)
 * Add ws_msg_recv() and ws_msg_send() to SERVER/scripts/websockets.ts
 * Add m__Player__buffer_in and m__Player__buffer_out to GameMap
 * Update GameMap.connect_player() and GameMap.connect_player() to use the mentioned buffers
