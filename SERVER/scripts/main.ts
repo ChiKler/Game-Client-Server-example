@@ -45,7 +45,7 @@ async function handle_requests()
     {
       if(acceptable(req))
       {
-        handle_user_connection("Jane", await acceptWebSocket({ conn: req.conn, bufReader: req.r, bufWriter: req.w, headers: req.headers}));
+        handle_user_connection("Jane", await acceptWebSocket({ conn: req.conn, bufReader: req.r, bufWriter: req.w, headers: req.headers }));
       };
     }
     else
@@ -53,7 +53,7 @@ async function handle_requests()
     {
       if(acceptable(req))
       {
-        handle_user_connection("John", await acceptWebSocket({ conn: req.conn, bufReader: req.r, bufWriter: req.w, headers: req.headers}));
+        handle_user_connection("John", await acceptWebSocket({ conn: req.conn, bufReader: req.r, bufWriter: req.w, headers: req.headers }));
       };
     }
     else
@@ -61,7 +61,7 @@ async function handle_requests()
     {
       if(acceptable(req))
       {
-        handle_user_connection("Mary", await acceptWebSocket({ conn: req.conn, bufReader: req.r, bufWriter: req.w, headers: req.headers}));
+        handle_user_connection("Mary", await acceptWebSocket({ conn: req.conn, bufReader: req.r, bufWriter: req.w, headers: req.headers }));
       };
     }
     
@@ -84,7 +84,7 @@ async function handle_requests()
     if (req.method === "GET" && req.url === "/scripts/canvas.js")
     {
       const headers = new Headers(); headers.set("Content-Type", "text/javascript");
-      req.respond({ status:200, headers, body: await Deno.open("../CLIENT/scripts/Player.js") });
+      req.respond({ status:200, headers, body: await Deno.open("../CLIENT/scripts/canvas.js") });
     }
     else
     if (req.method === "GET" && req.url === "/scripts/main.js")
@@ -122,7 +122,7 @@ async function handle_requests()
     
     else
     {
-      req.respond({ status: Status.NotFound, body: JSON.stringify({ message: "Request Not Found" }) });
+      req.respond({ status: Status.NotFound, body: JSON.stringify({ message: "Error 404 (Request Not Found)" }) });
     };
   };
 };
