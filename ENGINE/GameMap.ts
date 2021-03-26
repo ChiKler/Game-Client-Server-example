@@ -20,9 +20,9 @@ export class GameMap {
   m__Players: Map<string, Player>;
 
   // @ts-ignore
-  m__PlayersBufferIn: GameMap.PlayersBufferIn;
+  m__Players_BufferIn: GameMap.Players_BufferIn;
   // @ts-ignore
-  m__PlayersBufferOut: GameMap.PlayersBufferOut;
+  m__Players_BufferOut: GameMap.Players_BufferOut;
 
   constructor(p__GameMap_ID: GameMap_ID) {
     this.m__GameMap_ID = p__GameMap_ID;
@@ -31,11 +31,11 @@ export class GameMap {
 
     this.m__Players = new Map<string, Player>();
 
-    this.m__PlayersBufferIn = new GameMap.PlayersBufferIn();
-    this.m__PlayersBufferOut = new GameMap.PlayersBufferOut();
+    this.m__Players_BufferIn = new GameMap.Players_BufferIn();
+    this.m__Players_BufferOut = new GameMap.Players_BufferOut();
   }
 
-  static PlayersBufferIn = class {
+  static Players_BufferIn = class {
     #data: Array<Player>; // should use ArrayBuffer as buffer and Uint8Array as view
 
     constructor() {
@@ -51,7 +51,7 @@ export class GameMap {
     read(): void { // take callback, do forEach
     }
   };
-  static PlayersBufferOut = class<
+  static Players_BufferOut = class<
     T extends {
       player: Player;
       isToBeDisconnected: boolean;
@@ -83,7 +83,7 @@ export class GameMap {
       return ({ status: Status.NotFound });
     } else {
       // @ts-ignore
-      g__GameMaps.get(p__GameMap_ID).m__PlayersBufferIn.pass(player);
+      g__GameMaps.get(p__GameMap_ID).m__Players_BufferIn.pass(player);
 
       return ({ status: Status.OK });
     }
@@ -116,7 +116,7 @@ export class GameMap {
       return ({ status: Status.NotFound });
     } else {
       // @ts-ignore
-      g__GameMaps.get(p__GameMap_ID).m__PlayersBufferOut.pass({
+      g__GameMaps.get(p__GameMap_ID).m__Players_BufferOut.pass({
         // @ts-ignore
         player: this.m__Players.get(uuID).player,
         isToBeDisconnected: true,
