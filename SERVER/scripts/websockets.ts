@@ -66,6 +66,6 @@ export async function ws_msg_recv<WS_msg_recv__body__Ty>(
       // ignore the message
     }
   } catch (err) {
-    console.error(err);
+    // console.error(err);
   }
 }
