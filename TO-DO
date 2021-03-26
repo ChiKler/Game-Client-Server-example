@@ -1,5 +1,3 @@
-* Add ws_msg_recv() and ws_msg_send() to SERVER/scripts/websockets.ts
-* Create some ws messages
 * Replicate the bug
 
 * connect_user should be an independant petition to connect_player
