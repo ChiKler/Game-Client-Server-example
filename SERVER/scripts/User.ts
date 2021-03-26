@@ -45,11 +45,11 @@ export class User
     if (l__GameMap__connect_player__ReVa.status == Status.OK)
     {
       // @ts-ignore
-      g__Users.get(uuID).#isConnected = true;
-      
-      // @ts-ignore
       g__GameMaps.get(GameMap_ID.Sandbox).handle_socket_messages(g__Users.get(uuID));
     };
+
+    // @ts-ignore
+    g__Users.get(uuID).#isConnected = true;
     
     return ({ status: l__GameMap__connect_player__ReVa.status });
   };
