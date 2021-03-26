@@ -16,11 +16,10 @@ import {
 
 const g__Users = new Map<string, User>();
 
-const g__GameMaps = new Map<GameMap_ID, GameMap>([
-  [GameMap_ID.Sandbox, new GameMap(GameMap_ID.Sandbox)],
-]);
+const g__GameMaps = new Map<GameMap_ID, GameMap>();
 
 const g__server = serve({ port: 3000 });
+const g__server__isRunning = true;
 
 async function handle_requests() {
   const handle_user_connection = (uuID: string, player_ws__new: WebSocket) => {
@@ -39,6 +38,8 @@ async function handle_requests() {
 
   // @ts-ignore
   for await (const req: ServerRequest of g__server) {
+    if (!g__server__isRunning) break;
+
     if (req.url === "/ws?uuID=Jane") {
       if (acceptable(req)) {
         handle_user_connection(
@@ -165,5 +166,7 @@ async function handle_requests() {
 
 await Promise.all([
   handle_requests(),
-  g__GameMaps.get(GameMap_ID.Sandbox)?.run(),
+  GameMap.g__GameMaps__handler(g__GameMaps, g__server__isRunning),
+  // @ts-ignore
+  g__GameMaps.get(GameMap_ID.Sandbox).run(),
 ]);
