@@ -174,7 +174,7 @@ export class GameMap {
             WS_msg__send(player_i.ws, {
               kind: "Player_WSMsg",
               id: Player_WSMsg_ID.Sighting,
-              body: { p__Player: player_j },
+              body: { p__Player: { uuID: player_j.uuID } },
             });
           }
         }
