@@ -10,8 +10,8 @@ export async function WS_msg__send(
   ws: WebSocket,
   msg: WS_msg,
 ): Promise<void> {
+  if (ws.isClosed) return;
   try {
-    console.log(msg);
     await ws.send(JSON.stringify(msg));
   } catch (error) {
     console.error(error);
