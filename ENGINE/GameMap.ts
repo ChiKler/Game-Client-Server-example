@@ -165,8 +165,6 @@ export class GameMap {
       return (elapsed_ms() * 0.001);
     };
 
-    // -------- COMENT THIS SECTION TO SOLVE THE SUPPOSED BUG -------- //
-
     this.#m__Players.forEach((player_i: Player) => {
       this.#m__Players.forEach((player_j: Player) => {
         if (player_j.uuID != player_i.uuID) {
@@ -178,8 +176,6 @@ export class GameMap {
         }
       });
     });
-
-    // -------- COMENT THIS SECTION TO SOLVE THE SUPPOSED BUG -------- //
 
     let m__Players_BufferIn__take__ReVa: (Player | undefined);
     while (
