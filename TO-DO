@@ -1,9 +1,3 @@
-* Replicate the WS bugs (if they are still a thing) from:
-  - https://github.com/denoland/deno/issues/8419
-  - https://github.com/denoland/deno/issues/9337
-  - https://github.com/denoland/deno/pull/9339
-  - https://github.com/denoland/deno/issues/6013
-
 * connect_user should be an independant petition to connect_player
 
 * solve bug: when a player is already in the GameMap and relogs, they don't receive the connection message on the client
