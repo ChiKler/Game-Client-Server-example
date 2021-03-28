@@ -54,22 +54,22 @@ export class GameMap {
   static Players_BufferIn = class extends GameMap.Players_Buffer<Player> {
   };
   static Players_BufferOut__data__Ty = class {
-    player: Player;
-    isToBeDisconnected: boolean;
-    GameMap_ID__target: (GameMap_ID | undefined);
+    m__Player: Player;
+    m__isToBeDisconnected: boolean;
+    m__GameMap_ID__target: (GameMap_ID | undefined);
 
     constructor(
-      player: Player,
-      isToBeDisconnected: boolean,
-      GameMap_ID__target?: GameMap_ID,
+      p__Player: Player,
+      p__isToBeDisconnected: boolean,
+      p__GameMap_ID__target?: GameMap_ID,
     ) {
-      this.player = player;
-      this.isToBeDisconnected = isToBeDisconnected;
+      this.m__Player = p__Player;
+      this.m__isToBeDisconnected = p__isToBeDisconnected;
 
-      if (isToBeDisconnected) {
-        this.GameMap_ID__target = undefined;
+      if (p__isToBeDisconnected) {
+        this.m__GameMap_ID__target = undefined;
       } else {
-        if (GameMap_ID__target == undefined) {
+        if (p__GameMap_ID__target == undefined) {
           try {
             throw new TypeError(
               "Invalid GameMap.Players_BufferOut__data__Ty constructor call. The argument GameMap_ID__target needs to be provided when the argument isToBeDisconnected is false.",
@@ -78,7 +78,7 @@ export class GameMap {
             console.error(err);
           }
         } else {
-          this.GameMap_ID__target = GameMap_ID__target;
+          this.m__GameMap_ID__target = p__GameMap_ID__target;
         }
       }
     }
@@ -130,12 +130,14 @@ export class GameMap {
       return ({ status: Status.NotFound });
     } else {
       // @ts-ignore
-      g__GameMaps.get(p__GameMap_ID).#m__Players_BufferOut.pass({
-        // @ts-ignore
-        player: this.#m__Players.get(uuID).player,
-        isToBeDisconnected: true,
-        GameMap_ID__target: undefined,
-      });
+      g__GameMaps.get(l__GameMap_ID).#m__Players_BufferOut.pass(
+        new GameMap.Players_BufferOut__data__Ty(
+          // @ts-ignore
+          g__GameMaps.get(l__GameMap_ID).#m__Players.get(uuID).player,
+          true,
+          undefined,
+        ),
+      );
 
       return ({ status: Status.OK });
     }
@@ -262,23 +264,23 @@ export class GameMap {
             .#m__Players_BufferOut.take()) !=
             undefined
         ) {
-          if (l__GameMap__Players_BufferOut__take__ReVa.isToBeDisconnected) {
+          if (l__GameMap__Players_BufferOut__take__ReVa.m__isToBeDisconnected) {
             console.log(
-              `The Player with uuID ${l__GameMap__Players_BufferOut__take__ReVa.player.uuID} is to be disconnected from g__GameMaps. This option needs to be implemented.`,
+              `The Player with uuID ${l__GameMap__Players_BufferOut__take__ReVa.m__Player.uuID} is to be disconnected from g__GameMaps. This option needs to be implemented.`,
             );
           } else {
             if (
               g__GameMaps.get(
                 // @ts-ignore
-                l__GameMap__Players_BufferOut__take__ReVa.GameMap_ID__target,
+                l__GameMap__Players_BufferOut__take__ReVa.m__GameMap_ID__target,
               ) != undefined
             ) {
               // @ts-ignore
               g__GameMaps.get(
                 // @ts-ignore
-                l__GameMap__Players_BufferOut__take__ReVa.GameMap_ID__target,
+                l__GameMap__Players_BufferOut__take__ReVa.m__GameMap_ID__target,
               ).#m__Players_BufferIn.pass(
-                l__GameMap__Players_BufferOut__take__ReVa.player,
+                l__GameMap__Players_BufferOut__take__ReVa.m__Player,
               );
             }
           }
