@@ -1,16 +1,17 @@
 import { WebSocket } from "https://deno.land/std@0.91.0/ws/mod.ts";
 
-export interface WS_msg_send {
+export interface WS_msg {
   kind: string;
   id: number;
   body: object;
 }
 
-export async function ws_msg_send(
+export async function WS_msg__send(
   ws: WebSocket,
-  msg: WS_msg_send,
+  msg: WS_msg,
 ): Promise<void> {
   try {
+    console.log(msg);
     await ws.send(JSON.stringify(msg));
   } catch (error) {
     console.error(error);
@@ -22,22 +23,16 @@ export async function ws_msg_send(
   }
 }
 
-export interface WS_msg_recv {
-  kind: string;
-  id: number;
-  body: object;
-}
-
 /**
  * 
- * SHOULD RECURSEVILY CHECK ALL THE PROPERTIES OF WS_msg_recv__body__Ty (TO BE IMPLEMENTED)
+ * SHOULD RECURSEVILY CHECK ALL THE PROPERTIES OF WS_msg__body__Ty (TO BE IMPLEMENTED)
  * 
 **/
-export async function ws_msg_recv<WS_msg_recv__body__Ty>(
+export async function WS_msg__recv<WS_msg__body__Ty>(
   kind: string,
   id: number,
   msg_str: any,
-  callback: (body: WS_msg_recv__body__Ty) => any,
+  callback: (body: WS_msg__body__Ty) => any,
 ): Promise<void> {
   try {
     const msg = JSON.parse(msg_str);
@@ -56,7 +51,7 @@ export async function ws_msg_recv<WS_msg_recv__body__Ty>(
         (typeof msg.body == "object")
       ) {
         if (msg.kind == kind && msg.id == id) {
-          // SHOULD RECURSEVILY CHECK ALL THE PROPERTIES OF WS_msg_recv__body__Ty (TO BE IMPLEMENTED)
+          // SHOULD RECURSEVILY CHECK ALL THE PROPERTIES OF WS_msg__body__Ty (TO BE IMPLEMENTED)
           callback(msg.body);
         }
       } else {
