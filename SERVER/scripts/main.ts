@@ -21,7 +21,7 @@ const g__GameMaps = new Map<GameMap_ID, GameMap>();
 const g__server = serve({ port: 3000 });
 const g__server__isRunning = true;
 
-async function handle_requests() {
+async function g__server__handle_requests() {
   const handle_user_connection = async (
     uuID: string,
     player_ws__new: WebSocket,
@@ -39,6 +39,19 @@ async function handle_requests() {
     );
   };
 
+  const handle_get_file_request = async (
+    req: ServerRequest,
+    content_type: string,
+    file_path: string,
+  ): Promise<void> => {
+    const headers = new Headers();
+    headers.set("Content-Type", content_type);
+    req.respond({
+      status: 200,
+      headers,
+      body: await Deno.open(file_path),
+    });
+  };
   // @ts-ignore
   for await (const req: ServerRequest of g__server) {
     if (!g__server__isRunning) break;
@@ -80,92 +93,71 @@ async function handle_requests() {
         );
       }
     } else if (req.method === "GET" && req.url === "/") {
-      const headers: Headers = new Headers();
-      headers.set("Content-Type", "text/html");
-      req.respond({
-        status: 200,
-        body: await Deno.open("../CLIENT/index.html"),
-      });
+      handle_get_file_request(
+        req,
+        "text/html",
+        "../CLIENT/index.html",
+      );
     } else if (req.method === "GET" && req.url === "/css/main.css") {
-      const headers: Headers = new Headers();
-      headers.set("Content-Type", "text/css");
-      req.respond({
-        status: 200,
-        headers,
-        body: await Deno.open("../CLIENT/css/main.css"),
-      });
+      handle_get_file_request(
+        req,
+        "text/css",
+        "../CLIENT/css/main.css",
+      );
     } else if (req.method === "GET" && req.url === "/scripts/canvas.js") {
-      const headers = new Headers();
-      headers.set("Content-Type", "text/javascript");
-      req.respond({
-        status: 200,
-        headers,
-        body: await Deno.open("../CLIENT/scripts/canvas.js"),
-      });
+      handle_get_file_request(
+        req,
+        "text/javascript",
+        "../CLIENT/scripts/canvas.js",
+      );
     } else if (req.method === "GET" && req.url === "/scripts/init.js") {
-      const headers: Headers = new Headers();
-      headers.set("Content-Type", "text/javascript");
-      req.respond({
-        status: 200,
-        headers,
-        body: await Deno.open("../CLIENT/scripts/init.js"),
-      });
+      handle_get_file_request(
+        req,
+        "text/javascript",
+        "../CLIENT/scripts/init.js",
+      );
     } else if (req.method === "GET" && req.url === "/scripts/main.js") {
-      const headers: Headers = new Headers();
-      headers.set("Content-Type", "text/javascript");
-      req.respond({
-        status: 200,
-        headers,
-        body: await Deno.open("../CLIENT/scripts/main.js"),
-      });
+      handle_get_file_request(
+        req,
+        "text/javascript",
+        "../CLIENT/scripts/main.js",
+      );
     } else if (req.method === "GET" && req.url === "/scripts/mod.js") {
-      const headers: Headers = new Headers();
-      headers.set("Content-Type", "text/javascript");
-      req.respond({
-        status: 200,
-        headers,
-        body: await Deno.open("../CLIENT/scripts/mod.js"),
-      });
+      handle_get_file_request(
+        req,
+        "text/javascript",
+        "../CLIENT/scripts/mod.js",
+      );
     } else if (req.method === "GET" && req.url === "/scripts/websockets.js") {
-      const headers: Headers = new Headers();
-      headers.set("Content-Type", "text/javascript");
-      req.respond({
-        status: 200,
-        headers,
-        body: await Deno.open("../CLIENT/scripts/websockets.js"),
-      });
+      handle_get_file_request(
+        req,
+        "text/javascript",
+        "../CLIENT/scripts/websockets.js",
+      );
     } else if (req.method === "GET" && req.url === "/ENGINE/GameEntity.js") {
-      const headers = new Headers();
-      headers.set("Content-Type", "text/javascript");
-      req.respond({
-        status: 200,
-        headers,
-        body: await Deno.open("../ENGINE/GameEntity.js"),
-      });
+      handle_get_file_request(
+        req,
+        "text/javascript",
+        "../ENGINE/GameEntity.js",
+      );
     } else if (req.method === "GET" && req.url === "/ENGINE/GameMap.js") {
-      const headers: Headers = new Headers();
-      headers.set("Content-Type", "text/javascript");
-      req.respond({
-        status: 200,
-        headers,
-        body: await Deno.open("../ENGINE/GameMap.js"),
-      });
+      handle_get_file_request(
+        req,
+        "text/javascript",
+        "../ENGINE/GameMap.js",
+      );
     } else if (req.method === "GET" && req.url === "/ENGINE/Player.js") {
-      const headers = new Headers();
-      headers.set("Content-Type", "text/javascript");
-      req.respond({
-        status: 200,
-        headers,
-        body: await Deno.open("../ENGINE/Player.js"),
-      });
+      handle_get_file_request(
+        req,
+        "text/javascript",
+        "../ENGINE/Player.js",
+      );
     } else if (req.method === "GET" && req.url === "/ENGINE/mod.js") {
-      const headers = new Headers();
-      headers.set("Content-Type", "text/javascript");
-      req.respond({
-        status: 200,
-        headers,
-        body: await Deno.open("../ENGINE/mod.js"),
-      });
+      handle_get_file_request(
+        req,
+        "text/javascript",
+        "../ENGINE/mod.js",
+      );
     } else {
       req.respond({
         status: Status.NotFound,
@@ -176,7 +168,7 @@ async function handle_requests() {
 }
 
 await Promise.all([
-  handle_requests(),
+  g__server__handle_requests(),
   GameMap.g__GameMaps__handler(g__GameMaps, g__server__isRunning),
   // @ts-ignore
   g__GameMaps.get(GameMap_ID.Sandbox).run(),
