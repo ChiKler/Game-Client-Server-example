@@ -19,7 +19,7 @@ export class GameMap {
 
   #isRunning: boolean;
 
-  #m__Players: Map<string, Player>;
+  #m__Players_Map: Map<number, Player>;
 
   // @ts-ignore
   #m__Players_BufferIn: GameMap.Players_BufferIn;
@@ -31,7 +31,7 @@ export class GameMap {
 
     this.#isRunning = false;
 
-    this.#m__Players = new Map<string, Player>();
+    this.#m__Players_Map = new Map<number, Player>();
 
     this.#m__Players_BufferIn = new GameMap.Players_BufferIn();
     this.#m__Players_BufferOut = new GameMap.Players_BufferOut();
@@ -105,7 +105,7 @@ export class GameMap {
 
   static disconnect_player(
     g__GameMaps: Map<GameMap_ID, GameMap>,
-    uuID: string,
+    eeID: number,
   ): { status: Status } {
     const l__GameMap_IDs = [...g__GameMaps.keys()];
     let l__GameMap_ID: GameMap_ID;
@@ -116,7 +116,8 @@ export class GameMap {
     while ((found == false) && (i < l__GameMap_IDs.length)) {
       if (
         // @ts-ignore
-        g__GameMaps.get(l__GameMap_IDs[i]).#m__Players.get(uuID) == undefined
+        g__GameMaps.get(l__GameMap_IDs[i]).#m__Players_Map.get(eeID) ==
+          undefined
       ) {
         i++;
       } else {
@@ -133,7 +134,7 @@ export class GameMap {
       g__GameMaps.get(l__GameMap_ID).#m__Players_BufferOut.pass(
         new GameMap.Players_BufferOut__data__Ty(
           // @ts-ignore
-          g__GameMaps.get(l__GameMap_ID).#m__Players.get(uuID).player,
+          g__GameMaps.get(l__GameMap_ID).#m__Players_Map.get(eeID).player,
           true,
           undefined,
         ),
@@ -167,13 +168,13 @@ export class GameMap {
       return (elapsed_ms() * 0.001);
     };
 
-    this.#m__Players.forEach((player_i: Player) => {
-      this.#m__Players.forEach((player_j: Player) => {
-        if (player_j.uuID != player_i.uuID) {
+    this.#m__Players_Map.forEach((player_i: Player) => {
+      this.#m__Players_Map.forEach((player_j: Player) => {
+        if (player_j.eeID != player_i.eeID) {
           WS_msg__send(player_i.ws, {
             kind: "WS_msg_Player",
             id: WS_msg_Player_ID.Sighting,
-            body: { p__Player: { uuID: player_j.uuID } },
+            body: { p__Player: { eeID: player_j.eeID } },
           });
         }
       });
@@ -186,24 +187,24 @@ export class GameMap {
     ) {
       const player_that_arrives = m__Players_BufferIn__take__ReVa;
 
-      this.#m__Players.set(
-        player_that_arrives.uuID,
+      this.#m__Players_Map.set(
+        player_that_arrives.eeID,
         player_that_arrives,
       );
       WS_msg__send(player_that_arrives.ws, {
         kind: "WS_msg_Player",
         id: WS_msg_Player_ID.Connection,
         body: {
-          p__Player: { uuID: player_that_arrives.uuID },
+          p__Player: { eeID: player_that_arrives.eeID },
           p__GameMap_ID: this.m__GameMap_ID,
         },
       });
-      this.#m__Players.forEach((player_that_was_already_here: Player) => {
-        if (player_that_was_already_here.uuID != player_that_arrives.uuID) {
+      this.#m__Players_Map.forEach((player_that_was_already_here: Player) => {
+        if (player_that_was_already_here.eeID != player_that_arrives.eeID) {
           WS_msg__send(player_that_was_already_here.ws, {
             kind: "WS_msg_Player",
             id: WS_msg_Player_ID.Sighting,
-            body: { p__Player: { uuID: player_that_arrives.uuID } },
+            body: { p__Player: { eeID: player_that_arrives.eeID } },
           });
         }
       });
@@ -266,7 +267,7 @@ export class GameMap {
         ) {
           if (l__GameMap__Players_BufferOut__take__ReVa.m__isToBeDisconnected) {
             console.log(
-              `The Player with uuID ${l__GameMap__Players_BufferOut__take__ReVa.m__Player.uuID} is to be disconnected from g__GameMaps. This option needs to be implemented.`,
+              `The Player with eeID ${l__GameMap__Players_BufferOut__take__ReVa.m__Player.eeID} is to be disconnected from g__GameMaps. This option needs to be implemented.`,
             );
           } else {
             if (

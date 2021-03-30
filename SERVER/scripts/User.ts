@@ -80,7 +80,6 @@ export class User {
       player_ws__old = undefined;
       player = new Player(
         await GameEntity.eeID_generate(1),
-        uuID,
         player_ws__new,
       );
     }
@@ -112,7 +111,8 @@ export class User {
   ): { status: Status } {
     const l__GameMap__disconnect_player__ReVa = GameMap.disconnect_player(
       g__GameMaps,
-      uuID,
+      // @ts-ignore
+      g__Users.get(uuID).player.eeID,
     );
 
     if (l__GameMap__disconnect_player__ReVa.status == Status.OK) {

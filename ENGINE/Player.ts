@@ -10,13 +10,10 @@ export enum WS_msg_Player_ID {
 }
 
 export class Player extends GameEntity {
-  readonly uuID: string;
-
   ws: WebSocket;
 
-  constructor(eeID: number, uuID: string, ws: WebSocket) {
+  constructor(eeID: number, ws: WebSocket) {
     super(eeID);
-    this.uuID = uuID;
 
     this.ws = ws;
   }
