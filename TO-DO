@@ -1,5 +1,4 @@
-* use entity ID to store all the entities in the Maps instead of uuID
-
 * connect_user should be an independant petition to connect_player
+* do something with the return value from User.connect, etc.
 
 * solve bug: when a player is already in the GameMap and relogs, they don't receive the connection message on the client
