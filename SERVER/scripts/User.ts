@@ -46,23 +46,24 @@ export class User {
     g__Users: Map<string, User>,
     uuID: string,
   ): Promise<{ status: Status; status_message: string }> {
-    const user = g__Users.get(uuID)!;
-    if (!user.#isConnected) {
+    const user = g__Users.get(uuID);
+
+    if ((user == undefined) || (!user!.#isConnected)) {
       return ({
         status: Status.Conflict,
         status_message: `The User with uuID ${uuID} wasn't connected.`,
       });
-    } else if (user.#ws_player == undefined) {
+    } else if (user!.#ws_player == undefined) {
       return ({
         status: Status.Conflict,
         status_message:
           `The User with uuID ${uuID} doesn't have a WebSocket for their Player.`,
       });
     } else {
-      if (user.#player == undefined) {
-        user.#player = new Player(
+      if (user!.#player == undefined) {
+        user!.#player = new Player(
           await GameEntity.eeID_generate(1),
-          user.#ws_player!,
+          user!.#ws_player!,
         );
 
         const l__GameMap__connect_player__ReVa = GameMap.connect_player(
