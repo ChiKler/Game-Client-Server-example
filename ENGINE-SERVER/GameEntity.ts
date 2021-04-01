@@ -1,10 +1,10 @@
 // @ts-ignore
-import { GameEntity as CLIENT_GameEntity } from "../ENGINE/GameEntity.js";
+import { GameEntity as CLIENT_GameEntity } from "../ENGINE-CLIENT/mod.js";
 // @ts-ignore
-import { Player } from "../ENGINE/Player.ts";
+import { Player } from "./mod.ts";
 
 // @ts-ignore
-import { Mutex } from "../vendor/utility/Mutex.ts";
+import { Mutex } from "../vendor/utility/mod.ts";
 
 export abstract class GameEntity {
   readonly eeID: number;

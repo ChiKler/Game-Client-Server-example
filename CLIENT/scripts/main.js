@@ -1,4 +1,4 @@
-import { Player } from "../../ENGINE/mod.js";
+import { Player } from "../../ENGINE-CLIENT/mod.js";
 
 //import { GameMap_ID, GameMap } from "../../ENGINE/mod.js";
 

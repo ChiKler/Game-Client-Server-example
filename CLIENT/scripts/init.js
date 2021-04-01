@@ -1,4 +1,4 @@
-import { Player, WS_msg_Player_ID } from "../../ENGINE/mod.js";
+import { Player, WS_msg_Player_ID } from "../../ENGINE-CLIENT/mod.js";
 
 import {
   g__connect_player,

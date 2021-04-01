@@ -1,8 +1,8 @@
 // @ts-ignore
-import { GameEntity } from "./GameEntity.ts";
+import { GameEntity } from "./mod.ts";
 
 // @ts-ignore
-import { Player as CLIENT_Player } from "../ENGINE/Player.js";
+import { Player as CLIENT_Player } from "../ENGINE-CLIENT/mod.js";
 
 // @ts-ignore
 import { WebSocket } from "https://deno.land/std@0.91.0/ws/mod.ts";

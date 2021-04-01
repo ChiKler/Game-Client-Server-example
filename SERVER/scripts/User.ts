@@ -1,5 +1,10 @@
 // @ts-ignore
-import { GameEntity, GameMap, GameMap_ID, Player } from "../../ENGINE/mod.ts";
+import {
+  GameEntity,
+  GameMap,
+  GameMap_ID,
+  Player,
+} from "../../ENGINE-SERVER/mod.ts";
 
 // @ts-ignore
 import { Status } from "https://deno.land/std@0.91.0/http/http_status.ts";

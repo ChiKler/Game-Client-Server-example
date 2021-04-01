@@ -1,5 +1,5 @@
 // @ts-ignore
-import { GameMap, GameMap_ID } from "../../ENGINE/GameMap.ts";
+import { GameMap, GameMap_ID } from "../../ENGINE-SERVER/mod.ts";
 
 // @ts-ignore
 import { User } from "./User.ts";
@@ -165,29 +165,33 @@ async function g__server__handle_requests() {
         "text/javascript",
         "../CLIENT/scripts/websockets.js",
       );
-    } else if (req.method === "GET" && req.url === "/ENGINE/GameEntity.js") {
+    } else if (
+      req.method === "GET" && req.url === "/ENGINE-CLIENT/GameEntity.js"
+    ) {
       handle_req__GET__file(
         req,
         "text/javascript",
-        "../ENGINE/GameEntity.js",
+        "../ENGINE-CLIENT/GameEntity.js",
       );
-    } else if (req.method === "GET" && req.url === "/ENGINE/GameMap.js") {
+    } else if (
+      req.method === "GET" && req.url === "/ENGINE-CLIENT/GameMap.js"
+    ) {
       handle_req__GET__file(
         req,
         "text/javascript",
-        "../ENGINE/GameMap.js",
+        "../ENGINE-CLIENT/GameMap.js",
       );
-    } else if (req.method === "GET" && req.url === "/ENGINE/Player.js") {
+    } else if (req.method === "GET" && req.url === "/ENGINE-CLIENT/Player.js") {
       handle_req__GET__file(
         req,
         "text/javascript",
-        "../ENGINE/Player.js",
+        "../ENGINE-CLIENT/Player.js",
       );
-    } else if (req.method === "GET" && req.url === "/ENGINE/mod.js") {
+    } else if (req.method === "GET" && req.url === "/ENGINE-CLIENT/mod.js") {
       handle_req__GET__file(
         req,
         "text/javascript",
-        "../ENGINE/mod.js",
+        "../ENGINE-CLIENT/mod.js",
       );
     } else if (req.method === "GET" && req.url === "/vendor/utility/mod.js") {
       handle_req__GET__file(
