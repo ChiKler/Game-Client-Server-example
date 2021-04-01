@@ -44,7 +44,7 @@ export async function WS_msg__recv<WS_msg__body__Ty>(
       (JSON.stringify(msg) == "") // ?
     ) {
       // ignore the message
-    } else if (msg && typeof msg === "object") {
+    } else if (msg && typeof msg == "object") {
       if (
         (Object.keys(msg).length == 3) && (msg.hasOwnProperty("kind")) &&
         (typeof msg.kind == "string") && (msg.hasOwnProperty("id")) &&
