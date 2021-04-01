@@ -1,18 +1,13 @@
 // @ts-ignore
-import { Player, WS_msg_Player_ID } from "./Player.ts";
+import { Player, WS_msg_Player_ID } from "./mod.ts";
 
 // @ts-ignore
-import { time_stamp } from "../vendor/utility/time_stamp.ts";
-// @ts-ignore
-import { sleep } from "../vendor/utility/sleep.ts";
+import { sleep, time_stamp } from "../vendor/utility/mod.ts";
 
 // @ts-ignore
 import { Status } from "https://deno.land/std@0.91.0/http/http_status.ts";
 // @ts-ignore
 import { isWebSocketCloseEvent } from "https://deno.land/std@0.91.0/ws/mod.ts";
-
-// @ts-ignore
-import { User } from "../SERVER/scripts/User.ts";
 
 // @ts-ignore
 import { WS_msg__recv, WS_msg__send } from "../SERVER/scripts/websockets.ts";

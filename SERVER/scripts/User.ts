@@ -1,9 +1,9 @@
-// @ts-ignore
 import {
   GameEntity,
   GameMap,
   GameMap_ID,
   Player,
+  // @ts-ignore
 } from "../../ENGINE-SERVER/mod.ts";
 
 // @ts-ignore
