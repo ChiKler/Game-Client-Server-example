@@ -3,3 +3,5 @@
 * allow players to disconnect
 
 * solve bug: when a player is already in the GameMap and relogs, they don't receive the connection message on the client
+
+* Prevent user from being disconnected while their player is in the process of being connected (could use a custom mutex of some sort)
