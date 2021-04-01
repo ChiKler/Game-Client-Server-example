@@ -1,5 +1,3 @@
-* I somehow broke the websocket message system on a recent push, should be easy to fix.
-
 * allow players to disconnect
 
 * solve bug: when a player is already in the GameMap and relogs, they don't receive the connection message on the client
