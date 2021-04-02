@@ -59,9 +59,15 @@ async function g__server__handle_requests() {
         headers: req.headers,
       });
 
-      if (g__Users.get(uuID) != undefined) {
-        g__Users.get(uuID)!.ws_player = ws_player__new;
-      }
+      const l__User__ws_player__set__ReVa = await User.ws_player__set(
+        g__Users,
+        uuID,
+        ws_player__new,
+      );
+
+      console.info(
+        `"${req.url}": {\n  l__User__connect_player__ReVa: {\n    status: ${l__User__ws_player__set__ReVa.status}\n    status_message: ${l__User__ws_player__set__ReVa.status_message}\n  }\n}`,
+      );
     }
   };
   const handle_req__connect_player = async (
