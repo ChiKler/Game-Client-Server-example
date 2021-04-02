@@ -217,7 +217,7 @@ export class GameMap {
 
       g__GameMaps.get(l__GameMap_ID!)!.#m__PetitionsToDisconnectPlayer.push(
         l__PetitionToDisconnectPlayer,
-      );
+      ); // this generates a bug (l__PetitionToDisconnectPlayer gets copied?)
 
       while (!l__PetitionToDisconnectPlayer.hasBeenResolved) {}
 
