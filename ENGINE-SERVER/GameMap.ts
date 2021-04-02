@@ -78,7 +78,7 @@ export class GameMap {
       await l__GameMap.#update__stop();
     }
 
-    while (true) {} // wait for all the players at g__GameMaps.get(p__GameMap_ID).#m__Players_BufferOut to be disconnected // e.g. a player may still be waiting to receive rewards from an npc they had aggroed
+    await sleep(8000); // wait for all the players at g__GameMaps.get(p__GameMap_ID).#m__Players_BufferOut to be disconnected // e.g. a player may still be waiting to receive rewards from an npc they had aggroed
   }
 
   static Players_Buffer = class<T> {
@@ -184,7 +184,7 @@ export class GameMap {
           `The Player with eeID ${eeID} wasn't found on any GameMap.`,
       });
     } else {
-      while (true) {} // wait until the end of the #update() loop (could make a petition, which would be rejected or accepted by the loop if the player is safe to be disconnected)
+      await sleep(8000); // wait until the end of the #update() loop (could make a petition, which would be rejected or accepted by the loop if the player is safe to be disconnected)
 
       g__GameMaps.get(l__GameMap_ID!)!.#m__Players_BufferOut.pass(
         new GameMap.Players_BufferOut__data__Ty(
@@ -197,7 +197,7 @@ export class GameMap {
       return ({
         status: Status.OK,
         status_message:
-          `The Player with eeID ${eeID} was disconnected from the GameMap with GameMap_ID ${l__GameMap_ID}.`,
+          `The Player with eeID ${eeID} was disconnected from the GameMap with GameMap_ID ${l__GameMap_ID!}.`,
       });
     }
   }
@@ -297,7 +297,7 @@ export class GameMap {
     if (!this.#isRunning) {
       return;
     } else {
-      while (true) {} // wait for all the players to be safely moved into this.#m__Players_BufferOut // e.g. a player is still in combat
+      await sleep(8000); // wait for all the players to be safely moved into this.#m__Players_BufferOut // e.g. a player is still in combat
 
       this.#isRunning = false;
     }
