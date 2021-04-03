@@ -210,16 +210,13 @@ export class GameMap {
         eeID,
         new GameMap.PetitionToDisconnectPlayer(),
       );
-      console.log("test0");
+
       while (
         !g__GameMaps.get(l__GameMap_ID!)!.#m__PetitionsToDisconnectPlayer_Map
           .get(eeID)!.hasBeenDisconnected
       ) {
+        await sleep(20); // if possible I'd prefer doing something with a Promise instead of using a while loop
       }
-      console.log("test1");
-
-      g__GameMaps.get(l__GameMap_ID!)!.#m__PetitionsToDisconnectPlayer_Map
-        .delete(eeID);
 
       const l__PetitionToDisconnectPlayer = g__GameMaps.get(l__GameMap_ID!)!
         .#m__PetitionsToDisconnectPlayer_Map.get(eeID)!;
