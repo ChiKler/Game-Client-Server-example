@@ -105,12 +105,10 @@ export class User {
       try {
         user__isConnected__mutex__unlock = await user.#isConnected__mutex
           .lock();
-      } catch (err) {
-        console.error(err);
+      } catch {
         return ({
           status: Status.Conflict,
-          status_message:
-            `The WebSocket "ws_player" of the User with uuID ${uuID} can't be set due to a similar petition being requested simultaneously. Please try again.`,
+          status_message: `The User with uuID ${uuID} wasn't connected.`,
         });
       }
 
@@ -142,12 +140,10 @@ export class User {
       try {
         user__isConnected__mutex__unlock = await user.#isConnected__mutex
           .lock();
-      } catch (err) {
-        console.error(err);
+      } catch {
         return ({
           status: Status.Conflict,
-          status_message:
-            `The Player of the User with uuID ${uuID} can't be connected due to a similar petition being requested simultaneously. Please try again.`,
+          status_message: `The User with uuID ${uuID} wasn't connected.`,
         });
       }
 
@@ -221,12 +217,10 @@ export class User {
       try {
         user__isConnected__mutex__unlock = await user.#isConnected__mutex
           .lock();
-      } catch (err) {
-        console.error(err);
+      } catch {
         return ({
           status: Status.Conflict,
-          status_message:
-            `The Player of the User with uuID ${uuID} can't be disconnected due to a similar petition being requested simultaneously. Please try again.`,
+          status_message: `The User with uuID ${uuID} wasn't connected.`,
         });
       }
 
@@ -275,12 +269,10 @@ export class User {
       try {
         user__isConnected__mutex__unlock = await user.#isConnected__mutex
           .lock();
-      } catch (err) {
-        console.error(err);
+      } catch {
         return ({
           status: Status.Conflict,
-          status_message:
-            `The User with uuID ${uuID} can't be disconnected due to a similar petition being requested simultaneously. Please try again.`,
+          status_message: `The User with uuID ${uuID} wasn't connected.`,
         });
       }
 
