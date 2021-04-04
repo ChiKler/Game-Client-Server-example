@@ -5,7 +5,7 @@ import { GameEntity } from "./mod.ts";
 import { Player as CLIENT_Player } from "../ENGINE-CLIENT/mod.js";
 
 // @ts-ignore
-import { WebSocket } from "https://deno.land/std@0.91.0/ws/mod.ts";
+import { WebSocket } from "https://deno.land/std@0.92.0/ws/mod.ts";
 
 // @ts-ignore
 import { WS_msg__recv, WS_msg__send } from "../SERVER/scripts/websockets.ts";

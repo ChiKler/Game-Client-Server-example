@@ -5,12 +5,12 @@ import { Player } from "./mod.ts";
 import { sleep, time_stamp } from "../vendor/utility/mod.ts";
 
 // @ts-ignore
-import { Status } from "https://deno.land/std@0.91.0/http/http_status.ts";
+import { Status } from "https://deno.land/std@0.92.0/http/http_status.ts";
 import {
   isWebSocketCloseEvent,
   WebSocket,
   // @ts-ignore
-} from "https://deno.land/std@0.91.0/ws/mod.ts";
+} from "https://deno.land/std@0.92.0/ws/mod.ts";
 
 export enum GameMap_ID {
   Sandbox,

@@ -7,11 +7,11 @@ import {
 } from "../../ENGINE-SERVER/mod.ts";
 
 // @ts-ignore
-import { Status } from "https://deno.land/std@0.91.0/http/http_status.ts";
+import { Status } from "https://deno.land/std@0.92.0/http/http_status.ts";
 // @ts-ignore
-import { v4 } from "https://deno.land/std@0.91.0/uuid/mod.ts";
+import { v4 } from "https://deno.land/std@0.92.0/uuid/mod.ts";
 // @ts-ignore
-import { WebSocket } from "https://deno.land/std@0.91.0/ws/mod.ts";
+import { WebSocket } from "https://deno.land/std@0.92.0/ws/mod.ts";
 
 // @ts-ignore
 import { Mutex } from "../../vendor/utility/mod.ts";
