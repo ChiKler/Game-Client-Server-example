@@ -1,4 +1,5 @@
 import {
+  Character,
   GameEntity,
   GameMap,
   GameMap_ID,
@@ -166,6 +167,14 @@ export class User {
         if (user!.#player == undefined) {
           user!.#player = new Player(
             await GameEntity.eeID_generate(1),
+            new Character(
+              0,
+              0,
+              0,
+              (
+                (uuID == "Jane") ? "Red" : ((uuID == "John") ? "Green" : "Blue")
+              ),
+            ),
             user!.#ws_player!,
           );
 

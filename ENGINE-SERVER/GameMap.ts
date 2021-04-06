@@ -3,7 +3,6 @@ import { Player } from "./mod.ts";
 
 // @ts-ignore
 import { sleep, time_stamp } from "../vendor/utility/mod.ts";
-
 // @ts-ignore
 import { Status } from "https://deno.land/std@0.92.0/http/http_status.ts";
 import {
@@ -11,6 +10,8 @@ import {
   WebSocket,
   // @ts-ignore
 } from "https://deno.land/std@0.92.0/ws/mod.ts";
+// @ts-ignore
+import { WS_msg_Player } from "./WS_msg_Player.ts";
 
 export enum GameMap_ID {
   Sandbox,
@@ -148,7 +149,7 @@ export class GameMap {
     if (g__GameMaps.get(p__GameMap_ID) == undefined) return;
     const l__GameMap = g__GameMaps.get(p__GameMap_ID)!;
     if (l__GameMap.#isRunning) {
-      await l__GameMap.#update__stop();
+      await l__GameMap.update__stop();
     }
 
     await sleep(8000); // wait for all the players at g__GameMaps.get(p__GameMap_ID).#m__Players_BufferOut to be disconnected // e.g. a player may still be waiting to receive rewards from an npc they had aggroed
@@ -171,7 +172,7 @@ export class GameMap {
       return ({
         status: Status.OK,
         status_message:
-          `The Player with eeID ${player.eeID} was connected to the GameMap with GameMap_ID ${p__GameMap_ID}.`,
+          `The Player with eeID ${player.eeID} has been connected to the GameMap with GameMap_ID ${p__GameMap_ID}.`,
       });
     }
   }
@@ -243,7 +244,7 @@ export class GameMap {
     }
   };
 
-  #update = async (): Promise<void> => {
+  private async update() {
     const begin_ms = time_stamp();
     const min_ms = 20;
     const max_ms = 40;
@@ -292,7 +293,10 @@ export class GameMap {
     this.#m__Players_Map.forEach((player_i: Player) => {
       this.#m__Players_Map.forEach((player_j: Player) => {
         if (player_j.eeID != player_i.eeID) {
-          Player.handle__WS_msg_Player__Sighting__send(player_i, player_j);
+          WS_msg_Player.handle__WS_msg_Player__Sighting__send(
+            player_i,
+            player_j,
+          );
         }
       });
     });
@@ -309,14 +313,14 @@ export class GameMap {
         player_that_arrives,
       );
 
-      Player.handle__WS_msg_Player__Connection__send(
+      WS_msg_Player.handle__WS_msg_Player__Connection__send(
         player_that_arrives,
         this.m__GameMap_ID,
       );
 
       this.#m__Players_Map.forEach((player_that_was_already_here: Player) => {
         if (player_that_was_already_here.eeID != player_that_arrives.eeID) {
-          Player.handle__WS_msg_Player__Sighting__send(
+          WS_msg_Player.handle__WS_msg_Player__Sighting__send(
             player_that_arrives,
             player_that_was_already_here,
           );
@@ -335,8 +339,8 @@ export class GameMap {
         await sleep(sleep_ms);
       }
     }
-  };
-  #update__start = async (): Promise<void> => {
+  }
+  private async update__start() {
     if (this.#isRunning) {
       return;
     } else {
@@ -344,10 +348,10 @@ export class GameMap {
     }
 
     while (this.#isRunning) {
-      await this.#update();
+      await this.update();
     }
-  };
-  #update__stop = async (): Promise<void> => {
+  }
+  private async update__stop() {
     if (!this.#isRunning) {
       return;
     } else {
@@ -355,7 +359,7 @@ export class GameMap {
 
       this.#isRunning = false;
     }
-  };
+  }
 
   static async g__GameMaps__handler(
     g__GameMaps: Map<GameMap_ID, GameMap>,
@@ -424,7 +428,7 @@ export class GameMap {
 
     await Promise.all([
       handler_loop(),
-      g__GameMaps.get(GameMap_ID.Sandbox)!.#update__start(),
+      g__GameMaps.get(GameMap_ID.Sandbox)!.update__start(),
     ]);
 
     // safely close all GameMaps

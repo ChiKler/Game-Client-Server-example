@@ -1,15 +1,21 @@
 // @ts-ignore
-import { GameEntity as CLIENT_GameEntity } from "../ENGINE-CLIENT/mod.js";
+import { GameObject, Player } from "./mod.ts";
+
 // @ts-ignore
-import { Player } from "./mod.ts";
+import type { Player__SERVER_msg } from "../ENGINE-SERVER/Player.ts";
 
 // @ts-ignore
 import { Mutex } from "../vendor/utility/mod.ts";
 
+export type GameEntity__SERVER_msg = Player__SERVER_msg;
+
 export abstract class GameEntity {
   readonly eeID: number;
-  constructor(eeID: number) {
+  readonly m__GameObject: GameObject;
+  constructor(eeID: number, p__GameObject: GameObject) {
     this.eeID = eeID;
+
+    this.m__GameObject = p__GameObject;
   }
 
   private static eeID_count = 0;
@@ -22,17 +28,19 @@ export abstract class GameEntity {
     return (eeID_count__old);
   }
 
-  static CLIENT_type_conversion(p__GameEntity: GameEntity): CLIENT_GameEntity {
-    let l__CLIENT_GameEntity: CLIENT_GameEntity;
+  static from_SERVER_obj_to_SERVER_msg(
+    p__GameEntity: GameEntity,
+  ): GameEntity__SERVER_msg {
+    let l__GameEntity__SERVER_msg: GameEntity__SERVER_msg;
 
     if (p__GameEntity instanceof Player) {
-      l__CLIENT_GameEntity = Player.CLIENT_type_conversion(p__GameEntity);
-    } else {
-      throw new TypeError(
-        "static GameEntity.CLIENT_type_conversion() needs to be provided with a type-check on all of its derived classes.",
+      l__GameEntity__SERVER_msg = Player.from_SERVER_obj_to_SERVER_msg(
+        p__GameEntity,
       );
+    } else {
+      throw new TypeError();
     }
 
-    return (l__CLIENT_GameEntity);
+    return (l__GameEntity__SERVER_msg);
   }
 }
