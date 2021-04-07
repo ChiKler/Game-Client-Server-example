@@ -1,3 +1,3 @@
 - Draw Players and GameMap.
 
-- Build a test client for petitions
+- Build a test client for petitions.

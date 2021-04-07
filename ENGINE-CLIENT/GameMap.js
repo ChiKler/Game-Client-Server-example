@@ -1,5 +1,6 @@
-// @ts-ignore
 import { Player } from "./Player.js";
+
+import { Mutex, sleep, time_stamp } from "../vendor/utility/mod.js";
 
 export var GameMap_ID;
 (function (GameMap_ID) {
@@ -59,34 +60,76 @@ export class GameMap {
     while (this.#isRunning) {
       await this.update();
     }
-  } /*private */
+  }
   /*private */ update__stop() {
     if (!this.#isRunning) {
       return;
     } else {
       this.#isRunning = false;
     }
-  } /*private */
-
-  /*private */ static open(g__GameMap, g__GameMap__set, g__GameMap_ID) {
-    g__GameMap__set(new GameMap(g__GameMap_ID));
-    console.log(`Opening the GameMap with GameMap_ID ${g__GameMap_ID}`);
-  }
-  /*private */ static close(g__GameMap) {
-    console.log(
-      `Closing the GameMap with GameMap_ID ${g__GameMap.#m__GameMap_ID}`,
-    );
   }
 
-  static async g__GameMap__handler(g__GameMap, g__GameMap__set, g__GameMap_ID) {
-    // while (true)
-    // {
-    //
-    // };
+  /*private*/ static g__GameMap__isOpened = false;
+  /*private*/ static g__GameMap__isOpened__mutex = new Mutex();
 
-    if (g__GameMap_ID != g__GameMap.#m__GameMap_ID) {
-      GameMap.close(g__GameMap);
-      GameMap.open(g__GameMap, g__GameMap__set, g__GameMap_ID);
+  /*private */ static async g__GameMap__open(
+    g__GameMap,
+    g__GameMap__set,
+    g__Player,
+    g__Player__set,
+    p__GameMap_ID,
+  ) {
+    const l__GameMap__g__GameMap__isOpened__mutex__unlock = await GameMap
+      .g__GameMap__isOpened__mutex.lock();
+    if (GameMap.g__GameMap__isOpened) {
+      l__GameMap__g__GameMap__isOpened__mutex__unlock();
+      return;
+    } else {
+      console.log(`Opening the GameMap with GameMap_ID ${p__GameMap_ID}`);
+
+      while (g__Player == undefined) await sleep(20);
+
+      g__GameMap__set(new GameMap(p__GameMap_ID));
+
+      GameMap.g__GameMap__isOpened = true;
+
+      l__GameMap__g__GameMap__isOpened__mutex__unlock();
+    }
+  }
+  /*private */ static async g__GameMap__close(
+    g__GameMap,
+    g__GameMap__set,
+    g__Player,
+    g__Player__set,
+    p__GameMap_ID,
+  ) {
+    const l__GameMap__g__GameMap__isOpened__mutex__unlock = await GameMap
+      .g__GameMap__isOpened__mutex.lock();
+    if (GameMap.g__GameMap__isOpened) {
+      console.log(
+        `Closing the GameMap with GameMap_ID ${g__GameMap.#m__GameMap_ID}`,
+      );
+
+      // AWAIT FOR THE GAMEMAP
+      // UPDATE TO STOP RUNNING
+      g__GameMap__set(undefined);
+
+      if (p__GameMap_ID != undefined) {
+        GameMap.open(
+          g__GameMap,
+          g__GameMap__set,
+          g__Player,
+          g__Player__set,
+          p__GameMap_ID,
+        );
+      }
+
+      GameMap.g__GameMap__isOpened = false;
+
+      l__GameMap__g__GameMap__isOpened__mutex__unlock();
+    } else {
+      l__GameMap__g__GameMap__isOpened__mutex__unlock();
+      return;
     }
   }
 }

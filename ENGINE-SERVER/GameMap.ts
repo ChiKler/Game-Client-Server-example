@@ -290,12 +290,12 @@ export class GameMap {
       }
     }
 
-    this.#m__Players_Map.forEach((player_i: Player) => {
-      this.#m__Players_Map.forEach((player_j: Player) => {
-        if (player_j.eeID != player_i.eeID) {
+    this.#m__Players_Map.forEach((l__Player__source: Player) => {
+      this.#m__Players_Map.forEach((l__Player__target: Player) => {
+        if (l__Player__target.eeID != l__Player__source.eeID) {
           WS_msg_Player.handle__WS_msg_Player__Sighting__send(
-            player_i,
-            player_j,
+            l__Player__source,
+            l__Player__target,
           );
         }
       });

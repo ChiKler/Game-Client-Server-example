@@ -14,6 +14,6 @@ export function WS_msg__recv(ws, kind, id, callback) {
   });
 }
 
-export function WS_msg__send(ws, kind, id, body) {
-  ws.send(JSON.stringify({ kind, id, body }));
+export function WS_msg__send(ws, kind, id, msg__body) {
+  ws.send(JSON.stringify({ kind, id, msg__body }));
 }

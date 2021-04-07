@@ -1,5 +1,5 @@
 // @ts-ignore
-import { GameObject } from "./mod.ts";
+import { GameObject } from "./GameObject.ts";
 
 // @ts-ignore
 import { Mutex } from "../vendor/utility/mod.ts";

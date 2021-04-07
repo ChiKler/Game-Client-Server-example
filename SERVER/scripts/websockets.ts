@@ -16,7 +16,7 @@ export async function WS_msg__recv<WS_msg__body__Ty>(
   kind: string,
   id: number,
   msg_str: any,
-  callback: (body: WS_msg__body__Ty) => any,
+  callback: (msg__body: WS_msg__body__Ty) => any,
 ): Promise<void> {
   try {
     const msg = JSON.parse(msg_str);
