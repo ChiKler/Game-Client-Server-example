@@ -150,7 +150,7 @@ export class GameMap {
     await sleep(8000); // wait for all the players at g__GameMaps.get(p__GameMap_ID).#m__Players_BufferOut to be disconnected // e.g. a player may still be waiting to receive rewards from an npc they had aggroed
   }
 
-  static connect_player(
+  static connect__Player(
     g__GameMaps: Map<GameMap_ID, GameMap>,
     p__GameMap_ID: GameMap_ID,
     player: Player,
@@ -172,7 +172,7 @@ export class GameMap {
     }
   }
 
-  static async disconnect_player(
+  static async disconnect__Player(
     g__GameMaps: Map<GameMap_ID, GameMap>,
     eeID: number,
   ): Promise<{ status: Status; status_message: string }> {

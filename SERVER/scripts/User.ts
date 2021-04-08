@@ -178,7 +178,7 @@ export class User {
             user!.#ws_player!,
           );
 
-          const l__GameMap__connect_player__ReVa = GameMap.connect_player(
+          const l__GameMap__connect_player__ReVa = GameMap.connect__Player(
             g__GameMaps,
             p__GameMap_ID,
             user!.#player!,
@@ -252,7 +252,7 @@ export class User {
         });
       } else {
         const l__GameMap__disconnect_player__ReVa = await GameMap
-          .disconnect_player(
+          .disconnect__Player(
             g__GameMaps,
             user!.#player!.eeID,
           );
