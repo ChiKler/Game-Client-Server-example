@@ -187,6 +187,7 @@ export class User {
 
           if (l__GameMap__connect_player__ReVa.status == Status.OK) {
             l__GameMap.handle_socket_messages(
+              user!.#player!,
               user!.#ws_player!,
             );
           }
@@ -200,6 +201,7 @@ export class User {
           user!.#player!.ws_player = user!.#ws_player!;
 
           l__GameMap.handle_socket_messages(
+            user!.#player!,
             user!.#ws_player!,
           );
 

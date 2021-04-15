@@ -53,7 +53,7 @@ export class GameMap {
         if (p__GameMap_ID__target == undefined) {
           try {
             throw new TypeError(
-              "Invalid GameMap.Players_BufferOut__data__Ty constructor call. The argument GameMap_ID__target needs to be provided when the argument isToBeDisconnected is false.",
+              `Invalid "GameMap.Players_BufferOut__data__Ty" constructor call. The argument "GameMap_ID__target" needs to be provided when the argument "isToBeDisconnected" is false.`,
             );
           } catch (err) {
             console.error(err);
@@ -260,7 +260,26 @@ export class GameMap {
     }
   }
 
-  handle_socket_messages = async (ws_player: WebSocket): Promise<void> => {
+  handle_socket_messages = async (
+    player_that_arrives: Player,
+    ws_player: WebSocket,
+  ): Promise<void> => {
+    try {
+      WS_msg_Player.handle__WS_msg_Player__Connection__send(
+        player_that_arrives,
+        this.m__GameMap_ID,
+      );
+
+      this.#m__Players_Map.forEach((player_that_was_already_here: Player) => {
+        if (player_that_was_already_here.eeID != player_that_arrives.eeID) {
+          WS_msg_Player.handle__WS_msg_Player__Sighting__send(
+            player_that_arrives,
+            player_that_was_already_here,
+          );
+        }
+      });
+    } catch {}
+
     for await (const msg_str of ws_player) {
       if (isWebSocketCloseEvent(msg_str)) {
         // ...
@@ -273,7 +292,10 @@ export class GameMap {
   };
 
   #update__isLoopRunning = false;
+  #update__isLoopCompleted = true;
   private async update() {
+    this.#update__isLoopCompleted = false;
+
     const begin_ms = time_stamp();
     const min_ms = 20;
     const max_ms = 40;
@@ -341,20 +363,6 @@ export class GameMap {
         player_that_arrives.eeID,
         player_that_arrives,
       );
-
-      WS_msg_Player.handle__WS_msg_Player__Connection__send(
-        player_that_arrives,
-        this.m__GameMap_ID,
-      );
-
-      this.#m__Players_Map.forEach((player_that_was_already_here: Player) => {
-        if (player_that_was_already_here.eeID != player_that_arrives.eeID) {
-          WS_msg_Player.handle__WS_msg_Player__Sighting__send(
-            player_that_arrives,
-            player_that_was_already_here,
-          );
-        }
-      });
     }
 
     if (elapsed_ms() > max_ms) {
@@ -368,6 +376,8 @@ export class GameMap {
         await sleep(sleep_ms);
       }
     }
+
+    this.#update__isLoopCompleted = true;
   }
   private async update__start() {
     if (this.#update__isLoopRunning) {
@@ -384,10 +394,12 @@ export class GameMap {
     if (!this.#update__isLoopRunning) {
       return;
     } else {
-      await sleep(8000); // wait for all the players to be safely moved into this.#m__Players_BufferOut // e.g. a player is still in combat
-
       this.#update__isLoopRunning = false;
     }
+
+    while (!this.#update__isLoopCompleted) await sleep(20);
+
+    await sleep(8000); // wait for all the players to be safely moved into this.#m__Players_BufferOut // e.g. a player is still in combat
   }
 
   private static async g__GameMaps__open(
