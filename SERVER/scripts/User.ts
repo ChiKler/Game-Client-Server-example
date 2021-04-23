@@ -2,7 +2,7 @@ import {
   Character,
   GameEntity,
   GameMap,
-  GameMap_ID,
+  GameMap__ID,
   Player,
   // @ts-ignore
 } from "../../ENGINE-SERVER/mod.ts";
@@ -124,8 +124,8 @@ export class User {
     }
   }
   static async connect_player(
-    g__GameMaps: Map<GameMap_ID, GameMap>,
-    p__GameMap_ID: GameMap_ID,
+    g__GameMaps: Map<GameMap__ID, GameMap>,
+    p__GameMap__ID: GameMap__ID,
     g__Users: Map<string, User>,
     uuID: string,
   ): Promise<{ status: Status; status_message: string }> {
@@ -162,26 +162,37 @@ export class User {
             `The User with uuID ${uuID} doesn't have a WebSocket for their Player.`,
         });
       } else {
-        const l__GameMap = g__GameMaps.get(GameMap_ID.Sandbox)!;
+        const l__GameMap = g__GameMaps.get(GameMap__ID.Sandbox)!;
 
         if (user!.#player == undefined) {
           user!.#player = new Player(
-            await GameEntity.eeID_generate(1),
-            new Character(
-              0,
-              0,
-              0,
-              (
-                (uuID == "Jane") ? "Red" : ((uuID == "John") ? "Green" : "Blue")
+            {
+              eeID: await GameEntity.eeID__generate(1),
+              GameObject: new Character(
+                {
+                  posX: 0,
+                  posY: 0,
+                  posR: 0,
+                  forwardR: -Math.PI / 2,
+                },
+                {
+                  Character_Skin: (
+                    (uuID == "Jane")
+                      ? "Red"
+                      : ((uuID == "John") ? "Green" : "Blue")
+                  ),
+                },
               ),
-            ),
-            user!.#ws_player!,
+            },
+            {
+              ws_player: user!.#ws_player!,
+            },
           );
 
           const l__GameMap__connect_player__ReVa = await GameMap
             .connect__Player(
               g__GameMaps,
-              p__GameMap_ID,
+              p__GameMap__ID,
               user!.#player!,
             );
 
@@ -217,7 +228,7 @@ export class User {
   }
 
   static async disconnect_player(
-    g__GameMaps: Map<GameMap_ID, GameMap>,
+    g__GameMaps: Map<GameMap__ID, GameMap>,
     g__Users: Map<string, User>,
     uuID: string,
   ): Promise<{ status: Status; status_message: string }> {
@@ -269,7 +280,7 @@ export class User {
     }
   }
   static async disconnect_user(
-    g__GameMaps: Map<GameMap_ID, GameMap>,
+    g__GameMaps: Map<GameMap__ID, GameMap>,
     g__Users: Map<string, User>,
     uuID: string,
   ): Promise<{ status: Status; status_message: string }> {

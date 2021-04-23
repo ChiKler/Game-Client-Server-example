@@ -1,10 +1,14 @@
 // @ts-ignore
-import { GameEntity } from "./GameEntity.ts";
+import { GameEntity, GameEntity__Args } from "./GameEntity.ts";
 // @ts-ignore
 import { GameObject } from "./GameObject.ts";
 
 // @ts-ignore
 import { WebSocket } from "https://deno.land/std@0.92.0/ws/mod.ts";
+
+export interface Player__Args {
+  ws_player: WebSocket;
+}
 
 export class Player extends GameEntity {
   #ws_player: WebSocket;
@@ -21,9 +25,12 @@ export class Player extends GameEntity {
     this.#ws_player = ws_player;
   }
 
-  constructor(eeID: number, p__GameObject: GameObject, ws_player: WebSocket) {
-    super(eeID, p__GameObject);
+  constructor(
+    p__GameEntity__Args: GameEntity__Args,
+    p__Player__Args: Player__Args,
+  ) {
+    super(p__GameEntity__Args);
 
-    this.#ws_player = ws_player;
+    this.#ws_player = p__Player__Args.ws_player;
   }
 }

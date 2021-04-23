@@ -27,6 +27,7 @@ export class WS_msg<WS_msg__body__Ty extends WS_msg__body> {
   }
 
   static parse(msg_str: string): any {
+    console.log(msg_str);
     try {
       const msg_obj = JSON.parse(msg_str);
 
@@ -57,45 +58,45 @@ export class WS_msg<WS_msg__body__Ty extends WS_msg__body> {
       console.error(err);
     }
   }
-}
 
-export async function WS_msg__recv<WS_msg__body__Ty extends WS_msg__body>(
-  kind: string,
-  id: number,
-  msg_str: string,
-  check_props: (msg_obj__body: any) => msg_obj__body is WS_msg__body__Ty,
-  callback: (msg__body: WS_msg__body__Ty) => any,
-): Promise<void> {
-  const msg_obj = WS_msg.parse(msg_str);
-
-  if (msg_obj.kind == kind && msg_obj.id == id) {
-    if (check_props(msg_obj.body)) {
-      console.log(msg_obj);
-      callback(msg_obj.body);
+  static async recv<WS_msg__body__Ty extends WS_msg__body>(
+    kind: string,
+    id: number,
+    msg_str: string,
+    check_props: (msg_obj__body: any) => msg_obj__body is WS_msg__body__Ty,
+    callback: (msg__body: WS_msg__body__Ty) => void,
+  ): Promise<void> {
+    const msg_obj = WS_msg.parse(msg_str);
+    console.log(msg_obj);
+    if (msg_obj.kind == kind && msg_obj.id == id) {
+      if (check_props(msg_obj.body)) {
+        console.log(msg_obj);
+        callback(msg_obj.body);
+      } else {
+        // ignore the message
+      }
     } else {
       // ignore the message
     }
-  } else {
-    // ignore the message
   }
-}
 
-export async function WS_msg__send<
-  WS_msg__body__Ty extends WS_msg__body,
-  WS_msg__Ty extends WS_msg<WS_msg__body__Ty>,
->(
-  ws: WebSocket,
-  msg: WS_msg__Ty,
-): Promise<void> {
-  if (ws.isClosed) return;
-  try {
-    await ws.send(JSON.stringify(msg));
-  } catch (error) {
-    console.error(error);
+  static async send<
+    WS_msg__body__Ty extends WS_msg__body,
+    WS_msg__Ty extends WS_msg<WS_msg__body__Ty>,
+  >(
+    ws: WebSocket,
+    msg: WS_msg__Ty,
+  ): Promise<void> {
+    if (ws.isClosed) return;
     try {
-      await ws.close();
+      await ws.send(JSON.stringify(msg));
     } catch (error) {
       console.error(error);
+      try {
+        await ws.close();
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 }

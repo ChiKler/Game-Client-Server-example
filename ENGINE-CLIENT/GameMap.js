@@ -12,8 +12,8 @@ export class GameMap {
 
   #m__Players_Map;
 
-  /*private */ constructor(p__GameMap_ID) {
-    this.#m__GameMap_ID = p__GameMap_ID;
+  /*private */ constructor(p__GameMap__Args) {
+    this.#m__GameMap_ID = p__GameMap__Args.GameMap_ID;
 
     this.#m__Players_Map = new Map();
   }
@@ -55,7 +55,7 @@ export class GameMap {
 
   #update__isLoopRunning = false;
   #update__isLoopCompleted = true;
-  /*private*/ async update() {
+  /*private*/ async update(previous_loop_ms) {
     this.#update__isLoopCompleted = false;
 
     const begin_ms = time_stamp();
@@ -63,11 +63,15 @@ export class GameMap {
     const max_ms = 40;
 
     const elapsed_ms = () => {
-      return (time_stamp() - begin_ms);
+      return ((time_stamp() - begin_ms) + previous_loop_ms);
     };
     const delta_time = () => {
       return (elapsed_ms() * 0.001);
     };
+
+    this.#m__Players_Map.forEach((l__Player) => {
+      l__Player.Events__handle(delta_time());
+    });
 
     if (elapsed_ms() > max_ms) {
       console.warn(
@@ -82,6 +86,8 @@ export class GameMap {
     }
 
     this.#update__isLoopCompleted = true;
+
+    return (elapsed_ms() - previous_loop_ms);
   }
   /*private*/ async update__start(g__cvs, g__ctx, g__Player) {
     if (this.#update__isLoopRunning) {
@@ -96,8 +102,9 @@ export class GameMap {
       },
     );
 
+    let update__previous_loop_ms = 20;
     while (this.#update__isLoopRunning) {
-      await this.update();
+      update__previous_loop_ms = await this.update(update__previous_loop_ms);
     }
   }
   /*private*/ async update__stop() {
@@ -129,7 +136,7 @@ export class GameMap {
       l__GameMap__g__GameMap__isOpened__mutex__unlock();
       return;
     } else {
-      g__GameMap.set(new GameMap(p__GameMap_ID));
+      g__GameMap.set(new GameMap({ GameMap_ID: p__GameMap_ID }));
 
       if (p__Player != undefined) {
         g__Player.set(p__Player);

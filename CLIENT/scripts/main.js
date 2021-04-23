@@ -8,7 +8,7 @@ export const g__uuID = window.prompt("uuID", "Jane,John");
 
 export const g__server_address = "localhost:3000";
 
-export let g__GameMap = {
+export const g__GameMap = {
   m__instance: undefined,
   get: function () {
     return this.m__instance;
@@ -19,7 +19,7 @@ export let g__GameMap = {
 };
 globalThis.g__GameMap = g__GameMap;
 
-export let g__Player = {
+export const g__Player = {
   m__instance: undefined,
   get: function () {
     return this.m__instance;
@@ -30,43 +30,54 @@ export let g__Player = {
 };
 globalThis.g__Player = g__Player;
 
-let g__ws_player;
-async function g__ws_player__set() {
-  g__ws_player = WS__make(g__server_address, g__uuID, "player");
+export const g__ws_player = {
+  m__instance: undefined,
+  get: function () {
+    return this.m__instance;
+  },
+  set: async function (p__instance) {
+    this.m__instance = WS__make(g__server_address, g__uuID, "player");
 
-  await WS_msg_Player.handle__WS_msg_Player__Disconnection__recv(
-    g__ws_player,
-    g__cvs,
-    g__ctx,
-    g__GameMap,
-    g__Player,
-  );
-  await WS_msg_Player.handle__WS_msg_Player__Connection__recv(
-    g__ws_player,
-    g__cvs,
-    g__ctx,
-    g__GameMap,
-    g__Player,
-  );
-  await WS_msg_Player.handle__WS_msg_Player__Sighting__recv(
-    g__ws_player,
-    g__GameMap,
-  );
-  await WS_msg_Player.handle__WS_msg_Player__Vanishing__recv(
-    g__ws_player,
-    g__GameMap,
-  );
-  await WS_msg_Player.handle__WS_msg_Player__Takedown__recv(
-    g__ws_player,
-    g__GameMap,
-  );
-}
-let g__ws_chat;
-function g__ws_chat__set() {
-  g__ws_chat = WS__make("chat");
+    await WS_msg_Player.recv__WS_msg_Player__Disconnection(
+      g__ws_player,
+      g__cvs,
+      g__ctx,
+      g__GameMap,
+      g__Player,
+    );
+    await WS_msg_Player.recv__WS_msg_Player__Connection(
+      g__ws_player,
+      g__cvs,
+      g__ctx,
+      g__GameMap,
+      g__Player,
+    );
+    await WS_msg_Player.recv__WS_msg_Player__Sighting(
+      g__ws_player,
+      g__GameMap,
+    );
+    await WS_msg_Player.recv__WS_msg_Player__Vanishing(
+      g__ws_player,
+      g__GameMap,
+    );
+    await WS_msg_Player.recv__WS_msg_Player__Takedown(
+      g__ws_player,
+      g__GameMap,
+    );
+  },
+};
 
-  //Chat.handle__WS_msg_Chat__Message__recv(g__ws_chat);
-}
+export const g__ws_chat = {
+  m__instance: undefined,
+  get: function () {
+    return this.m__instance;
+  },
+  set: function (p__instance) {
+    this.m__instance = WS__make(g__server_address, g__uuID, "chat");
+
+    //Chat.recv__WS_msg_Chat__Message(g__ws_chat);
+  },
+};
 
 export async function g__connect_user() {
   return (await fetch(
@@ -74,7 +85,7 @@ export async function g__connect_user() {
   ));
 }
 export async function g__connect_player() {
-  await g__ws_player__set();
+  await g__ws_player.set();
 
   return (await fetch(
     `http://${g__server_address}/connect_player?uuID=${g__uuID}`,

@@ -7,10 +7,10 @@ import { sleep } from "../../vendor/utility/mod.js";
 async function init() {
   g__canvas__set();
   while ((await g__connect_user()).status != 200) {
-    await sleep(1000);
+    await sleep(5000);
   }
   while ((await g__connect_player()).status != 200) {
-    await sleep(1000);
+    await sleep(5000);
   }
 }
 

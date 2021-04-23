@@ -4,16 +4,27 @@ export function WS__make(g__server_address, g__uuID, ws_name) {
   ));
 }
 
-export function WS_msg__recv(ws, kind, id, callback) {
-  ws.addEventListener("message", function (evt) {
-    const msg = JSON.parse(evt.data);
+export /*abstract */ class WS_msg {
+  kind;
+  id;
+  body;
 
-    if ((msg.kind == kind) && (msg.id == id)) {
-      callback(msg.body);
-    }
-  });
-}
+  constructor(kind, id, body) {
+    this.kind = kind;
+    this.id = id;
+    this.body = body;
+  }
 
-export function WS_msg__send(ws, kind, id, msg__body) {
-  ws.send(JSON.stringify({ kind, id, msg__body }));
+  static recv(ws, kind, id, callback) {
+    ws.addEventListener("message", function (evt) {
+      const msg = JSON.parse(evt.data);
+
+      if ((msg.kind == kind) && (msg.id == id)) {
+        callback(msg.body);
+      }
+    });
+  }
+  static send(ws, kind, id, p__WS_msg__body) {
+    ws.send(JSON.stringify({ kind, id, body: p__WS_msg__body }));
+  }
 }

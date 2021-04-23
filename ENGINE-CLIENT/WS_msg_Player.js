@@ -5,7 +5,7 @@ import {
   Player,
 } from "../../ENGINE-CLIENT/mod.js";
 
-import { WS_msg__recv, WS_msg__send } from "../CLIENT/scripts/websockets.js";
+import { WS_msg } from "../CLIENT/scripts/websockets.js";
 
 export var WS_msg_Player_ID;
 (function (WS_msg_Player_ID) {
@@ -17,15 +17,15 @@ export var WS_msg_Player_ID;
 })(WS_msg_Player_ID || (WS_msg_Player_ID = {}));
 
 export class WS_msg_Player {
-  static async handle__WS_msg_Player__Connection__recv(
+  static async recv__WS_msg_Player__Connection(
     g__ws_player,
     g__cvs,
     g__ctx,
     g__GameMap,
     g__Player,
   ) {
-    WS_msg__recv(
-      g__ws_player,
+    WS_msg.recv(
+      g__ws_player.get(),
       "WS_msg_Player",
       WS_msg_Player_ID.Connection,
       (msg__body) => {
@@ -41,15 +41,15 @@ export class WS_msg_Player {
     );
   }
 
-  static async handle__WS_msg_Player__Disconnection__recv(
+  static async recv__WS_msg_Player__Disconnection(
     g__ws_player,
     g__cvs,
     g__ctx,
     g__GameMap,
     g__Player,
   ) {
-    WS_msg__recv(
-      g__ws_player,
+    WS_msg.recv(
+      g__ws_player.get(),
       "WS_msg_Player",
       WS_msg_Player_ID.Disconnection,
       (msg__body) => {
@@ -64,12 +64,12 @@ export class WS_msg_Player {
     );
   }
 
-  static async handle__WS_msg_Player__Sighting__recv(
+  static async recv__WS_msg_Player__Sighting(
     g__ws_player,
     g__GameMap,
   ) {
-    WS_msg__recv(
-      g__ws_player,
+    WS_msg.recv(
+      g__ws_player.get(),
       "WS_msg_Player",
       WS_msg_Player_ID.Sighting,
       (msg__body) => {
@@ -85,12 +85,12 @@ export class WS_msg_Player {
     );
   }
 
-  static async handle__WS_msg_Player__Vanishing__recv(
+  static async recv__WS_msg_Player__Vanishing(
     g__ws_player,
     g__GameMap,
   ) {
-    WS_msg__recv(
-      g__ws_player,
+    WS_msg.recv(
+      g__ws_player.get(),
       "WS_msg_Player",
       WS_msg_Player_ID.Vanishing,
       (msg__body) => {
@@ -106,12 +106,12 @@ export class WS_msg_Player {
     );
   }
 
-  static async handle__WS_msg_Player__Takedown__recv(
+  static async recv__WS_msg_Player__Takedown(
     g__ws_player,
     g__GameMap__get,
   ) {
-    WS_msg__recv(
-      g__ws_player,
+    WS_msg.recv(
+      g__ws_player.get(),
       "WS_msg_Player",
       WS_msg_Player_ID.Takedown,
       (msg__body) => {

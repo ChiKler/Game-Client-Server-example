@@ -1,19 +1,26 @@
 // @ts-ignore
-import { GameObject } from "./GameObject.ts";
+import { GameObject, GameObject__Args } from "./GameObject.ts";
+// @ts-ignore
+import { Stat } from "./Stat.ts";
 
 export type Character_Skin = "Red" | "Green" | "Blue";
+
+export interface Character__Args {
+  Character_Skin?: Character_Skin;
+}
 
 export class Character extends GameObject {
   readonly m__Character_Skin: Character_Skin;
 
   constructor(
-    posX: number,
-    posY: number,
-    posR: number,
-    p__Character_Skin: Character_Skin,
+    p__GameObject__Args: GameObject__Args,
+    p__Character__Args: Character__Args,
   ) {
-    super(posX, posY, posR);
+    p__GameObject__Args.Stat__speed = p__GameObject__Args.Stat__speed ||
+      new Stat({ value__base: 300 });
 
-    this.m__Character_Skin = p__Character_Skin;
+    super(p__GameObject__Args);
+
+    this.m__Character_Skin = p__Character__Args.Character_Skin || "Blue";
   }
 }

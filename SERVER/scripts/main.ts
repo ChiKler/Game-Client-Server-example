@@ -1,5 +1,5 @@
 // @ts-ignore
-import { GameMap, GameMap_ID } from "../../ENGINE-SERVER/mod.ts";
+import { GameMap, GameMap__ID } from "../../ENGINE-SERVER/mod.ts";
 
 // @ts-ignore
 import { User } from "./User.ts";
@@ -21,7 +21,7 @@ import {
 
 const g__Users = new Map<string, User>();
 
-const g__GameMaps = new Map<GameMap_ID, GameMap>();
+const g__GameMaps = new Map<GameMap__ID, GameMap>();
 
 const g__server = serve({ port: 3000 });
 const g__server__isRunning = true;
@@ -86,7 +86,7 @@ async function g__server__handle_requests() {
 
     const l__User__connect_player__ReVa = await User.connect_player(
       g__GameMaps,
-      GameMap_ID.Sandbox,
+      GameMap__ID.Sandbox,
       g__Users,
       uuID,
     );
@@ -235,6 +235,14 @@ async function g__server__handle_requests() {
         "text/javascript",
         "../CLIENT/scripts/main.js",
       );
+    } else if (
+      req.method === "GET" && req.url === "/scripts/Player_Controller.js"
+    ) {
+      handle_req__GET__file(
+        req,
+        "text/javascript",
+        "../CLIENT/scripts/Player_Controller.js",
+      );
     } else if (req.method === "GET" && req.url === "/scripts/websockets.js") {
       handle_req__GET__file(
         req,
@@ -260,6 +268,14 @@ async function g__server__handle_requests() {
         req,
         "text/javascript",
         "../CLIENT/scripts/main.js",
+      );
+    } else if (
+      req.method === "GET" && req.url === "/CLIENT/scripts/Player_Controller.js"
+    ) {
+      handle_req__GET__file(
+        req,
+        "text/javascript",
+        "../CLIENT/scripts/Player_Controller.js",
       );
     } else if (
       req.method === "GET" && req.url === "/CLIENT/scripts/websockets.js"
@@ -295,6 +311,14 @@ async function g__server__handle_requests() {
         "../ENGINE-CLIENT/GameEntity.js",
       );
     } else if (
+      req.method === "GET" && req.url === "/ENGINE-CLIENT/GameEntityEvent.js"
+    ) {
+      handle_req__GET__file(
+        req,
+        "text/javascript",
+        "../ENGINE-CLIENT/GameEntityEvent.js",
+      );
+    } else if (
       req.method === "GET" && req.url === "/ENGINE-CLIENT/GameMap.js"
     ) {
       handle_req__GET__file(
@@ -321,6 +345,20 @@ async function g__server__handle_requests() {
         req,
         "text/javascript",
         "../ENGINE-CLIENT/Player.js",
+      );
+    } else if (req.method === "GET" && req.url === "/ENGINE-CLIENT/Stat.js") {
+      handle_req__GET__file(
+        req,
+        "text/javascript",
+        "../ENGINE-CLIENT/Stat.js",
+      );
+    } else if (
+      req.method === "GET" && req.url === "/ENGINE-CLIENT/WS_msg_GameEntity.js"
+    ) {
+      handle_req__GET__file(
+        req,
+        "text/javascript",
+        "../ENGINE-CLIENT/WS_msg_GameEntity.js",
       );
     } else if (
       req.method === "GET" && req.url === "/ENGINE-CLIENT/WS_msg_Player.js"
