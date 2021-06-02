@@ -1,9 +1,9 @@
 /**
- * 
+ *
  * const mutex_unlock = await mutex.lock();
  * // do stuff here
  * mutex_unlock();
- * 
+ *
 **/
 export class Mutex {
   #current = Promise.resolve();

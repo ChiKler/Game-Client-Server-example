@@ -2,12 +2,12 @@ import {
   WebSocket,
   WebSocketMessage,
   // @ts-ignore
-} from "https://deno.land/std@0.92.0/ws/mod.ts";
+} from "https://deno.land/std@0.97.0/ws/mod.ts";
 
 /**
- * 
+ *
  * EACH DESCENDANT CLASS MUST IMPLEMENT A STATIC FUNCTION "check_props" AND CALL THEIR PARENT'S.
- * 
+ *
 **/
 export class WS_msg__body {
   static check_props(msg_obj__body: any): msg_obj__body is WS_msg__body {

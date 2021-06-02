@@ -4,7 +4,7 @@ import { GameEntity, GameEntity__Args } from "./GameEntity.ts";
 import { GameObject } from "./GameObject.ts";
 
 // @ts-ignore
-import { WebSocket } from "https://deno.land/std@0.92.0/ws/mod.ts";
+import { WebSocket } from "https://deno.land/std@0.97.0/ws/mod.ts";
 
 export interface Player__Args {
   ws_player: WebSocket;
@@ -17,9 +17,9 @@ export class Player extends GameEntity {
     return this.#ws_player;
   }
   /**
-   * 
+   *
    * USE ONLY FROM WITHIN THE "User" CLASS.
-   * 
+   *
   **/
   set ws_player(ws_player: WebSocket) {
     this.#ws_player = ws_player;

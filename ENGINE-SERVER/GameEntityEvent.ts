@@ -89,10 +89,10 @@ function GameEntityEvent__check_props<
 }
 
 /**
- * 
+ *
  * @returns {EventReTy} with information from the event's call.
  * @returns {null} if the event is cancelled.
- * 
+ *
 **/
 export function GameEntityEvent__handle_fn(
   p__GameEntityEvent__Data: GameEntityEvent__Data<GameEntityEvent__Args>,
