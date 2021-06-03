@@ -45,14 +45,13 @@ async function g__server__handle_requests() {
     );
 
     console.info(
-      `"${req.url}": {\n  l__User__connect_user__ReVa: {\n    status: ${l__User__connect_user__ReVa.status}\n    status_message: ${l__User__connect_user__ReVa.status_message}\n  }\n}`,
+      `"${req.url}": {\n  l__User__connect_user__ReVa: {\n    status: ${l__User__connect_user__ReVa.status}\n    statusText: ${l__User__connect_user__ReVa.statusText}\n  }\n}`,
     );
 
     req.respond({
       status: l__User__connect_user__ReVa.status,
-      body: JSON.stringify({
-        status_message: l__User__connect_user__ReVa.status_message,
-      }),
+      statusText: l__User__connect_user__ReVa.statusText,
+      body: "",
     });
   };
   const handle_req__ws_player__set = async (
@@ -75,7 +74,7 @@ async function g__server__handle_requests() {
       );
 
       console.info(
-        `"${req.url}": {\n  l__User__connect_player__ReVa: {\n    status: ${l__User__ws_player__set__ReVa.status}\n    status_message: ${l__User__ws_player__set__ReVa.status_message}\n  }\n}`,
+        `"${req.url}": {\n  l__User__connect_player__ReVa: {\n    status: ${l__User__ws_player__set__ReVa.status}\n    statusText: ${l__User__ws_player__set__ReVa.statusText}\n  }\n}`,
       );
     }
   };
@@ -92,14 +91,13 @@ async function g__server__handle_requests() {
     );
 
     console.info(
-      `"${req.url}": {\n  l__User__connect_player__ReVa: {\n    status: ${l__User__connect_player__ReVa.status}\n    status_message: ${l__User__connect_player__ReVa.status_message}\n  }\n}`,
+      `"${req.url}": {\n  l__User__connect_player__ReVa: {\n    status: ${l__User__connect_player__ReVa.status}\n    statusText: ${l__User__connect_player__ReVa.statusText}\n  }\n}`,
     );
 
     req.respond({
       status: l__User__connect_player__ReVa.status,
-      body: JSON.stringify({
-        status_message: l__User__connect_player__ReVa.status_message,
-      }),
+      statusText: l__User__connect_player__ReVa.statusText,
+      body: "",
     });
   };
   const handle_req__disconnect_player = async (
@@ -114,14 +112,13 @@ async function g__server__handle_requests() {
     );
 
     console.info(
-      `"${req.url}": {\n  l__User__disconnect_player__ReVa: {\n    status: ${l__User__disconnect_player__ReVa.status}\n    status_message: ${l__User__disconnect_player__ReVa.status_message}\n  }\n}`,
+      `"${req.url}": {\n  l__User__disconnect_player__ReVa: {\n    status: ${l__User__disconnect_player__ReVa.status}\n    statusText: ${l__User__disconnect_player__ReVa.statusText}\n  }\n}`,
     );
 
     req.respond({
       status: l__User__disconnect_player__ReVa.status,
-      body: JSON.stringify({
-        status_message: l__User__disconnect_player__ReVa.status_message,
-      }),
+      statusText: l__User__disconnect_player__ReVa.statusText,
+      body: "",
     });
   };
   const handle_req__disconnect_user = async (
@@ -136,14 +133,13 @@ async function g__server__handle_requests() {
     );
 
     console.info(
-      `"${req.url}": {\n  l__User__disconnect_user__ReVa: {\n    status: ${l__User__disconnect_user__ReVa.status}\n    status_message: ${l__User__disconnect_user__ReVa.status_message}\n  }\n}`,
+      `"${req.url}": {\n  l__User__disconnect_user__ReVa: {\n    status: ${l__User__disconnect_user__ReVa.status}\n    statusText: ${l__User__disconnect_user__ReVa.statusText}\n  }\n}`,
     );
 
     req.respond({
       status: l__User__disconnect_user__ReVa.status,
-      body: JSON.stringify({
-        status_message: l__User__disconnect_user__ReVa.status_message,
-      }),
+      statusText: l__User__disconnect_user__ReVa.statusText,
+      body: "",
     });
   };
 
@@ -165,26 +161,27 @@ async function g__server__handle_requests() {
   for await (const req of g__server) {
     if (!g__server__isRunning) break;
 
-    if ((req.method === "GET") && req.url === "/") {
+    if ((req.method === "GET") && (req.url === "/")) {
       handle_req__GET__file(
         req,
         "text/html",
         "../CLIENT/index.html",
       );
-    } else if ((req.method === "GET") && req.url === "/css/main.css") {
+    } else if ((req.method === "GET") && (req.url === "/css/main.css")) {
       handle_req__GET__file(
         req,
         "text/css",
         "../CLIENT/css/main.css",
       );
-    } else if ((req.method === "GET") && req.url === "/css/canvas.css") {
+    } else if ((req.method === "GET") && (req.url === "/css/canvas.css")) {
       handle_req__GET__file(
         req,
         "text/css",
         "../CLIENT/css/canvas.css",
       );
     } else if (
-      (req.method === "GET") && req.url === "/API/GameObject_Character_Red.png"
+      (req.method === "GET") &&
+      (req.url === "/API/GameObject_Character_Red.png")
     ) {
       handle_req__GET__file(
         req,
@@ -193,7 +190,7 @@ async function g__server__handle_requests() {
       );
     } else if (
       (req.method === "GET") &&
-      req.url === "/API/GameObject_Character_Green.png"
+      (req.url === "/API/GameObject_Character_Green.png")
     ) {
       handle_req__GET__file(
         req,
@@ -201,7 +198,8 @@ async function g__server__handle_requests() {
         "../API/GameObject_Character_Green.png",
       );
     } else if (
-      (req.method === "GET") && req.url === "/API/GameObject_Character_Blue.png"
+      (req.method === "GET") &&
+      (req.url === "/API/GameObject_Character_Blue.png")
     ) {
       handle_req__GET__file(
         req,
@@ -280,7 +278,7 @@ async function g__server__handle_requests() {
       );
     } else if (
       (req.method === "GET") &&
-      req.url === "/ENGINE-CLIENT/from_CLIENT_msg_to_CLIENT_obj.js"
+      (req.url === "/ENGINE-CLIENT/from_CLIENT_msg_to_CLIENT_obj.js")
     ) {
       handle_req__GET__file(
         req,
@@ -288,7 +286,7 @@ async function g__server__handle_requests() {
         "../ENGINE-CLIENT/from_CLIENT_msg_to_CLIENT_obj.js",
       );
     } else if (
-      (req.method === "GET") && req.url === "/ENGINE-CLIENT/Character.js"
+      (req.method === "GET") && (req.url === "/ENGINE-CLIENT/Character.js")
     ) {
       handle_req__GET__file(
         req,
@@ -296,7 +294,7 @@ async function g__server__handle_requests() {
         "../ENGINE-CLIENT/Character.js",
       );
     } else if (
-      (req.method === "GET") && req.url === "/ENGINE-CLIENT/GameEntity.js"
+      (req.method === "GET") && (req.url === "/ENGINE-CLIENT/GameEntity.js")
     ) {
       handle_req__GET__file(
         req,
@@ -304,7 +302,8 @@ async function g__server__handle_requests() {
         "../ENGINE-CLIENT/GameEntity.js",
       );
     } else if (
-      (req.method === "GET") && req.url === "/ENGINE-CLIENT/GameEntityEvent.js"
+      (req.method === "GET") &&
+      (req.url === "/ENGINE-CLIENT/GameEntityEvent.js")
     ) {
       handle_req__GET__file(
         req,
@@ -312,7 +311,7 @@ async function g__server__handle_requests() {
         "../ENGINE-CLIENT/GameEntityEvent.js",
       );
     } else if (
-      (req.method === "GET") && req.url === "/ENGINE-CLIENT/GameMap.js"
+      (req.method === "GET") && (req.url === "/ENGINE-CLIENT/GameMap.js")
     ) {
       handle_req__GET__file(
         req,
@@ -320,28 +319,32 @@ async function g__server__handle_requests() {
         "../ENGINE-CLIENT/GameMap.js",
       );
     } else if (
-      (req.method === "GET") && req.url === "/ENGINE-CLIENT/GameObject.js"
+      (req.method === "GET") && (req.url === "/ENGINE-CLIENT/GameObject.js")
     ) {
       handle_req__GET__file(
         req,
         "text/javascript",
         "../ENGINE-CLIENT/GameObject.js",
       );
-    } else if ((req.method === "GET") && req.url === "/ENGINE-CLIENT/mod.js") {
+    } else if (
+      (req.method === "GET") && (req.url === "/ENGINE-CLIENT/mod.js")
+    ) {
       handle_req__GET__file(
         req,
         "text/javascript",
         "../ENGINE-CLIENT/mod.js",
       );
     } else if (
-      (req.method === "GET") && req.url === "/ENGINE-CLIENT/Player.js"
+      (req.method === "GET") && (req.url === "/ENGINE-CLIENT/Player.js")
     ) {
       handle_req__GET__file(
         req,
         "text/javascript",
         "../ENGINE-CLIENT/Player.js",
       );
-    } else if ((req.method === "GET") && req.url === "/ENGINE-CLIENT/Stat.js") {
+    } else if (
+      (req.method === "GET") && (req.url === "/ENGINE-CLIENT/Stat.js")
+    ) {
       handle_req__GET__file(
         req,
         "text/javascript",
@@ -349,7 +352,7 @@ async function g__server__handle_requests() {
       );
     } else if (
       (req.method === "GET") &&
-      req.url === "/ENGINE-CLIENT/WS_msg_GameEntity.js"
+      (req.url === "/ENGINE-CLIENT/WS_msg_GameEntity.js")
     ) {
       handle_req__GET__file(
         req,
@@ -357,21 +360,23 @@ async function g__server__handle_requests() {
         "../ENGINE-CLIENT/WS_msg_GameEntity.js",
       );
     } else if (
-      (req.method === "GET") && req.url === "/ENGINE-CLIENT/WS_msg_Player.js"
+      (req.method === "GET") && (req.url === "/ENGINE-CLIENT/WS_msg_Player.js")
     ) {
       handle_req__GET__file(
         req,
         "text/javascript",
         "../ENGINE-CLIENT/WS_msg_Player.js",
       );
-    } else if ((req.method === "GET") && req.url === "/vendor/utility/mod.js") {
+    } else if (
+      (req.method === "GET") && (req.url === "/vendor/utility/mod.js")
+    ) {
       handle_req__GET__file(
         req,
         "text/javascript",
         "../vendor/utility/mod.js",
       );
     } else if (
-      (req.method === "GET") && req.url === "/vendor/utility/Mutex.js"
+      (req.method === "GET") && (req.url === "/vendor/utility/Mutex.js")
     ) {
       handle_req__GET__file(
         req,
@@ -379,7 +384,7 @@ async function g__server__handle_requests() {
         "../vendor/utility/Mutex.js",
       );
     } else if (
-      (req.method === "GET") && req.url === "/vendor/utility/sleep.js"
+      (req.method === "GET") && (req.url === "/vendor/utility/sleep.js")
     ) {
       handle_req__GET__file(
         req,
@@ -387,7 +392,7 @@ async function g__server__handle_requests() {
         "../vendor/utility/sleep.js",
       );
     } else if (
-      (req.method === "GET") && req.url === "/vendor/utility/time_stamp.js"
+      (req.method === "GET") && (req.url === "/vendor/utility/time_stamp.js")
     ) {
       handle_req__GET__file(
         req,
@@ -397,7 +402,8 @@ async function g__server__handle_requests() {
     } else {
       req.respond({
         status: Status.NotFound,
-        body: JSON.stringify({ status_message: "Request Not Found" }),
+        statusText: "Request Not Found",
+        body: "",
       });
     }
   }

@@ -80,7 +80,7 @@ export class GameMap {
     hasBeenDisconnected: boolean;
 
     status?: Status;
-    status_message?: string;
+    statusText?: string;
 
     constructor() {
       this.hasBeenDisconnected = false;
@@ -123,7 +123,7 @@ export class GameMap {
     g__GameMaps: Map<GameMap__ID, GameMap>,
     p__GameMap__ID: GameMap__ID,
     player: Player,
-  ): Promise<{ status: Status; status_message: string }> {
+  ): Promise<{ status: Status; statusText: string }> {
     let l__GameMap: GameMap;
 
     let l__GameMap__connect__Player__calls_in_progress__mutex__unlock:
@@ -155,7 +155,7 @@ export class GameMap {
     if (l__GameMap__wasAlreadyClosed) {
       return ({
         status: Status.NotFound,
-        status_message:
+        statusText:
           `The GameMap with GameMap__ID ${p__GameMap__ID} wasn't found. Could not connect the Player with eeID ${player.eeID}.`,
       });
     } else {
@@ -167,7 +167,7 @@ export class GameMap {
       --l__GameMap!.#connect__Player__calls_in_progress;
       return ({
         status: Status.OK,
-        status_message:
+        statusText:
           `The Player with eeID ${player.eeID} has been connected to the GameMap with GameMap__ID ${p__GameMap__ID}.`,
       });
     }
@@ -178,7 +178,7 @@ export class GameMap {
   static async disconnect__Player(
     g__GameMaps: Map<GameMap__ID, GameMap>,
     eeID: number,
-  ): Promise<{ status: Status; status_message: string }> {
+  ): Promise<{ status: Status; statusText: string }> {
     let l__GameMap: GameMap;
 
     const l__GameMap__IDs = [...g__GameMaps.keys()];
@@ -238,8 +238,7 @@ export class GameMap {
     if (found == false) {
       return ({
         status: Status.NotFound,
-        status_message:
-          `The Player with eeID ${eeID} wasn't found on any GameMap.`,
+        statusText: `The Player with eeID ${eeID} wasn't found on any GameMap.`,
       });
     } else {
       l__GameMap!.#m__PetitionsToDisconnectPlayer_Map.set(
@@ -263,7 +262,7 @@ export class GameMap {
       --l__GameMap!.#disconnect__Player__calls_in_progress;
       return ({
         status: l__PetitionToDisconnectPlayer.status!,
-        status_message: l__PetitionToDisconnectPlayer.status_message!,
+        statusText: l__PetitionToDisconnectPlayer.statusText!,
       });
     }
   }
@@ -349,7 +348,7 @@ export class GameMap {
           );
 
           l__PetitionToDisconnectPlayer.status = Status.OK;
-          l__PetitionToDisconnectPlayer.status_message =
+          l__PetitionToDisconnectPlayer.statusText =
             `The Player with eeID ${eeID} was disconnected from the GameMap with GameMap__ID ${this.m__GameMap__ID}.`;
 
           l__PetitionToDisconnectPlayer.hasBeenDisconnected = true;

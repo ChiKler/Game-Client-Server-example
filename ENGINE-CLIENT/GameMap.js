@@ -75,7 +75,7 @@ export class GameMap {
 
     if (elapsed_ms() > max_ms) {
       console.warn(
-        `The GameMap with ID ${this.m__GameMap_ID} took ${(elapsed_ms() -
+        `The GameMap with ID ${this.#m__GameMap_ID} took ${(elapsed_ms() -
           max_ms)}ms longer updating than it should have.`,
       );
     } else if (elapsed_ms() < min_ms) {

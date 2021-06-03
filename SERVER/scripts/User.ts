@@ -47,7 +47,7 @@ export class User {
     uuID: string,
   ): Promise<{
     status: Status;
-    status_message: string;
+    statusText: string;
   }> {
     const ssID = v4.generate();
 
@@ -78,13 +78,12 @@ export class User {
     if (wasUserAlreadyConnected) {
       return ({
         status: Status.OK,
-        status_message:
-          `The User with uuID ${uuID} had already been connected.`,
+        statusText: `The User with uuID ${uuID} had already been connected.`,
       });
     } else {
       return ({
         status: Status.OK,
-        status_message: `The User with uuID ${uuID} has been connected.`,
+        statusText: `The User with uuID ${uuID} has been connected.`,
       });
     }
   }
@@ -93,13 +92,13 @@ export class User {
     g__Users: Map<string, User>,
     uuID: string,
     ws_player__new: WebSocket,
-  ): Promise<{ status: Status; status_message: string }> {
+  ): Promise<{ status: Status; statusText: string }> {
     const user = g__Users.get(uuID);
 
     if (user == undefined) {
       return ({
         status: Status.Conflict,
-        status_message: `The User with uuID ${uuID} wasn't connected.`,
+        statusText: `The User with uuID ${uuID} wasn't connected.`,
       });
     } else {
       let user__isConnected__mutex__unlock: () => void;
@@ -109,7 +108,7 @@ export class User {
       } catch {
         return ({
           status: Status.Conflict,
-          status_message: `The User with uuID ${uuID} wasn't connected.`,
+          statusText: `The User with uuID ${uuID} wasn't connected.`,
         });
       }
 
@@ -118,7 +117,7 @@ export class User {
       user__isConnected__mutex__unlock();
       return ({
         status: Status.OK,
-        status_message:
+        statusText:
           `The User with uuID ${uuID} has been assigned a WebSocket to its "ws_player" property.`,
       });
     }
@@ -128,13 +127,13 @@ export class User {
     p__GameMap__ID: GameMap__ID,
     g__Users: Map<string, User>,
     uuID: string,
-  ): Promise<{ status: Status; status_message: string }> {
+  ): Promise<{ status: Status; statusText: string }> {
     const user = g__Users.get(uuID);
 
     if (user == undefined) {
       return ({
         status: Status.Conflict,
-        status_message: `The User with uuID ${uuID} wasn't connected.`,
+        statusText: `The User with uuID ${uuID} wasn't connected.`,
       });
     } else {
       let user__isConnected__mutex__unlock: () => void;
@@ -144,7 +143,7 @@ export class User {
       } catch {
         return ({
           status: Status.Conflict,
-          status_message: `The User with uuID ${uuID} wasn't connected.`,
+          statusText: `The User with uuID ${uuID} wasn't connected.`,
         });
       }
 
@@ -152,13 +151,13 @@ export class User {
         user__isConnected__mutex__unlock();
         return ({
           status: Status.Conflict,
-          status_message: `The User with uuID ${uuID} wasn't connected.`,
+          statusText: `The User with uuID ${uuID} wasn't connected.`,
         });
       } else if (user!.#ws_player == undefined) {
         user__isConnected__mutex__unlock();
         return ({
           status: Status.Conflict,
-          status_message:
+          statusText:
             `The User with uuID ${uuID} doesn't have a WebSocket for their Player.`,
         });
       } else {
@@ -206,7 +205,7 @@ export class User {
           user__isConnected__mutex__unlock();
           return ({
             status: l__GameMap__connect_player__ReVa.status,
-            status_message: l__GameMap__connect_player__ReVa.status_message,
+            statusText: l__GameMap__connect_player__ReVa.statusText,
           });
         } else {
           user!.#player!.ws_player = user!.#ws_player!;
@@ -219,7 +218,7 @@ export class User {
           user__isConnected__mutex__unlock();
           return ({
             status: Status.OK,
-            status_message:
+            statusText:
               `The User with uuID ${uuID} already had their Player connected.`,
           });
         }
@@ -231,13 +230,13 @@ export class User {
     g__GameMaps: Map<GameMap__ID, GameMap>,
     g__Users: Map<string, User>,
     uuID: string,
-  ): Promise<{ status: Status; status_message: string }> {
+  ): Promise<{ status: Status; statusText: string }> {
     const user = g__Users.get(uuID);
 
     if (user == undefined) {
       return ({
         status: Status.Conflict,
-        status_message: `The User with uuID ${uuID} wasn't connected.`,
+        statusText: `The User with uuID ${uuID} wasn't connected.`,
       });
     } else {
       let user__isConnected__mutex__unlock: () => void;
@@ -247,7 +246,7 @@ export class User {
       } catch {
         return ({
           status: Status.Conflict,
-          status_message: `The User with uuID ${uuID} wasn't connected.`,
+          statusText: `The User with uuID ${uuID} wasn't connected.`,
         });
       }
 
@@ -255,13 +254,13 @@ export class User {
         user__isConnected__mutex__unlock();
         return ({
           status: Status.Conflict,
-          status_message: `The User with uuID ${uuID} wasn't connected.`,
+          statusText: `The User with uuID ${uuID} wasn't connected.`,
         });
       } else if (user!.#player == undefined) {
         user__isConnected__mutex__unlock();
         return ({
           status: Status.Conflict,
-          status_message:
+          statusText:
             `The Player of the User with uuID ${uuID} wasn't connected.`,
         });
       } else {
@@ -274,7 +273,7 @@ export class User {
         user__isConnected__mutex__unlock();
         return ({
           status: l__GameMap__disconnect_player__ReVa.status,
-          status_message: l__GameMap__disconnect_player__ReVa.status_message,
+          statusText: l__GameMap__disconnect_player__ReVa.statusText,
         });
       }
     }
@@ -283,13 +282,13 @@ export class User {
     g__GameMaps: Map<GameMap__ID, GameMap>,
     g__Users: Map<string, User>,
     uuID: string,
-  ): Promise<{ status: Status; status_message: string }> {
+  ): Promise<{ status: Status; statusText: string }> {
     const user = g__Users.get(uuID);
 
     if (user == undefined) {
       return ({
         status: Status.Conflict,
-        status_message: `The User with uuID ${uuID} wasn't connected.`,
+        statusText: `The User with uuID ${uuID} wasn't connected.`,
       });
     } else {
       let user__isConnected__mutex__unlock: () => void;
@@ -299,7 +298,7 @@ export class User {
       } catch {
         return ({
           status: Status.Conflict,
-          status_message: `The User with uuID ${uuID} wasn't connected.`,
+          statusText: `The User with uuID ${uuID} wasn't connected.`,
         });
       }
 
@@ -307,7 +306,7 @@ export class User {
         user__isConnected__mutex__unlock();
         return ({
           status: Status.Conflict,
-          status_message: `The User with uuID ${uuID} wasn't connected.`,
+          statusText: `The User with uuID ${uuID} wasn't connected.`,
         });
       } else {
         user__isConnected__mutex__unlock();
@@ -327,13 +326,13 @@ export class User {
           user__isConnected__mutex__unlock();
           return ({
             status: Status.OK,
-            status_message: `The User with uuID ${uuID} has been disconnected.`,
+            statusText: `The User with uuID ${uuID} has been disconnected.`,
           });
         } else {
           user__isConnected__mutex__unlock();
           return ({
             status: l__User__disconnect_player__ReVa.status,
-            status_message: l__User__disconnect_player__ReVa.status_message,
+            statusText: l__User__disconnect_player__ReVa.statusText,
           });
         }
       }
