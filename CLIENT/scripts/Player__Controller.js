@@ -23,7 +23,7 @@ const controller_mouse = {
   GameEntityEvent__target_lock: { button: 0 },
 };
 
-/*abstract */ class Player_Controller {
+/*abstract */ class Player__Controller {
   static move_forward__begin(evt) {
     if (!g__Player.get().Event__move_forward__handle_fn__condt__begin) {
       return;
@@ -66,15 +66,15 @@ const controller_mouse = {
 
 window.addEventListener("mousedown", (evt) => // Update when mouse or player moves (add nested event listener (must be on canvas for mouse relative position))
 {
-  //Player_Controller.move_towards__begin(evt);
+  //Player__Controller.move_towards__begin(evt);
 });
 window.addEventListener("mouseup", (evt) => {
-  //Player_Controller.move_towards__close(evt);
+  //Player__Controller.move_towards__close(evt);
 });
 
 window.addEventListener("keydown", (evt) => {
-  Player_Controller.move_forward__begin(evt);
+  Player__Controller.move_forward__begin(evt);
 });
 window.addEventListener("keyup", (evt) => {
-  Player_Controller.move_forward__close(evt);
+  Player__Controller.move_forward__close(evt);
 });

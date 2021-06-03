@@ -75,7 +75,7 @@ export const g__ws_chat = {
   set: function (p__instance) {
     this.m__instance = WS__make(g__server_address, g__uuID, "chat");
 
-    //Chat.recv__WS_msg_Chat__Message(g__ws_chat);
+    //WS_msg_Chat.recv__WS_msg_Chat__Message(g__ws_chat);
   },
 };
 
