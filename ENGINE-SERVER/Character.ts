@@ -16,7 +16,8 @@ export class Character extends GameObject {
     p__GameObject__Args: GameObject__Args,
     p__Character__Args: Character__Args,
   ) {
-    p__GameObject__Args.Stat__speed = p__GameObject__Args.Stat__speed ||
+    p__GameObject__Args.Stat_MovementSpeed =
+      p__GameObject__Args.Stat_MovementSpeed ||
       new Stat({ value__base: 300 });
 
     super(p__GameObject__Args);

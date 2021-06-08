@@ -21,18 +21,20 @@ export interface GameEntityEvent__ReTy {
   status: number;
 }
 
-export enum GameEntityEvent_ID {
+export enum GameEntityEvent__ID {
   move_towards,
   move_forward,
   move_backward,
   move_left,
   move_right,
+  steer_left,
+  steer_right,
 }
 
 interface GameEntityEvent<
   GameEntityEvent__Args__Ty extends GameEntityEvent__Args,
 > {
-  id: GameEntityEvent_ID;
+  id: GameEntityEvent__ID;
   data: GameEntityEvent__Data<GameEntityEvent__Args__Ty>;
 }
 
@@ -194,7 +196,7 @@ export interface GameEntityEvent__move_forward__Args
   extends GameEntityEvent__Args {
   elapsed_ms?: number;
   duration_ms?: number;
-  Stat__speed?: Stat;
+  Stat_MovementSpeed?: Stat;
 }
 export interface GameEntityEvent__move_forward__ReTy
   extends GameEntityEvent__ReTy {
@@ -209,12 +211,10 @@ export enum GameEntityEvent__move_forward__close__Status {
 export enum GameEntityEvent__move_forward__logic__Status {
   OK,
 }
-
 export interface GameEntityEvent__move_forward
   extends GameEntityEvent<GameEntityEvent__move_forward__Args> {
   //
 }
-
 function GameEntityEvent__move_forward__Args__check_props(
   obj: object,
 ): obj is GameEntityEvent__move_forward__Args {
@@ -227,12 +227,231 @@ function GameEntityEvent__move_forward__Args__check_props(
       ((typeof obj.duration_ms) == "number"))
   ));
 }
-
 export function GameEntityEvent__move_forward__check_props(
   obj: object,
 ): obj is GameEntityEvent__move_forward {
   return (GameEntityEvent__check_props<GameEntityEvent__move_forward__Args>(
     obj,
     GameEntityEvent__move_forward__Args__check_props,
+  ));
+}
+
+export interface GameEntityEvent__move_backward__Args
+  extends GameEntityEvent__Args {
+  elapsed_ms?: number;
+  duration_ms?: number;
+  Stat_MovementSpeed?: Stat;
+}
+export interface GameEntityEvent__move_backward__ReTy
+  extends GameEntityEvent__ReTy {
+  //
+}
+export enum GameEntityEvent__move_backward__begin__Status {
+  OK,
+}
+export enum GameEntityEvent__move_backward__close__Status {
+  OK,
+}
+export enum GameEntityEvent__move_backward__logic__Status {
+  OK,
+}
+export interface GameEntityEvent__move_backward
+  extends GameEntityEvent<GameEntityEvent__move_backward__Args> {
+  //
+}
+function GameEntityEvent__move_backward__Args__check_props(
+  obj: object,
+): obj is GameEntityEvent__move_backward__Args {
+  return ((Object.keys(obj).length == 0) || (
+    (Object.keys(obj).length == 1) &&
+    (obj.hasOwnProperty("duration_ms")) &&
+    // @ts-ignore
+    (((typeof obj.elapsed_ms) == "undefined") ||
+      // @ts-ignore
+      ((typeof obj.duration_ms) == "number"))
+  ));
+}
+export function GameEntityEvent__move_backward__check_props(
+  obj: object,
+): obj is GameEntityEvent__move_backward {
+  return (GameEntityEvent__check_props<GameEntityEvent__move_backward__Args>(
+    obj,
+    GameEntityEvent__move_backward__Args__check_props,
+  ));
+}
+
+export interface GameEntityEvent__move_left__Args
+  extends GameEntityEvent__Args {
+  elapsed_ms?: number;
+  duration_ms?: number;
+  Stat_MovementSpeed?: Stat;
+}
+export interface GameEntityEvent__move_left__ReTy
+  extends GameEntityEvent__ReTy {
+  //
+}
+export enum GameEntityEvent__move_left__begin__Status {
+  OK,
+}
+export enum GameEntityEvent__move_left__close__Status {
+  OK,
+}
+export enum GameEntityEvent__move_left__logic__Status {
+  OK,
+}
+export interface GameEntityEvent__move_left
+  extends GameEntityEvent<GameEntityEvent__move_left__Args> {
+  //
+}
+function GameEntityEvent__move_left__Args__check_props(
+  obj: object,
+): obj is GameEntityEvent__move_left__Args {
+  return ((Object.keys(obj).length == 0) || (
+    (Object.keys(obj).length == 1) &&
+    (obj.hasOwnProperty("duration_ms")) &&
+    // @ts-ignore
+    (((typeof obj.elapsed_ms) == "undefined") ||
+      // @ts-ignore
+      ((typeof obj.duration_ms) == "number"))
+  ));
+}
+export function GameEntityEvent__move_left__check_props(
+  obj: object,
+): obj is GameEntityEvent__move_left {
+  return (GameEntityEvent__check_props<GameEntityEvent__move_left__Args>(
+    obj,
+    GameEntityEvent__move_left__Args__check_props,
+  ));
+}
+
+export interface GameEntityEvent__move_right__Args
+  extends GameEntityEvent__Args {
+  elapsed_ms?: number;
+  duration_ms?: number;
+  Stat_MovementSpeed?: Stat;
+}
+export interface GameEntityEvent__move_right__ReTy
+  extends GameEntityEvent__ReTy {
+  //
+}
+export enum GameEntityEvent__move_right__begin__Status {
+  OK,
+}
+export enum GameEntityEvent__move_right__close__Status {
+  OK,
+}
+export enum GameEntityEvent__move_right__logic__Status {
+  OK,
+}
+export interface GameEntityEvent__move_right
+  extends GameEntityEvent<GameEntityEvent__move_right__Args> {
+  //
+}
+function GameEntityEvent__move_right__Args__check_props(
+  obj: object,
+): obj is GameEntityEvent__move_right__Args {
+  return ((Object.keys(obj).length == 0) || (
+    (Object.keys(obj).length == 1) &&
+    (obj.hasOwnProperty("duration_ms")) &&
+    // @ts-ignore
+    (((typeof obj.elapsed_ms) == "undefined") ||
+      // @ts-ignore
+      ((typeof obj.duration_ms) == "number"))
+  ));
+}
+export function GameEntityEvent__move_right__check_props(
+  obj: object,
+): obj is GameEntityEvent__move_right {
+  return (GameEntityEvent__check_props<GameEntityEvent__move_right__Args>(
+    obj,
+    GameEntityEvent__move_right__Args__check_props,
+  ));
+}
+
+export interface GameEntityEvent__steer_left__Args
+  extends GameEntityEvent__Args {
+  elapsed_ms?: number;
+  duration_ms?: number;
+  Stat_SteeringSpeed?: Stat;
+}
+export interface GameEntityEvent__steer_left__ReTy
+  extends GameEntityEvent__ReTy {
+  //
+}
+export enum GameEntityEvent__steer_left__begin__Status {
+  OK,
+}
+export enum GameEntityEvent__steer_left__close__Status {
+  OK,
+}
+export enum GameEntityEvent__steer_left__logic__Status {
+  OK,
+}
+export interface GameEntityEvent__steer_left
+  extends GameEntityEvent<GameEntityEvent__steer_left__Args> {
+  //
+}
+function GameEntityEvent__steer_left__Args__check_props(
+  obj: object,
+): obj is GameEntityEvent__steer_left__Args {
+  return ((Object.keys(obj).length == 0) || (
+    (Object.keys(obj).length == 1) &&
+    (obj.hasOwnProperty("duration_ms")) &&
+    // @ts-ignore
+    (((typeof obj.elapsed_ms) == "undefined") ||
+      // @ts-ignore
+      ((typeof obj.duration_ms) == "number"))
+  ));
+}
+export function GameEntityEvent__steer_left__check_props(
+  obj: object,
+): obj is GameEntityEvent__steer_left {
+  return (GameEntityEvent__check_props<GameEntityEvent__steer_left__Args>(
+    obj,
+    GameEntityEvent__steer_left__Args__check_props,
+  ));
+}
+
+export interface GameEntityEvent__steer_right__Args
+  extends GameEntityEvent__Args {
+  elapsed_ms?: number;
+  duration_ms?: number;
+  Stat_SteeringSpeed?: Stat;
+}
+export interface GameEntityEvent__steer_right__ReTy
+  extends GameEntityEvent__ReTy {
+  //
+}
+export enum GameEntityEvent__steer_right__begin__Status {
+  OK,
+}
+export enum GameEntityEvent__steer_right__close__Status {
+  OK,
+}
+export enum GameEntityEvent__steer_right__logic__Status {
+  OK,
+}
+export interface GameEntityEvent__steer_right
+  extends GameEntityEvent<GameEntityEvent__steer_right__Args> {
+  //
+}
+function GameEntityEvent__steer_right__Args__check_props(
+  obj: object,
+): obj is GameEntityEvent__steer_right__Args {
+  return ((Object.keys(obj).length == 0) || (
+    (Object.keys(obj).length == 1) &&
+    (obj.hasOwnProperty("duration_ms")) &&
+    // @ts-ignore
+    (((typeof obj.elapsed_ms) == "undefined") ||
+      // @ts-ignore
+      ((typeof obj.duration_ms) == "number"))
+  ));
+}
+export function GameEntityEvent__steer_right__check_props(
+  obj: object,
+): obj is GameEntityEvent__steer_right {
+  return (GameEntityEvent__check_props<GameEntityEvent__steer_right__Args>(
+    obj,
+    GameEntityEvent__steer_right__Args__check_props,
   ));
 }

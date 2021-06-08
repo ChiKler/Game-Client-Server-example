@@ -286,7 +286,9 @@ export class GameMap {
           );
         }
       });
-    } catch {}
+    } catch {
+      // Either WS could be closed.
+    }
 
     for await (const msg_str of ws_player) {
       if (isWebSocketCloseEvent(msg_str)) {
@@ -295,6 +297,26 @@ export class GameMap {
         break;
       } else {
         WS_msg_GameEntity.recv__WS_msg_GameEntity__move_forward(
+          p__Player,
+          <string> msg_str,
+        );
+        WS_msg_GameEntity.recv__WS_msg_GameEntity__move_backward(
+          p__Player,
+          <string> msg_str,
+        );
+        WS_msg_GameEntity.recv__WS_msg_GameEntity__move_left(
+          p__Player,
+          <string> msg_str,
+        );
+        WS_msg_GameEntity.recv__WS_msg_GameEntity__move_right(
+          p__Player,
+          <string> msg_str,
+        );
+        WS_msg_GameEntity.recv__WS_msg_GameEntity__steer_left(
+          p__Player,
+          <string> msg_str,
+        );
+        WS_msg_GameEntity.recv__WS_msg_GameEntity__steer_right(
           p__Player,
           <string> msg_str,
         );
@@ -350,7 +372,7 @@ export class GameMap {
             `The Player with eeID ${eeID} was disconnected from the GameMap with GameMap__ID ${this.m__GameMap__ID}.`;
 
           l__PetitionToDisconnectPlayer.hasBeenDisconnected = true;
-        } catch (err) {
+        } catch {
           // this happens when m__PetitionsToDisconnectPlayer_Map.get(eeID)
           // is undefined because it got deleted at GameMap.disconnect_player()
           // (do nothing with the error, just catch it)

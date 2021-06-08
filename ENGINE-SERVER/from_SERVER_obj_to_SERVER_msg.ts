@@ -27,15 +27,13 @@ export interface SERVER_msg__Character {
   type: string;
   args: {
     GameObject__Args: {
-      posX: number;
-      posY: number;
-      posR: number;
+      Pos: { X: number; Y: number; R: number };
 
-      forwardR: number;
-
-      Stat__speed: SERVER_msg__Stat;
+      Stat_MovementSpeed: SERVER_msg__Stat;
+      Stat_SteeringSpeed: SERVER_msg__Stat;
 
       isMovementImpaired: boolean;
+      isSteeringImpaired: boolean;
     };
     Character__Args: {
       Character_Skin: Character_Skin;
@@ -53,20 +51,21 @@ export function from_SERVER_obj_to_SERVER_msg__Character(
     args: {
       GameObject__Args: {
         // @ts-ignore
-        posX: p__Character.posX,
-        // @ts-ignore
-        posY: p__Character.posY,
-        // @ts-ignore
-        posR: p__Character.posR,
+        Pos: p__Character.Pos,
 
         // @ts-ignore
-        forwardR: p__Character.forwardR,
-
+        Stat_MovementSpeed: Stat.to_SERVER_msg(
+          p__Character.m__Stat_MovementSpeed,
+        ),
         // @ts-ignore
-        Stat__speed: Stat.to_SERVER_msg(p__Character.m__Stat__speed),
+        Stat_SteeringSpeed: Stat.to_SERVER_msg(
+          p__Character.m__Stat_SteeringSpeed,
+        ),
 
         // @ts-ignore
         isMovementImpaired: p__Character.isMovementImpaired,
+        // @ts-ignore
+        isSteeringImpaired: p__Character.isSteeringImpaired,
       },
       Character__Args: {
         Character_Skin: p__Character.m__Character_Skin,

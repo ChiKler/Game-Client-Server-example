@@ -169,10 +169,7 @@ export class User {
               eeID: await GameEntity.eeID__generate(1),
               GameObject: new Character(
                 {
-                  posX: 0,
-                  posY: 0,
-                  posR: 0,
-                  forwardR: -Math.PI / 2,
+                  Pos: { X: 0, Y: 0, R: 0 },
                 },
                 {
                   Character_Skin: (

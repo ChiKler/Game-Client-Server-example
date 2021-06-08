@@ -1,11 +1,15 @@
-export var GameEntityEvent_ID;
-(function (GameEntityEvent_ID) {
-  GameEntityEvent_ID[GameEntityEvent_ID["move_towards"] = 0] = "move_towards";
-  GameEntityEvent_ID[GameEntityEvent_ID["move_forward"] = 1] = "move_forward";
-  GameEntityEvent_ID[GameEntityEvent_ID["move_backward"] = 2] = "move_backward";
-  GameEntityEvent_ID[GameEntityEvent_ID["move_left"] = 3] = "move_left";
-  GameEntityEvent_ID[GameEntityEvent_ID["move_right"] = 4] = "move_right";
-})(GameEntityEvent_ID || (GameEntityEvent_ID = {}));
+export var GameEntityEvent__ID;
+(function (GameEntityEvent__ID) {
+  GameEntityEvent__ID[GameEntityEvent__ID["move_towards"] = 0] = "move_towards";
+  GameEntityEvent__ID[GameEntityEvent__ID["move_forward"] = 1] = "move_forward";
+  GameEntityEvent__ID[GameEntityEvent__ID["move_backward"] = 2] =
+    "move_backward";
+  GameEntityEvent__ID[GameEntityEvent__ID["move_left"] = 3] = "move_left";
+  GameEntityEvent__ID[GameEntityEvent__ID["move_right"] = 4] = "move_right";
+  "move_backward";
+  GameEntityEvent__ID[GameEntityEvent__ID["steer_left"] = 5] = "steer_left";
+  GameEntityEvent__ID[GameEntityEvent__ID["steer_right"] = 6] = "steer_right";
+})(GameEntityEvent__ID || (GameEntityEvent__ID = {}));
 
 export class GameEntityEvent__Buffer_In {
   #m__GameEntityEvent__Array;
@@ -94,12 +98,170 @@ export function GameEntityEvent__handle_fn(
   return (l__ReVa);
 }
 
-export var GameEntityEvent__move_forward__Status;
-(function (GameEntityEvent__move_forward__Status) {
-  GameEntityEvent__move_forward__Status[
-    GameEntityEvent__move_forward__Status["OK"] = 0
+export var GameEntityEvent__move_forward__begin__Status;
+(function (GameEntityEvent__move_forward__begin__Status) {
+  GameEntityEvent__move_forward__begin__Status[
+    GameEntityEvent__move_forward__begin__Status["OK"] = 0
   ] = "OK";
 })(
-  GameEntityEvent__move_forward__Status ||
-    (GameEntityEvent__move_forward__Status = {}),
+  GameEntityEvent__move_forward__begin__Status ||
+    (GameEntityEvent__move_forward__begin__Status = {}),
+);
+export var GameEntityEvent__move_forward__close__Status;
+(function (GameEntityEvent__move_forward__close__Status) {
+  GameEntityEvent__move_forward__close__Status[
+    GameEntityEvent__move_forward__close__Status["OK"] = 0
+  ] = "OK";
+})(
+  GameEntityEvent__move_forward__close__Status ||
+    (GameEntityEvent__move_forward__close__Status = {}),
+);
+export var GameEntityEvent__move_forward__logic__Status;
+(function (GameEntityEvent__move_forward__logic__Status) {
+  GameEntityEvent__move_forward__logic__Status[
+    GameEntityEvent__move_forward__logic__Status["OK"] = 0
+  ] = "OK";
+})(
+  GameEntityEvent__move_forward__logic__Status ||
+    (GameEntityEvent__move_forward__logic__Status = {}),
+);
+
+export var GameEntityEvent__move_backward__begin__Status;
+(function (GameEntityEvent__move_backward__begin__Status) {
+  GameEntityEvent__move_backward__begin__Status[
+    GameEntityEvent__move_backward__begin__Status["OK"] = 0
+  ] = "OK";
+})(
+  GameEntityEvent__move_backward__begin__Status ||
+    (GameEntityEvent__move_backward__begin__Status = {}),
+);
+export var GameEntityEvent__move_backward__close__Status;
+(function (GameEntityEvent__move_backward__close__Status) {
+  GameEntityEvent__move_backward__close__Status[
+    GameEntityEvent__move_backward__close__Status["OK"] = 0
+  ] = "OK";
+})(
+  GameEntityEvent__move_backward__close__Status ||
+    (GameEntityEvent__move_backward__close__Status = {}),
+);
+export var GameEntityEvent__move_backward__logic__Status;
+(function (GameEntityEvent__move_backward__logic__Status) {
+  GameEntityEvent__move_backward__logic__Status[
+    GameEntityEvent__move_backward__logic__Status["OK"] = 0
+  ] = "OK";
+})(
+  GameEntityEvent__move_backward__logic__Status ||
+    (GameEntityEvent__move_backward__logic__Status = {}),
+);
+
+export var GameEntityEvent__move_left__begin__Status;
+(function (GameEntityEvent__move_left__begin__Status) {
+  GameEntityEvent__move_left__begin__Status[
+    GameEntityEvent__move_left__begin__Status["OK"] = 0
+  ] = "OK";
+})(
+  GameEntityEvent__move_left__begin__Status ||
+    (GameEntityEvent__move_left__begin__Status = {}),
+);
+export var GameEntityEvent__move_left__close__Status;
+(function (GameEntityEvent__move_left__close__Status) {
+  GameEntityEvent__move_left__close__Status[
+    GameEntityEvent__move_left__close__Status["OK"] = 0
+  ] = "OK";
+})(
+  GameEntityEvent__move_left__close__Status ||
+    (GameEntityEvent__move_left__close__Status = {}),
+);
+export var GameEntityEvent__move_left__logic__Status;
+(function (GameEntityEvent__move_left__logic__Status) {
+  GameEntityEvent__move_left__logic__Status[
+    GameEntityEvent__move_left__logic__Status["OK"] = 0
+  ] = "OK";
+})(
+  GameEntityEvent__move_left__logic__Status ||
+    (GameEntityEvent__move_left__logic__Status = {}),
+);
+
+export var GameEntityEvent__move_right__begin__Status;
+(function (GameEntityEvent__move_right__begin__Status) {
+  GameEntityEvent__move_right__begin__Status[
+    GameEntityEvent__move_right__begin__Status["OK"] = 0
+  ] = "OK";
+})(
+  GameEntityEvent__move_right__begin__Status ||
+    (GameEntityEvent__move_right__begin__Status = {}),
+);
+export var GameEntityEvent__move_right__close__Status;
+(function (GameEntityEvent__move_right__close__Status) {
+  GameEntityEvent__move_right__close__Status[
+    GameEntityEvent__move_right__close__Status["OK"] = 0
+  ] = "OK";
+})(
+  GameEntityEvent__move_right__close__Status ||
+    (GameEntityEvent__move_right__close__Status = {}),
+);
+export var GameEntityEvent__move_right__logic__Status;
+(function (GameEntityEvent__move_right__logic__Status) {
+  GameEntityEvent__move_right__logic__Status[
+    GameEntityEvent__move_right__logic__Status["OK"] = 0
+  ] = "OK";
+})(
+  GameEntityEvent__move_right__logic__Status ||
+    (GameEntityEvent__move_right__logic__Status = {}),
+);
+
+export var GameEntityEvent__steer_left__begin__Status;
+(function (GameEntityEvent__steer_left__begin__Status) {
+  GameEntityEvent__steer_left__begin__Status[
+    GameEntityEvent__steer_left__begin__Status["OK"] = 0
+  ] = "OK";
+})(
+  GameEntityEvent__steer_left__begin__Status ||
+    (GameEntityEvent__steer_left__begin__Status = {}),
+);
+export var GameEntityEvent__steer_left__close__Status;
+(function (GameEntityEvent__steer_left__close__Status) {
+  GameEntityEvent__steer_left__close__Status[
+    GameEntityEvent__steer_left__close__Status["OK"] = 0
+  ] = "OK";
+})(
+  GameEntityEvent__steer_left__close__Status ||
+    (GameEntityEvent__steer_left__close__Status = {}),
+);
+export var GameEntityEvent__steer_left__logic__Status;
+(function (GameEntityEvent__steer_left__logic__Status) {
+  GameEntityEvent__steer_left__logic__Status[
+    GameEntityEvent__steer_left__logic__Status["OK"] = 0
+  ] = "OK";
+})(
+  GameEntityEvent__steer_left__logic__Status ||
+    (GameEntityEvent__steer_left__logic__Status = {}),
+);
+
+export var GameEntityEvent__steer_right__begin__Status;
+(function (GameEntityEvent__steer_right__begin__Status) {
+  GameEntityEvent__steer_right__begin__Status[
+    GameEntityEvent__steer_right__begin__Status["OK"] = 0
+  ] = "OK";
+})(
+  GameEntityEvent__steer_right__begin__Status ||
+    (GameEntityEvent__steer_right__begin__Status = {}),
+);
+export var GameEntityEvent__steer_right__close__Status;
+(function (GameEntityEvent__steer_right__close__Status) {
+  GameEntityEvent__steer_right__close__Status[
+    GameEntityEvent__steer_right__close__Status["OK"] = 0
+  ] = "OK";
+})(
+  GameEntityEvent__steer_right__close__Status ||
+    (GameEntityEvent__steer_right__close__Status = {}),
+);
+export var GameEntityEvent__steer_right__logic__Status;
+(function (GameEntityEvent__steer_right__logic__Status) {
+  GameEntityEvent__steer_right__logic__Status[
+    GameEntityEvent__steer_right__logic__Status["OK"] = 0
+  ] = "OK";
+})(
+  GameEntityEvent__steer_right__logic__Status ||
+    (GameEntityEvent__steer_right__logic__Status = {}),
 );

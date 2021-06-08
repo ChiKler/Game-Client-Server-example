@@ -12,18 +12,19 @@ export function from_CLIENT_msg_to_CLIENT_obj__Character(
   if (p__Character__CLIENT_msg.type == "Character") {
     l__Character = new Character(
       {
-        posX: p__Character__CLIENT_msg.args.GameObject__Args.posX,
-        posY: p__Character__CLIENT_msg.args.GameObject__Args.posY,
-        posR: p__Character__CLIENT_msg.args.GameObject__Args.posR,
+        Pos: p__Character__CLIENT_msg.args.GameObject__Args.Pos,
 
-        forwardR: p__Character__CLIENT_msg.args.GameObject__Args.forwardR,
-
-        Stat__speed: Stat.to_CLIENT_obj(
-          p__Character__CLIENT_msg.args.GameObject__Args.Stat__speed,
+        Stat_MovementSpeed: Stat.to_CLIENT_obj(
+          p__Character__CLIENT_msg.args.GameObject__Args.Stat_MovementSpeed,
+        ),
+        Stat_SteeringSpeed: Stat.to_CLIENT_obj(
+          p__Character__CLIENT_msg.args.GameObject__Args.Stat_SteeringSpeed,
         ),
 
         isMovementImpaired:
           p__Character__CLIENT_msg.args.GameObject__Args.isMovementImpaired,
+        isSteeringImpaired:
+          p__Character__CLIENT_msg.args.GameObject__Args.isSteeringImpaired,
       },
       p__Character__CLIENT_msg.args.Character__Args,
     );

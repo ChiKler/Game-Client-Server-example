@@ -10,7 +10,8 @@ export class Character extends GameObject {
     p__Character__Args.Character_Skin = p__Character__Args.Character_Skin ||
       "Blue";
 
-    p__GameObject__Args.Stat__speed = p__GameObject__Args.Stat__speed ||
+    p__GameObject__Args.Stat_MovementSpeed =
+      p__GameObject__Args.Stat_MovementSpeed ||
       new Stat({ base: 300 });
 
     p__GameObject__Args.sprite =

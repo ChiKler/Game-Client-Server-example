@@ -32,8 +32,8 @@ export class GameMap {
 
       g__ctx.clearRect(0, 0, g__cvs.width, g__cvs.height);
 
-      const camX = -g__Player.get().m__GameObject.posX + g__cvs.width / 2;
-      const camY = -g__Player.get().m__GameObject.posY + g__cvs.height / 2;
+      const camX = -g__Player.get().m__GameObject.Pos.X + g__cvs.width / 2;
+      const camY = -g__Player.get().m__GameObject.Pos.Y + g__cvs.height / 2;
 
       g__ctx.translate(camX, camY);
     }
