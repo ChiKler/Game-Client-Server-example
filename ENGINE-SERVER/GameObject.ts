@@ -149,7 +149,7 @@ export abstract class GameObject {
     const step_legnth1__Y = (Math.cos(l__Pos__R) * step_length0);
 
     this.Pos.X += step_legnth1__X;
-    this.Pos.Y += step_legnth1__Y;
+    this.Pos.Y -= step_legnth1__Y;
   }
   move_right(delta_time: number, p__Stat_MovementSpeed: (Stat | undefined)) {
     const l__Stat_MovementSpeed =
@@ -163,7 +163,7 @@ export abstract class GameObject {
     const step_legnth1__Y = (Math.cos(l__Pos__R) * step_length0);
 
     this.Pos.X -= step_legnth1__X;
-    this.Pos.Y -= step_legnth1__Y;
+    this.Pos.Y += step_legnth1__Y;
   }
   steer_left(delta_time: number, p__Stat_SteeringSpeed: (Stat | undefined)) {
     const l__PI = Math.PI;

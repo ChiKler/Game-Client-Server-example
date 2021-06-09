@@ -296,30 +296,34 @@ export class GameMap {
 
         break;
       } else {
-        WS_msg_GameEntity.recv__WS_msg_GameEntity__move_forward(
-          p__Player,
-          <string> msg_str,
-        );
-        WS_msg_GameEntity.recv__WS_msg_GameEntity__move_backward(
-          p__Player,
-          <string> msg_str,
-        );
-        WS_msg_GameEntity.recv__WS_msg_GameEntity__move_left(
-          p__Player,
-          <string> msg_str,
-        );
-        WS_msg_GameEntity.recv__WS_msg_GameEntity__move_right(
-          p__Player,
-          <string> msg_str,
-        );
-        WS_msg_GameEntity.recv__WS_msg_GameEntity__steer_left(
-          p__Player,
-          <string> msg_str,
-        );
-        WS_msg_GameEntity.recv__WS_msg_GameEntity__steer_right(
-          p__Player,
-          <string> msg_str,
-        );
+        try {
+          WS_msg_GameEntity.recv__WS_msg_GameEntity__move_forward(
+            p__Player,
+            <string> msg_str,
+          );
+          WS_msg_GameEntity.recv__WS_msg_GameEntity__move_backward(
+            p__Player,
+            <string> msg_str,
+          );
+          WS_msg_GameEntity.recv__WS_msg_GameEntity__move_left(
+            p__Player,
+            <string> msg_str,
+          );
+          WS_msg_GameEntity.recv__WS_msg_GameEntity__move_right(
+            p__Player,
+            <string> msg_str,
+          );
+          WS_msg_GameEntity.recv__WS_msg_GameEntity__steer_left(
+            p__Player,
+            <string> msg_str,
+          );
+          WS_msg_GameEntity.recv__WS_msg_GameEntity__steer_right(
+            p__Player,
+            <string> msg_str,
+          );
+        } catch {
+          // ws_player could be closed.
+        }
       }
     }
   };

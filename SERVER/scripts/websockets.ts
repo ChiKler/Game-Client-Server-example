@@ -88,12 +88,10 @@ export class WS_msg<WS_msg__body__Ty extends WS_msg__body> {
     if (ws.isClosed) return;
     try {
       await ws.send(JSON.stringify(msg));
-    } catch (error) {
-      console.error(error);
+    } catch {
       try {
         await ws.close();
-      } catch (error) {
-        console.error(error);
+      } catch {
       }
     }
   }

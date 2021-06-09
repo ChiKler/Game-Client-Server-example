@@ -6,15 +6,15 @@ interface GameEntityEvent__Info {
   pause: boolean;
 }
 
-interface GameEntityEvent__Args {
+interface GameEntityEvent__Data__Args {
   //
 }
 
 interface GameEntityEvent__Data<
-  GameEntityEvent__Args__Ty extends GameEntityEvent__Args,
+  GameEntityEvent__Data__Args__Ty extends GameEntityEvent__Data__Args,
 > {
   info: GameEntityEvent__Info;
-  args: GameEntityEvent__Args__Ty;
+  args: GameEntityEvent__Data__Args__Ty;
 }
 
 export interface GameEntityEvent__ReTy {
@@ -32,22 +32,24 @@ export enum GameEntityEvent__ID {
 }
 
 interface GameEntityEvent<
-  GameEntityEvent__Args__Ty extends GameEntityEvent__Args,
+  GameEntityEvent__Data__Args__Ty extends GameEntityEvent__Data__Args,
 > {
   id: GameEntityEvent__ID;
-  data: GameEntityEvent__Data<GameEntityEvent__Args__Ty>;
+  data: GameEntityEvent__Data<GameEntityEvent__Data__Args__Ty>;
 }
 
 export class GameEntityEvent__Buffer_In {
-  #m__GameEntityEvent__Array: Array<GameEntityEvent<GameEntityEvent__Args>>;
+  #m__GameEntityEvent__Array: Array<
+    GameEntityEvent<GameEntityEvent__Data__Args>
+  >;
 
-  constructor(...args: GameEntityEvent<GameEntityEvent__Args>[]) {
+  constructor(...args: GameEntityEvent<GameEntityEvent__Data__Args>[]) {
     this.#m__GameEntityEvent__Array = new Array<
-      GameEntityEvent<GameEntityEvent__Args>
+      GameEntityEvent<GameEntityEvent__Data__Args>
     >(...args);
   }
 
-  push(p__GameEntityEvent: GameEntityEvent<GameEntityEvent__Args>) {
+  push(p__GameEntityEvent: GameEntityEvent<GameEntityEvent__Data__Args>) {
     for (const i of this.#m__GameEntityEvent__Array.keys()) {
       if (this.#m__GameEntityEvent__Array[i].id == p__GameEntityEvent.id) {
         this.#m__GameEntityEvent__Array.splice(i, 1);
@@ -59,9 +61,9 @@ export class GameEntityEvent__Buffer_In {
 
   forEach(
     callbackfn: (
-      value: GameEntityEvent<GameEntityEvent__Args>,
+      value: GameEntityEvent<GameEntityEvent__Data__Args>,
       index: number,
-      array: GameEntityEvent<GameEntityEvent__Args>[],
+      array: GameEntityEvent<GameEntityEvent__Data__Args>[],
     ) => void,
     thisArg?: any,
   ): void {
@@ -70,13 +72,13 @@ export class GameEntityEvent__Buffer_In {
 }
 
 function GameEntityEvent__check_props<
-  GameEntityEvent__Args__Ty extends GameEntityEvent__Args,
+  GameEntityEvent__Data__Args__Ty extends GameEntityEvent__Data__Args,
 >(
   obj: object,
-  p__GameEntityEvent__Args__Ty__check_props: (
+  p__GameEntityEvent__Data__Args__Ty__check_props: (
     obj: object,
-  ) => obj is GameEntityEvent__Args__Ty,
-): obj is GameEntityEvent<GameEntityEvent__Args__Ty> {
+  ) => obj is GameEntityEvent__Data__Args__Ty,
+): obj is GameEntityEvent<GameEntityEvent__Data__Args__Ty> {
   return ((Object.keys(obj).length == 2) && (obj.hasOwnProperty("id")) &&
     // @ts-ignore
     ((typeof obj.id) == "number") && (obj.hasOwnProperty("data")) &&
@@ -103,7 +105,7 @@ function GameEntityEvent__check_props<
     // @ts-ignore
     ((obj.data.args != null) && ((typeof obj.data.args) == "object")) &&
     // @ts-ignore
-    p__GameEntityEvent__Args__Ty__check_props(obj.data.args));
+    p__GameEntityEvent__Data__Args__Ty__check_props(obj.data.args));
 }
 
 /**
@@ -113,17 +115,17 @@ function GameEntityEvent__check_props<
  *
 **/
 export function GameEntityEvent__handle_fn(
-  p__GameEntityEvent__Data: GameEntityEvent__Data<GameEntityEvent__Args>,
+  p__GameEntityEvent__Data: GameEntityEvent__Data<GameEntityEvent__Data__Args>,
   p__GameEntityEvent__handle_fn__condt__begin: (
-    args: GameEntityEvent__Args,
+    args: GameEntityEvent__Data__Args,
     delta_time: number,
   ) => { success: boolean; status: number },
   p__GameEntityEvent__handle_fn__condt__close: (
-    args: GameEntityEvent__Args,
+    args: GameEntityEvent__Data__Args,
     delta_time: number,
   ) => { success: boolean; status: number },
   p__GameEntityEvent__handle_fn__logic: (
-    args: GameEntityEvent__Args,
+    args: GameEntityEvent__Data__Args,
     delta_time: number,
   ) => GameEntityEvent__ReTy,
   delta_time: number,
@@ -193,7 +195,7 @@ export function GameEntityEvent__handle_fn(
 }
 
 export interface GameEntityEvent__move_forward__Args
-  extends GameEntityEvent__Args {
+  extends GameEntityEvent__Data__Args {
   elapsed_ms?: number;
   duration_ms?: number;
   Stat_MovementSpeed?: Stat;
@@ -237,7 +239,7 @@ export function GameEntityEvent__move_forward__check_props(
 }
 
 export interface GameEntityEvent__move_backward__Args
-  extends GameEntityEvent__Args {
+  extends GameEntityEvent__Data__Args {
   elapsed_ms?: number;
   duration_ms?: number;
   Stat_MovementSpeed?: Stat;
@@ -281,7 +283,7 @@ export function GameEntityEvent__move_backward__check_props(
 }
 
 export interface GameEntityEvent__move_left__Args
-  extends GameEntityEvent__Args {
+  extends GameEntityEvent__Data__Args {
   elapsed_ms?: number;
   duration_ms?: number;
   Stat_MovementSpeed?: Stat;
@@ -325,7 +327,7 @@ export function GameEntityEvent__move_left__check_props(
 }
 
 export interface GameEntityEvent__move_right__Args
-  extends GameEntityEvent__Args {
+  extends GameEntityEvent__Data__Args {
   elapsed_ms?: number;
   duration_ms?: number;
   Stat_MovementSpeed?: Stat;
@@ -369,7 +371,7 @@ export function GameEntityEvent__move_right__check_props(
 }
 
 export interface GameEntityEvent__steer_left__Args
-  extends GameEntityEvent__Args {
+  extends GameEntityEvent__Data__Args {
   elapsed_ms?: number;
   duration_ms?: number;
   Stat_SteeringSpeed?: Stat;
@@ -413,7 +415,7 @@ export function GameEntityEvent__steer_left__check_props(
 }
 
 export interface GameEntityEvent__steer_right__Args
-  extends GameEntityEvent__Args {
+  extends GameEntityEvent__Data__Args {
   elapsed_ms?: number;
   duration_ms?: number;
   Stat_SteeringSpeed?: Stat;
