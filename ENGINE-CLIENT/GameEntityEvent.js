@@ -11,31 +11,6 @@ export var GameEntityEvent__ID;
   GameEntityEvent__ID[GameEntityEvent__ID["steer_right"] = 6] = "steer_right";
 })(GameEntityEvent__ID || (GameEntityEvent__ID = {}));
 
-export class GameEntityEvent__Buffer_In {
-  #m__GameEntityEvent__Array;
-
-  constructor(...args) {
-    this.#m__GameEntityEvent__Array = new Array(...args);
-  }
-
-  push(p__GameEntityEvent) {
-    for (const i of this.#m__GameEntityEvent__Array.keys()) {
-      if (this.#m__GameEntityEvent__Array[i].id == p__GameEntityEvent.id) {
-        this.#m__GameEntityEvent__Array.splice(i, 1);
-      }
-    }
-
-    return (this.#m__GameEntityEvent__Array.push(p__GameEntityEvent));
-  }
-
-  forEach(
-    callbackfn,
-    thisArg,
-  ) {
-    this.#m__GameEntityEvent__Array.forEach(callbackfn, thisArg);
-  }
-}
-
 /**
  *
  * @returns {EventReTy} with information from the event's call.

@@ -9,6 +9,8 @@ import {
 // @ts-ignore
 import { GameEntity } from "./GameEntity.ts";
 // @ts-ignore
+import { GameEntityEvent__ID } from "./GameEntityEvent.ts";
+// @ts-ignore
 import { Player } from "./Player.ts";
 // @ts-ignore
 import { WS_msg_GameEntity } from "./WS_msg_GameEntity.ts";
@@ -107,7 +109,7 @@ export class GameMap
   #m__Players_BufferOut: GameMap.Players_BufferOut;
   
   // @ts-ignore
-  #m__PetitionsToDisconnectPlayer : { [key : string] : GameMap.PetitionToDisconnectPlayer };
+  #m__PetitionsToDisconnectPlayer : { [ key : string ] : GameMap.PetitionToDisconnectPlayer };
 
   private constructor(p__GameMap__Args: GameMap__Args) {
     this.m__GameMap__ID = p__GameMap__Args.GameMap__ID;
@@ -279,14 +281,14 @@ export class GameMap
     ws_player: WebSocket,
   ): Promise<void> => {
     try {
-      WS_msg_Player.send__WS_msg_Player__Connection(
+      WS_msg_Player.send__Connection(
         p__Player,
         this.m__GameMap__ID,
       );
 
       this.#m__Players.forEach((l__Player__target: Player) => {
         if (l__Player__target.eeID != p__Player.eeID) {
-          WS_msg_Player.send__WS_msg_Player__Sighting(
+          WS_msg_Player.send__Sighting(
             p__Player,
             l__Player__target,
           );
@@ -303,27 +305,27 @@ export class GameMap
         break;
       } else {
         try {
-          WS_msg_GameEntity.recv__WS_msg_GameEntity__move_forward(
+          WS_msg_GameEntity.recv__move_forward(
             p__Player,
             <string> msg_str,
           );
-          WS_msg_GameEntity.recv__WS_msg_GameEntity__move_backward(
+          WS_msg_GameEntity.recv__move_backward(
             p__Player,
             <string> msg_str,
           );
-          WS_msg_GameEntity.recv__WS_msg_GameEntity__move_left(
+          WS_msg_GameEntity.recv__move_left(
             p__Player,
             <string> msg_str,
           );
-          WS_msg_GameEntity.recv__WS_msg_GameEntity__move_right(
+          WS_msg_GameEntity.recv__move_right(
             p__Player,
             <string> msg_str,
           );
-          WS_msg_GameEntity.recv__WS_msg_GameEntity__steer_left(
+          WS_msg_GameEntity.recv__steer_left(
             p__Player,
             <string> msg_str,
           );
-          WS_msg_GameEntity.recv__WS_msg_GameEntity__steer_right(
+          WS_msg_GameEntity.recv__steer_right(
             p__Player,
             <string> msg_str,
           );
@@ -384,14 +386,24 @@ export class GameMap
       }
     }
 
-    this.#m__Players.forEach((l__Player: Player) => {
-      l__Player.Events__handle(delta_time());
-    });
+    const iterate_through_Players_and_handle_GameEntityEvent = (p__GameEntityEvent__ID : GameEntityEvent__ID) =>
+    {
+      this.#m__Players.forEach((l__Player : Player) => {
+        l__Player.GameEntityEvents__handle(p__GameEntityEvent__ID, delta_time());
+      });
+    }
 
-    this.#m__Players.forEach((l__Player__source: Player) => {
-      this.#m__Players.forEach((l__Player__target: Player) => {
+    iterate_through_Players_and_handle_GameEntityEvent(GameEntityEvent__ID.move_forward);
+    iterate_through_Players_and_handle_GameEntityEvent(GameEntityEvent__ID.move_backward);
+    iterate_through_Players_and_handle_GameEntityEvent(GameEntityEvent__ID.move_left);
+    iterate_through_Players_and_handle_GameEntityEvent(GameEntityEvent__ID.move_right);
+    iterate_through_Players_and_handle_GameEntityEvent(GameEntityEvent__ID.steer_left);
+    iterate_through_Players_and_handle_GameEntityEvent(GameEntityEvent__ID.steer_right);
+
+    this.#m__Players.forEach((l__Player__source : Player) => {
+      this.#m__Players.forEach((l__Player__target : Player) => {
         if (l__Player__target.eeID != l__Player__source.eeID) {
-          WS_msg_Player.send__WS_msg_Player__Sighting(
+          WS_msg_Player.send__Sighting(
             l__Player__source,
             l__Player__target,
           );

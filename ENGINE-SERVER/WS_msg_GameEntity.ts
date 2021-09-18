@@ -21,7 +21,8 @@ import {
   // @ts-ignore
 } from "../SERVER/scripts/websockets.ts";
 
-enum WS_msg_GameEntity__ID {
+enum WS_msg_GameEntity__ID
+{
   GameEntityEvent,
 }
 
@@ -129,7 +130,7 @@ interface WS_msg_GameEntity_move_right__body extends WS_msg_GameEntity__body {}
 export class WS_msg_GameEntity<
   WS_msg_GameEntity__body__Ty extends WS_msg_GameEntity__body,
 > extends WS_msg<WS_msg_GameEntity__body__Ty> {
-  static async recv__WS_msg_GameEntity__move_forward(
+  static async recv__move_forward(
     p__GameEntity: GameEntity,
     msg_str: string,
   ) {
@@ -139,13 +140,12 @@ export class WS_msg_GameEntity<
       msg_str,
       WS_msg_GameEntity_move_forward__body__check_props,
       (msg__body: WS_msg_GameEntity_move_forward__body): void => {
-        p__GameEntity.m__GameEntityEvent__Buffer_In.push(
-          msg__body.GameEntityEvent,
-        );
+        const p__GameEntity__m__GameEntityEvents__k = msg__body.GameEntityEvent.ID + "";
+        p__GameEntity.m__GameEntityEvents[p__GameEntity__m__GameEntityEvents__k] = msg__body.GameEntityEvent;
       },
     );
   }
-  static async recv__WS_msg_GameEntity__move_backward(
+  static async recv__move_backward(
     p__GameEntity: GameEntity,
     msg_str: string,
   ) {
@@ -155,13 +155,12 @@ export class WS_msg_GameEntity<
       msg_str,
       WS_msg_GameEntity_move_backward__body__check_props,
       (msg__body: WS_msg_GameEntity_move_backward__body): void => {
-        p__GameEntity.m__GameEntityEvent__Buffer_In.push(
-          msg__body.GameEntityEvent,
-        );
+        const p__GameEntity__m__GameEntityEvents__k = msg__body.GameEntityEvent.ID + "";
+        p__GameEntity.m__GameEntityEvents[p__GameEntity__m__GameEntityEvents__k] = msg__body.GameEntityEvent;
       },
     );
   }
-  static async recv__WS_msg_GameEntity__move_left(
+  static async recv__move_left(
     p__GameEntity: GameEntity,
     msg_str: string,
   ) {
@@ -171,13 +170,12 @@ export class WS_msg_GameEntity<
       msg_str,
       WS_msg_GameEntity_move_left__body__check_props,
       (msg__body: WS_msg_GameEntity_move_left__body): void => {
-        p__GameEntity.m__GameEntityEvent__Buffer_In.push(
-          msg__body.GameEntityEvent,
-        );
+        const p__GameEntity__m__GameEntityEvents__k = msg__body.GameEntityEvent.ID + "";
+        p__GameEntity.m__GameEntityEvents[p__GameEntity__m__GameEntityEvents__k] = msg__body.GameEntityEvent;
       },
     );
   }
-  static async recv__WS_msg_GameEntity__move_right(
+  static async recv__move_right(
     p__GameEntity: GameEntity,
     msg_str: string,
   ) {
@@ -187,13 +185,12 @@ export class WS_msg_GameEntity<
       msg_str,
       WS_msg_GameEntity_move_right__body__check_props,
       (msg__body: WS_msg_GameEntity_move_right__body): void => {
-        p__GameEntity.m__GameEntityEvent__Buffer_In.push(
-          msg__body.GameEntityEvent,
-        );
+        const p__GameEntity__m__GameEntityEvents__k = msg__body.GameEntityEvent.ID + "";
+        p__GameEntity.m__GameEntityEvents[p__GameEntity__m__GameEntityEvents__k] = msg__body.GameEntityEvent;
       },
     );
   }
-  static async recv__WS_msg_GameEntity__steer_left(
+  static async recv__steer_left(
     p__GameEntity: GameEntity,
     msg_str: string,
   ) {
@@ -203,13 +200,12 @@ export class WS_msg_GameEntity<
       msg_str,
       WS_msg_GameEntity_steer_left__body__check_props,
       (msg__body: WS_msg_GameEntity_steer_left__body): void => {
-        p__GameEntity.m__GameEntityEvent__Buffer_In.push(
-          msg__body.GameEntityEvent,
-        );
+        const p__GameEntity__m__GameEntityEvents__k = msg__body.GameEntityEvent.ID + "";
+        p__GameEntity.m__GameEntityEvents[p__GameEntity__m__GameEntityEvents__k] = msg__body.GameEntityEvent;
       },
     );
   }
-  static async recv__WS_msg_GameEntity__steer_right(
+  static async recv__steer_right(
     p__GameEntity: GameEntity,
     msg_str: string,
   ) {
@@ -219,9 +215,8 @@ export class WS_msg_GameEntity<
       msg_str,
       WS_msg_GameEntity_steer_right__body__check_props,
       (msg__body: WS_msg_GameEntity_steer_right__body): void => {
-        p__GameEntity.m__GameEntityEvent__Buffer_In.push(
-          msg__body.GameEntityEvent,
-        );
+        const p__GameEntity__m__GameEntityEvents__k = msg__body.GameEntityEvent.ID + "";
+        p__GameEntity.m__GameEntityEvents[p__GameEntity__m__GameEntityEvents__k] = msg__body.GameEntityEvent;
       },
     );
   }

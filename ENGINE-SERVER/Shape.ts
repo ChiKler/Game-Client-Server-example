@@ -7,23 +7,32 @@ import { GameEntity } from "./GameEntity.ts";
 
 class Shape
 {
+  public static intersects_with_GameEntity(
+    p__GameEntity : GameEntity,
+    intersects_Rectangle : (p__Rectangle : Rectangle) => boolean
+  )
+  {
+    let found = false;
+    // @ts-ignore
+    const p__GameEntity__m__GameObject__HitBox = p__GameEntity.m__GameObject.HitBox;
+    const p__GameEntity__m__GameObject__HitBox__Rectangles = p__GameEntity__m__GameObject__HitBox.Rectangles;
+    for (let i = 0; i < p__GameEntity__m__GameObject__HitBox__Rectangles.length; i++)
+    {
+      if (intersects_Rectangle(p__GameEntity__m__GameObject__HitBox__Rectangles[i])) found = true; break;
+    }
+    return (found);
+  }
+
   public static select_GameEntities_that_intersect(
     p__GameEntities : Array<GameEntity>,
     intersects_Rectangle : (p__Rectangle : Rectangle) => boolean
   )
   {
     const l__GameEntities = new Array();
-    
+
     p__GameEntities.forEach((p__GameEntity) => {
-      let found = false;
-      // @ts-ignore
-      const p__GameEntity__m__GameObject__HitBox = p__GameEntity.m__GameObject.HitBox;
-      const p__GameEntity__m__GameObject__HitBox__Rectangles = p__GameEntity__m__GameObject__HitBox.Rectangles;
-      for (let i = 0; i < p__GameEntity__m__GameObject__HitBox__Rectangles.length; i++)
-      {
-        if (intersects_Rectangle(p__GameEntity__m__GameObject__HitBox__Rectangles[i])) found = true; break;
-      }
-      if (found) l__GameEntities.push(p__GameEntity);
+      if (Shape.intersects_with_GameEntity(p__GameEntity, intersects_Rectangle))
+        l__GameEntities.push(p__GameEntity);
     });
   }
 }
@@ -78,6 +87,11 @@ export class Point
   }
   
   
+  public intersects_with_GameEntity(p__GameEntity : GameEntity)
+  {
+    Shape.intersects_with_GameEntity(p__GameEntity, this.intersects_Rectangle);
+  }
+
   public select_GameEntities_that_intersect(p__GameEntities : Array<GameEntity>)
   {
     Shape.select_GameEntities_that_intersect(p__GameEntities, this.intersects_Rectangle);
@@ -144,6 +158,11 @@ export class Rectangle
   }
   
   
+  public intersects_with_GameEntity(p__GameEntity : GameEntity)
+  {
+    Shape.intersects_with_GameEntity(p__GameEntity, this.intersects_Rectangle);
+  }
+
   public select_GameEntities_that_intersect(p__GameEntities : Array<GameEntity>)
   {
     Shape.select_GameEntities_that_intersect(p__GameEntities, this.intersects_Rectangle);

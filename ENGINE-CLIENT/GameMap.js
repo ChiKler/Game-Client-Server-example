@@ -1,3 +1,5 @@
+import { GameEntityEvent__ID } from "./GameEntityEvent.js";
+
 import { Player } from "./Player.js";
 
 import { Mutex, sleep, time_stamp } from "../vendor/utility/mod.js";
@@ -78,9 +80,21 @@ export class GameMap
       return (elapsed_ms() * 0.001);
     };
 
-    this.#m__Players.forEach((l__Player) => {
-      l__Player.Events__handle(delta_time());
-    });
+
+    const iterate_through_Players_and_handle_GameEntityEvent = (p__GameEntityEvent__ID) =>
+    {
+      this.#m__Players.forEach((l__Player) => {
+        l__Player.GameEntityEvents__handle(p__GameEntityEvent__ID, delta_time());
+      });
+    }
+
+    iterate_through_Players_and_handle_GameEntityEvent(GameEntityEvent__ID.move_forward);
+    iterate_through_Players_and_handle_GameEntityEvent(GameEntityEvent__ID.move_backward);
+    iterate_through_Players_and_handle_GameEntityEvent(GameEntityEvent__ID.move_left);
+    iterate_through_Players_and_handle_GameEntityEvent(GameEntityEvent__ID.move_right);
+    iterate_through_Players_and_handle_GameEntityEvent(GameEntityEvent__ID.steer_left);
+    iterate_through_Players_and_handle_GameEntityEvent(GameEntityEvent__ID.steer_right);
+
 
     if (elapsed_ms() > max_ms) {
       console.warn(

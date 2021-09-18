@@ -52,7 +52,7 @@ class GameMap__QuadTree__Quadrant
         );
       }
       
-      Promise.all([
+      (() => {
         (async () => {
           this.children.nw = generate_Quadrant(
             new Rectangle(
@@ -113,7 +113,7 @@ class GameMap__QuadTree__Quadrant
             ),
           );
         })()
-      ]);
+      })();
       
       this.is_subdivided = true;
     }
@@ -205,6 +205,16 @@ export class GameMap__QuadTree
   
   insert(p__GameEntity)
   {
+    const l__Quadrants_that_intersect_with_GameEntity = new Array();
+
+    const l__Quadrants__vs = Object.values(this.#Quadrants);
+    for (let i = 0; i < l__Quadrants__vs; i++)
+    {
+      const l__Quadrants__v = l__Quadrants__vs[i]
+      if (l__Quadrants__v.Rectangle.intersects_with_GameEntity)
+        l__Quadrants_that_intersect_with_GameEntity.push(l__Quadrants__v);
+    }
+
     //
   }
   
@@ -213,7 +223,6 @@ export class GameMap__QuadTree
   {
     const l__Quadrants = this.#Quadrants_by_eeID[eeID + ""];
     
-    const l__Quadrants_updated__ids = new Array();
     const l__Quadtrees_removed__ids = new Array();
     
     const l__Quadrants__vs = Object.values(l__Quadrants);
@@ -224,70 +233,71 @@ export class GameMap__QuadTree
       
       const l__GameEntities = l__Quadrant.GameEntities;
       
-      const ks = Object.keys(l__GameEntities);
+      const l__GameEntities__ks = Object.keys(l__GameEntities);
       for (let i = 0; i < ks.length; i++)
       {
-        const k = ks[i];
-        
-        if (k == eeID) delete l__GameEntities[eeID + ""];
+        if (l__GameEntities__ks[i] == eeID) delete l__GameEntities[eeID + ""];
       }
 
 
       let needsToBeUpdated = true;
       
-      for (let i = 0; i < l__Quadrants_updated__ids.length; i++)
+      for (let i = 0; i < l__Quadtrees_removed__ids.length; i++)
       {
-        if (l__Quadrants_updated__ids[i] == l__Quadrant.id) needsToBeUpdated = false; break;
+        if (l__Quadtrees_removed__ids[i] == l__Quadrant.id) needsToBeUpdated = false; break;
       }
       
       if (needsToBeUpdated)
       {
         const l__Quadrant__parent = l__Quadrant.parent;
 
-        if ((l__Quadrant__parent != undefined) && (!GameMap__QuadTree__Quadrant.is_subdivisible(l__Quadrant__parent)))
+        const l__Quadrant__siblings__GameEntities = {};
+
+        const add_GameEntities_from_siblings = (l__Quadrant__sibling) =>
         {
-          const l__GameEntities = {};
-          
-          const add_GameEntities_from_siblings = (l__Quadrant__sibling) =>
+          l__Quadtrees_removed__ids.push(l__Quadrant__sibling.id);
+
+          const l__Quadrant__sibling__GameEntities = l__Quadrant__sibling.GameEntities;
+
+          for (let i = 0; i < l__Quadrant__sibling__GameEntities.length; i++)
           {
-            l__Quadtrees_removed__ids.push(l__Quadrant__sibling.id);
-            
-            const l__Quadrant__sibling__GameEntities = l__Quadrant__sibling.GameEntities;
-
-            for (let i = 0; i < l__Quadrant__sibling__GameEntities.length; i++)
-            {
-              l__GameEntities[eeID + ""] = l__Quadrant__sibling__GameEntities[i];
-
-              l__Quadrants_updated__ids.push(l__Quadrant__sibling.id);
-            }
+            l__Quadrant__siblings__GameEntities[eeID + ""] = l__Quadrant__sibling__GameEntities[i];
           }
-          
-          const l__Quadrant__siblings = l__Quadrant__parent.children;
-          
-          add_GameEntities_from_siblings(l__Quadrant__siblings.nw);
-          add_GameEntities_from_siblings(l__Quadrant__siblings.ne);
-          add_GameEntities_from_siblings(l__Quadrant__siblings.sw);
-          add_GameEntities_from_siblings(l__Quadrant__siblings.se);
+        }
 
-          l__Quadrant__siblings = undefined;
+        const l__Quadrant__siblings = l__Quadrant__parent.children;
+
+        add_GameEntities_from_siblings(l__Quadrant__siblings.nw);
+        add_GameEntities_from_siblings(l__Quadrant__siblings.ne);
+        add_GameEntities_from_siblings(l__Quadrant__siblings.sw);
+        add_GameEntities_from_siblings(l__Quadrant__siblings.se);
+
+        if
+        (
+          (l__Quadrant__parent != undefined)
+          &&
+          (!GameMap__QuadTree__Quadrant.is_subdivisible(
+            l__Quadrant__parent.Rectangle.Size.X,
+            l__Quadrant__parent.Rectangle.Size.Y,
+            l__Quadrant__siblings__GameEntities.length
+          ))
+        )
+        {
+          l__Quadrant__parent.GameEntities = l__Quadrant__siblings__GameEntities;
 
           l__Quadrant__parent.is_subdivided = false;
 
-          l__Quadrant__parent.GameEntities = l__GameEntities;
-          
-          this__Quadrants__k = (l__Quadrant__parent.id + "");
+          this__Quadrants__k = l__Quadrant__parent.id + "";
 
           this.#Quadrants[this__Quadrants__k] = l__Quadrant__parent;
-          
+
           for (let i = 0; i < l__Quadrant__parent.GameEntities.length; i++)
           {
             this.#Quadrants_by_eeID[l__Quadrant__parent__GameEntities[i].eeID + ""]
               [this__Quadrants__k] = l__Quadrant__parent;
           }
-        }
-        else
-        {
-          l__Quadrants_updated__ids.push(l__Quadrant.id);
+
+          l__Quadrant__siblings = undefined;
         }
       }
     }
@@ -316,17 +326,27 @@ export class GameMap__QuadTree
       }
     }
   }
+
+
+  update_because_GameEntity_has_moved(eeID, p__GameEntity)
+  {
+    this.remove(eeID);
+    this.insert(p__GameEntity);
+  }
   
   
   /*private */get_Quadrants_that_intersect_with_Shape(p__Shape)
   {
     const l__Quadrants = new Array();
-    
-    for (let l__Quadrant in this.#Quadrants)
+
+    const l__Quadrants__vs = Object.values(this.#Quadrants);
+    for (let i = 0; i < l__Quadrants__vs.length; i++)
     {
+      const l__Quadrant = l__Quadrants__vs[i];
+
       if (p__Shape.intersects_Rectangle(l__Quadrant.Rectangle)) l__Quadrants.push(l__Quadrant);
     }
-    
+
     return (l__Quadrants);
   }
 }

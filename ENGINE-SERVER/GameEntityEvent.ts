@@ -6,7 +6,7 @@ interface GameEntityEvent__Info {
   pause: boolean;
 }
 
-interface GameEntityEvent__Data__Args {
+export interface GameEntityEvent__Data__Args {
   //
 }
 
@@ -31,44 +31,11 @@ export enum GameEntityEvent__ID {
   steer_right,
 }
 
-interface GameEntityEvent<
+export interface GameEntityEvent<
   GameEntityEvent__Data__Args__Ty extends GameEntityEvent__Data__Args,
 > {
-  id: GameEntityEvent__ID;
+  ID: GameEntityEvent__ID;
   data: GameEntityEvent__Data<GameEntityEvent__Data__Args__Ty>;
-}
-
-export class GameEntityEvent__Buffer_In {
-  #m__GameEntityEvent__Array: Array<
-    GameEntityEvent<GameEntityEvent__Data__Args>
-  >;
-
-  constructor(...args: GameEntityEvent<GameEntityEvent__Data__Args>[]) {
-    this.#m__GameEntityEvent__Array = new Array<
-      GameEntityEvent<GameEntityEvent__Data__Args>
-    >(...args);
-  }
-
-  push(p__GameEntityEvent: GameEntityEvent<GameEntityEvent__Data__Args>) {
-    for (const i of this.#m__GameEntityEvent__Array.keys()) {
-      if (this.#m__GameEntityEvent__Array[i].id == p__GameEntityEvent.id) {
-        this.#m__GameEntityEvent__Array.splice(i, 1);
-      }
-    }
-
-    return (this.#m__GameEntityEvent__Array.push(p__GameEntityEvent));
-  }
-
-  forEach(
-    callbackfn: (
-      value: GameEntityEvent<GameEntityEvent__Data__Args>,
-      index: number,
-      array: GameEntityEvent<GameEntityEvent__Data__Args>[],
-    ) => void,
-    thisArg?: any,
-  ): void {
-    this.#m__GameEntityEvent__Array.forEach(callbackfn, thisArg);
-  }
 }
 
 function GameEntityEvent__check_props<
@@ -79,9 +46,9 @@ function GameEntityEvent__check_props<
     obj: object,
   ) => obj is GameEntityEvent__Data__Args__Ty,
 ): obj is GameEntityEvent<GameEntityEvent__Data__Args__Ty> {
-  return ((Object.keys(obj).length == 2) && (obj.hasOwnProperty("id")) &&
+  return ((Object.keys(obj).length == 2) && (obj.hasOwnProperty("ID")) &&
     // @ts-ignore
-    ((typeof obj.id) == "number") && (obj.hasOwnProperty("data")) &&
+    ((typeof obj.ID) == "number") && (obj.hasOwnProperty("data")) &&
     // @ts-ignore
     ((obj.data != null) && ((typeof obj.data) == "object")) &&
     // @ts-ignore

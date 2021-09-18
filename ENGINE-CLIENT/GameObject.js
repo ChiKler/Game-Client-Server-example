@@ -50,7 +50,7 @@ export /*abstract */ class GameObject {
       (p__Stat_SteeringSpeed || this.m__Stat_SteeringSpeed);
 
     const step_length =
-      (((l__Stat_SteeringSpeed.get() / 360) * (l__PI * 2)) * delta_time);
+      (((l__Stat_SteeringSpeed.get() * (l__PI * 2)) / 360) * delta_time);
 
     // deno-fmt-ignore
     if ((l__Pos__R__old < 0) || ((1 / l__Pos__R__old) == -Infinity))
@@ -176,7 +176,7 @@ export /*abstract */ class GameObject {
 
     // deno-fmt-ignore
     const step_length =
-      ((((l__Stat_SteeringSpeed.get() / 360) * (l__PI * 2)) * delta_time) % (l__PI * 2));
+      ((((l__Stat_SteeringSpeed.get() * (l__PI * 2)) / 360) * delta_time) % (l__PI * 2));
 
     // deno-fmt-ignore
     const l__Pos__R__old__from_0_to_2PI = (
@@ -202,7 +202,7 @@ export /*abstract */ class GameObject {
 
     // deno-fmt-ignore
     const step_length =
-      ((((l__Stat_SteeringSpeed.get() / 360) * (l__PI * 2)) * delta_time) % (l__PI * 2));
+      ((((l__Stat_SteeringSpeed.get() * (l__PI * 2)) / 360) * delta_time) % (l__PI * 2));
 
     // deno-fmt-ignore
     const l__Pos__R__old__from_0_to_2PI = (

@@ -57,7 +57,7 @@ interface WS_msg_Player__body__Takedown extends WS_msg_Player__body {
 
 export class WS_msg_Player<WS_msg_Player__body__Ty extends WS_msg_Player__body>
   extends WS_msg<WS_msg_Player__body__Ty> {
-  static async send__WS_msg_Player__Connection(
+  static async send__Connection(
     p__Player__source: Player,
     p__GameMap_ID: GameMap_ID,
   ): Promise<void> {
@@ -75,7 +75,7 @@ export class WS_msg_Player<WS_msg_Player__body__Ty extends WS_msg_Player__body>
       },
     });
   }
-  static async send__WS_msg_Player__Disconnection(
+  static async send__Disconnection(
     p__Player__source: Player,
     p__GameMap_ID?: GameMap_ID,
   ): Promise<void> {
@@ -89,7 +89,7 @@ export class WS_msg_Player<WS_msg_Player__body__Ty extends WS_msg_Player__body>
     });
   }
 
-  static async send__WS_msg_Player__Sighting(
+  static async send__Sighting(
     p__GameEntity__source: GameEntity,
     p__Player__target: Player,
   ): Promise<void> {
@@ -107,7 +107,7 @@ export class WS_msg_Player<WS_msg_Player__body__Ty extends WS_msg_Player__body>
     });
   }
 
-  static async send__WS_msg_Player__Vanishing(
+  static async send__Vanishing(
     p__GameEntity__source: GameEntity,
     p__Player__target: Player,
   ): Promise<void> {
@@ -125,7 +125,7 @@ export class WS_msg_Player<WS_msg_Player__body__Ty extends WS_msg_Player__body>
     });
   }
 
-  static async send__WS_msg_Player__Takedown(
+  static async send__Takedown(
     p__GameEntity__source: GameEntity,
     p__Player__target: Player,
   ): Promise<void> {
