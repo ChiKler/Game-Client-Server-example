@@ -8,16 +8,16 @@ import {
   serve,
   ServerRequest,
   // @ts-ignore
-} from "https://deno.land/std@0.97.0/http/server.ts";
+} from "https://deno.land/std@0.106.0/http/server.ts";
 // @ts-ignore
-import { Status } from "https://deno.land/std@0.97.0/http/http_status.ts";
+import { Status } from "https://deno.land/std@0.106.0/http/http_status.ts";
 
 import {
   acceptable,
   acceptWebSocket,
   WebSocket,
   // @ts-ignore
-} from "https://deno.land/std@0.97.0/ws/mod.ts";
+} from "https://deno.land/std@0.106.0/ws/mod.ts";
 
 const g__Users = new Map<string, User>();
 

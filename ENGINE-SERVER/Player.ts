@@ -2,7 +2,7 @@
 import { GameEntity, GameEntity__Args } from "./GameEntity.ts";
 
 // @ts-ignore
-import { WebSocket } from "https://deno.land/std@0.97.0/ws/mod.ts";
+import { WebSocket } from "https://deno.land/std@0.106.0/ws/mod.ts";
 
 
 

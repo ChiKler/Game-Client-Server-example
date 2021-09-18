@@ -1,10 +1,10 @@
 // @ts-ignore
-import { Status } from "https://deno.land/std@0.97.0/http/http_status.ts";
+import { Status } from "https://deno.land/std@0.106.0/http/http_status.ts";
 import {
   isWebSocketCloseEvent,
   WebSocket,
   // @ts-ignore
-} from "https://deno.land/std@0.97.0/ws/mod.ts";
+} from "https://deno.land/std@0.106.0/ws/mod.ts";
 
 // @ts-ignore
 import { GameEntity } from "./GameEntity.ts";

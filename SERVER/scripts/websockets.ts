@@ -2,7 +2,7 @@ import {
   WebSocket,
   WebSocketMessage,
   // @ts-ignore
-} from "https://deno.land/std@0.97.0/ws/mod.ts";
+} from "https://deno.land/std@0.106.0/ws/mod.ts";
 
 /**
  *
