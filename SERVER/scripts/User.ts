@@ -17,26 +17,31 @@ import { WebSocket } from "https://deno.land/std@0.106.0/ws/mod.ts";
 // @ts-ignore
 import { Mutex } from "../../vendor/utility/mod.ts";
 
-export class User {
+
+
+
+
+export class User
+{
   readonly uuID: string;
   readonly ssID: string;
 
   #ws_player?: WebSocket;
   //#ws_chat? : WebSocket;
 
-  #player?: Player;
+  #m__Player?: Player;
 
   #isConnected: boolean;
   #isConnected__mutex: Mutex;
 
-  private constructor(uuID: string, ssID: string, player?: Player) {
+  private constructor(uuID: string, ssID: string, p__Player?: Player) {
     this.uuID = uuID;
     this.ssID = ssID;
 
     this.#ws_player = undefined;
     //this.#ws_chat = undefined;
 
-    this.#player = player;
+    this.#m__Player = p__Player;
 
     this.#isConnected = false;
     this.#isConnected__mutex = new Mutex();
@@ -45,7 +50,7 @@ export class User {
   static async connect_User(
     g__Users: Map<string, User>,
     uuID: string,
-  ): Promise<{
+  ) : Promise<{
     status: Status;
     statusText: string;
   }> {
@@ -59,21 +64,20 @@ export class User {
     let player: (Player | undefined);
 
     if (wasUserAlreadyConnected) {
-      player = g__Users.get(uuID)!.#player!;
+      player = g__Users.get(uuID)!.#m__Player!;
     } else {
       player = undefined;
     }
 
-    const user = new User(uuID, ssID, player);
+    const l__User = new User(uuID, ssID, player);
 
-    const user__isConnected__mutex__unlock = await user.#isConnected__mutex
-      .lock();
+    const l__User__isConnected__mutex__unlock = await l__User.#isConnected__mutex.lock();
 
-    g__Users.set(uuID, user);
+    g__Users.set(uuID, l__User);
 
-    user.#isConnected = true;
+    l__User.#isConnected = true;
 
-    user__isConnected__mutex__unlock();
+    l__User__isConnected__mutex__unlock();
 
     if (wasUserAlreadyConnected) {
       return ({
@@ -92,29 +96,29 @@ export class User {
     g__Users: Map<string, User>,
     uuID: string,
     ws_player__new: WebSocket,
-  ): Promise<{ status: Status; statusText: string }> {
-    const user = g__Users.get(uuID);
+  ) : Promise<{ status: Status; statusText: string }> {
+    const l__User = g__Users.get(uuID);
 
-    if (user == undefined) {
+    if (l__User == undefined) {
       return ({
         status: Status.Conflict,
         statusText: `The User with uuID ${uuID} wasn't connected.`,
       });
     } else {
-      let user__isConnected__mutex__unlock: () => void;
+      let l__User__isConnected__mutex__unlock : () => void;
       try {
-        user__isConnected__mutex__unlock = await user.#isConnected__mutex
-          .lock();
-      } catch {
+        l__User__isConnected__mutex__unlock = await l__User.#isConnected__mutex.lock();
+      } catch(err) {
+        console.warn(`The following error could occur when "l__User" is disconnected (undefined). It might be unrelated:\n${err}`);
         return ({
           status: Status.Conflict,
           statusText: `The User with uuID ${uuID} wasn't connected.`,
         });
       }
 
-      user!.#ws_player = ws_player__new;
+      l__User!.#ws_player = ws_player__new;
 
-      user__isConnected__mutex__unlock();
+      l__User__isConnected__mutex__unlock();
       return ({
         status: Status.OK,
         statusText:
@@ -127,34 +131,34 @@ export class User {
     p__GameMap__ID: GameMap__ID,
     g__Users: Map<string, User>,
     uuID: string,
-  ): Promise<{ status: Status; statusText: string }> {
-    const user = g__Users.get(uuID);
+  ) : Promise<{ status: Status; statusText: string }> {
+    const l__User = g__Users.get(uuID);
 
-    if (user == undefined) {
+    if (l__User == undefined) {
       return ({
         status: Status.Conflict,
         statusText: `The User with uuID ${uuID} wasn't connected.`,
       });
     } else {
-      let user__isConnected__mutex__unlock: () => void;
+      let l__User__isConnected__mutex__unlock: () => void;
       try {
-        user__isConnected__mutex__unlock = await user.#isConnected__mutex
-          .lock();
-      } catch {
+        l__User__isConnected__mutex__unlock = await l__User.#isConnected__mutex.lock();
+        } catch(err) {
+          console.warn(`The following error could occur when "l__User" is disconnected (undefined). It might be unrelated:\n${err}`);
         return ({
           status: Status.Conflict,
           statusText: `The User with uuID ${uuID} wasn't connected.`,
         });
       }
 
-      if (!user!.#isConnected) {
-        user__isConnected__mutex__unlock();
+      if (!l__User!.#isConnected) {
+        l__User__isConnected__mutex__unlock();
         return ({
           status: Status.Conflict,
           statusText: `The User with uuID ${uuID} wasn't connected.`,
         });
-      } else if (user!.#ws_player == undefined) {
-        user__isConnected__mutex__unlock();
+      } else if (l__User!.#ws_player == undefined) {
+        l__User__isConnected__mutex__unlock();
         return ({
           status: Status.Conflict,
           statusText:
@@ -163,8 +167,8 @@ export class User {
       } else {
         const l__GameMap = g__GameMaps.get(GameMap__ID.Sandbox)!;
 
-        if (user!.#player == undefined) {
-          user!.#player = new Player(
+        if (l__User!.#m__Player == undefined) {
+          l__User!.#m__Player = new Player(
             {
               eeID: await GameEntity.eeID__generate(1),
               GameObject: new Character(
@@ -181,7 +185,7 @@ export class User {
               ),
             },
             {
-              ws_player: user!.#ws_player!,
+              ws_player: l__User!.#ws_player!,
             },
           );
 
@@ -189,32 +193,32 @@ export class User {
             .connect_Player(
               g__GameMaps,
               p__GameMap__ID,
-              user!.#player!,
+              l__User!.#m__Player!,
             );
 
           if (l__GameMap__connect_Player__ReVa.status == Status.OK) {
             l__GameMap.handle_WS_messages(
               g__GameMaps,
-              user!.#player!,
-              user!.#ws_player!,
+              l__User!.#m__Player!,
+              l__User!.#ws_player!,
             );
           }
 
-          user__isConnected__mutex__unlock();
+          l__User__isConnected__mutex__unlock();
           return ({
             status: l__GameMap__connect_Player__ReVa.status,
             statusText: l__GameMap__connect_Player__ReVa.statusText,
           });
         } else {
-          user!.#player!.ws_player = user!.#ws_player!;
+          l__User!.#m__Player!.ws_player = l__User!.#ws_player!;
 
           l__GameMap.handle_WS_messages(
             g__GameMaps,
-            user!.#player!,
-            user!.#ws_player!,
+            l__User!.#m__Player!,
+            l__User!.#ws_player!,
           );
 
-          user__isConnected__mutex__unlock();
+          l__User__isConnected__mutex__unlock();
           return ({
             status: Status.OK,
             statusText:
@@ -229,47 +233,47 @@ export class User {
     g__GameMaps: Map<GameMap__ID, GameMap>,
     g__Users: Map<string, User>,
     uuID: string,
-  ): Promise<{ status: Status; statusText: string }> {
-    const user = g__Users.get(uuID);
+  ) : Promise<{ status: Status; statusText: string }> {
+    const l__User = g__Users.get(uuID);
 
-    if (user == undefined) {
+    if (l__User == undefined) {
       return ({
         status: Status.Conflict,
         statusText: `The User with uuID ${uuID} wasn't connected.`,
       });
     } else {
-      let user__isConnected__mutex__unlock: () => void;
+      let l__l__User__isConnected__mutex__unlock : () => void;
       try {
-        user__isConnected__mutex__unlock = await user.#isConnected__mutex
-          .lock();
-      } catch {
+        l__l__User__isConnected__mutex__unlock = await l__User.#isConnected__mutex.lock();
+      } catch(err) {
+        console.warn(`The following error could occur when "l__User" is disconnected (undefined). It might be unrelated:\n${err}`);
         return ({
           status: Status.Conflict,
           statusText: `The User with uuID ${uuID} wasn't connected.`,
         });
       }
 
-      if (!user!.#isConnected) {
-        user__isConnected__mutex__unlock();
+      if (!l__User!.#isConnected) {
+        l__l__User__isConnected__mutex__unlock();
         return ({
           status: Status.Conflict,
           statusText: `The User with uuID ${uuID} wasn't connected.`,
         });
-      } else if (user!.#player == undefined) {
-        user__isConnected__mutex__unlock();
+      } else if (l__User!.#m__Player == undefined) {
+        l__l__User__isConnected__mutex__unlock();
         return ({
           status: Status.Conflict,
           statusText:
             `The Player of the User with uuID ${uuID} wasn't connected.`,
         });
       } else {
-        const l__GameMap__disconnect_Player__ReVa = await GameMap
-          .disconnect_Player(
+        const l__GameMap__disconnect_Player__ReVa =
+          await GameMap.disconnect_Player(
             g__GameMaps,
-            user!.#player!.eeID,
+            l__User!.#m__Player!.eeID,
           );
 
-        user__isConnected__mutex__unlock();
+        l__l__User__isConnected__mutex__unlock();
         return ({
           status: l__GameMap__disconnect_Player__ReVa.status,
           statusText: l__GameMap__disconnect_Player__ReVa.statusText,
@@ -281,54 +285,53 @@ export class User {
     g__GameMaps: Map<GameMap__ID, GameMap>,
     g__Users: Map<string, User>,
     uuID: string,
-  ): Promise<{ status: Status; statusText: string }> {
-    const user = g__Users.get(uuID);
+  ) : Promise<{ status: Status; statusText: string }> {
+    const l__User = g__Users.get(uuID);
 
-    if (user == undefined) {
+    if (l__User == undefined) {
       return ({
         status: Status.Conflict,
         statusText: `The User with uuID ${uuID} wasn't connected.`,
       });
     } else {
-      let user__isConnected__mutex__unlock: () => void;
+      let l__User__isConnected__mutex__unlock: () => void;
       try {
-        user__isConnected__mutex__unlock = await user.#isConnected__mutex
-          .lock();
-      } catch {
+        l__User__isConnected__mutex__unlock = await l__User.#isConnected__mutex.lock();
+      } catch(err) {
+        console.warn(`The following error could occur when "l__User" is disconnected (undefined). It might be unrelated:\n${err}`);
         return ({
           status: Status.Conflict,
           statusText: `The User with uuID ${uuID} wasn't connected.`,
         });
       }
 
-      if (!user!.#isConnected) {
-        user__isConnected__mutex__unlock();
+      if (!l__User!.#isConnected) {
+        l__User__isConnected__mutex__unlock();
         return ({
           status: Status.Conflict,
           statusText: `The User with uuID ${uuID} wasn't connected.`,
         });
       } else {
-        user__isConnected__mutex__unlock();
+        l__User__isConnected__mutex__unlock();
         const l__User__disconnect_Player__ReVa = await User.disconnect_Player(
           g__GameMaps,
           g__Users,
           uuID,
         );
-        user__isConnected__mutex__unlock = await user.#isConnected__mutex
-          .lock();
+        l__User__isConnected__mutex__unlock = await l__User.#isConnected__mutex.lock();
 
         if (
           (l__User__disconnect_Player__ReVa.status == Status.OK) ||
           (l__User__disconnect_Player__ReVa.status == Status.Conflict)
         ) {
           g__Users.delete(uuID);
-          user__isConnected__mutex__unlock();
+          l__User__isConnected__mutex__unlock();
           return ({
             status: Status.OK,
             statusText: `The User with uuID ${uuID} has been disconnected.`,
           });
         } else {
-          user__isConnected__mutex__unlock();
+          l__User__isConnected__mutex__unlock();
           return ({
             status: l__User__disconnect_Player__ReVa.status,
             statusText: l__User__disconnect_Player__ReVa.statusText,
