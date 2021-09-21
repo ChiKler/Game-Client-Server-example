@@ -19,72 +19,110 @@ import { WS_msg_Player } from "./WS_msg_Player.ts";
 // @ts-ignore
 import { Mutex, sleep, time_stamp } from "../vendor/utility/mod.ts";
 
-export enum GameMap__ID {
+
+
+
+
+export enum GameMap__ID
+{
   Sandbox,
 }
 
-export interface GameMap__Args {
-  GameMap__ID: GameMap__ID;
+export interface GameMap__Args
+{
+  GameMap__ID : GameMap__ID;
 }
 
 export class GameMap
 {
-  static Players_Buffer = class<T>
+  static Players_Buffer_In = class
   {
-    #data: Array<T>; // should use ArrayBuffer as buffer and Uint8Array as view
+    #data : Array<Player> = new Array<Player>(); // should use ArrayBuffer as buffer and Uint8Array as view
     
     
-    constructor()
+    pass(p__Player : Player) : void
     {
-      this.#data = new Array<T>();
+      this.#data.push(p__Player);
     }
     
-    
-    pass(t: T) : number
-    {
-      return (this.#data.push(t));
-    }
-    
-    take() : (T | undefined)
+    take() : (Player | undefined)
     {
       return (this.#data.pop());
     }
   };
-  static Players_BufferIn = class extends GameMap.Players_Buffer<Player> {};
-  static Players_BufferOut__data__Ty = class
+  static Players_Buffer_Out__data__value__Ty = class
   {
-    Player: Player;
-    isToBeDisconnected: boolean;
-    GameMap__ID__target: (GameMap__ID | undefined);
+    Player : Player;
+    isToBeDisconnected : boolean;
+    GameMap__ID_target? : GameMap__ID;
     
     
     constructor(
-      p__Player: Player,
-      p__isToBeDisconnected: boolean,
-      p__GameMap__ID__target?: GameMap__ID,
+      p__Player : Player,
+      p__isToBeDisconnected : boolean,
+      p__GameMap__ID_target? : GameMap__ID,
     ) {
       this.Player = p__Player;
       this.isToBeDisconnected = p__isToBeDisconnected;
       
       if (p__isToBeDisconnected) {
-        this.GameMap__ID__target = undefined;
-      } else {
-        if (p__GameMap__ID__target == undefined) {
-          try {
-            throw new TypeError(
-              `Invalid "GameMap.Players_BufferOut__data__Ty" constructor call. The argument "GameMap__ID__target" needs to be provided when the argument "isToBeDisconnected" is false.`,
-            );
-          } catch (err) {
-            console.error(err);
-          }
+        if (p__GameMap__ID_target == undefined) {
+          this.GameMap__ID_target = undefined;
         } else {
-          this.GameMap__ID__target = p__GameMap__ID__target;
+          throw new TypeError(
+            `Invalid "GameMap.Players_Buffer_Out__data__value__Ty" constructor call. The argument "GameMap__ID__target" needs not to be provided when the argument "isToBeDisconnected" is true.`,
+          );
+        }
+      } else {
+        if (p__GameMap__ID_target == undefined) {
+          throw new TypeError(
+            `Invalid "GameMap.Players_Buffer_Out__data__value__Ty" constructor call. The argument "GameMap__ID__target" needs to be provided when the argument "isToBeDisconnected" is false.`,
+          );
+        } else {
+          this.GameMap__ID_target = p__GameMap__ID_target;
         }
       }
     }
   };
-  // @ts-ignore
-  static Players_BufferOut = class extends GameMap.Players_Buffer<GameMap.Players_BufferOut__data__Ty> {};
+  static Players_Buffer_Out = class
+  {
+    //@ts-ignore
+    #data : { [ key : number ] : GameMap.Players_Buffer_Out__data__value__Ty } = {};
+
+    #idx_count = 0;
+
+
+    //@ts-ignore
+    pass(p__GameMap__Players_Buffer_Out__data__value__Ty : GameMap.Players_Buffer_Out__data__value__Ty) : void
+    {
+      this.#data[this.#idx_count++] = p__GameMap__Players_Buffer_Out__data__value__Ty;
+    }
+
+    //@ts-ignore
+    take() : (GameMap.Players_Buffer_Out__data__value__Ty | undefined)
+    {
+      const this__data__keys = Object.keys(this.#data);
+
+      const this__data__keys__length = this__data__keys.length;
+
+      if (this__data__keys__length == 0) return (undefined);
+
+      let idx_smallest = +this__data__keys[0];
+
+      for (let i = 1; i < this__data__keys__length; i++)
+      {
+        const idx_candidate = +this__data__keys[i];
+
+        if (idx_smallest > idx_candidate) idx_smallest = idx_candidate;
+      }
+
+      const l__GameMap__Players_Buffer_Out__data__value__Ty = this.#data[idx_smallest]!;
+
+      delete this.#data[idx_smallest];
+
+      return (l__GameMap__Players_Buffer_Out__data__value__Ty);
+    }
+  };
 
   static PetitionToDisconnectPlayer = class {
     hasBeenDisconnected : boolean;
@@ -97,35 +135,35 @@ export class GameMap
     }
   };
 
-  readonly m__GameMap__ID: GameMap__ID;
+  readonly m__GameMap__ID : GameMap__ID;
   
   readonly Size : { X : number, Y : number };
 
-  #m__Players: Map<number, Player>;
+  #m__Players : Map<number, Player>;
 
   // @ts-ignore
-  #m__Players_BufferIn: GameMap.Players_BufferIn;
+  #m__Players_Buffer_In : GameMap.Players_Buffer_In;
   // @ts-ignore
-  #m__Players_BufferOut: GameMap.Players_BufferOut;
+  #m__Players_Buffer_Out : GameMap.Players_Buffer_Out;
   
   // @ts-ignore
   #m__PetitionsToDisconnectPlayer : { [ key : string ] : GameMap.PetitionToDisconnectPlayer };
 
-  private constructor(p__GameMap__Args: GameMap__Args) {
+  private constructor(p__GameMap__Args : GameMap__Args) {
     this.m__GameMap__ID = p__GameMap__Args.GameMap__ID;
     
     this.Size = { X: 3600, Y: 3600 };
     
     this.#m__Players = new Map<number, Player>();
 
-    this.#m__Players_BufferIn = new GameMap.Players_BufferIn();
-    this.#m__Players_BufferOut = new GameMap.Players_BufferOut();
+    this.#m__Players_Buffer_In = new GameMap.Players_Buffer_In();
+    this.#m__Players_Buffer_Out = new GameMap.Players_Buffer_Out();
 
     this.#m__PetitionsToDisconnectPlayer = {};
   }
 
   #connect_Player__calls_in_progress = 0;
-  #connect_Player__calls_in_progress__mutex = new Mutex();
+  #connect_Player__calls_in_progress__Mutex = new Mutex();
   static async connect_Player(
     g__GameMaps: Map<GameMap__ID, GameMap>,
     p__GameMap__ID: GameMap__ID,
@@ -133,7 +171,7 @@ export class GameMap
   ) : Promise<{ status : Status; statusText : string }> {
     let l__GameMap : (GameMap | undefined);
 
-    let l__GameMap__connect_Player__calls_in_progress__mutex__unlock :
+    let l__GameMap__connect_Player__calls_in_progress__Mutex__unlock :
       ((() => void) | undefined) = undefined;
 
     let l__GameMap__wasAlreadyClosed = false;
@@ -141,20 +179,20 @@ export class GameMap
     try {
       l__GameMap = g__GameMaps.get(p__GameMap__ID);
 
-      l__GameMap__connect_Player__calls_in_progress__mutex__unlock =
-        await l__GameMap!.#connect_Player__calls_in_progress__mutex.lock();
+      l__GameMap__connect_Player__calls_in_progress__Mutex__unlock =
+        await l__GameMap!.#connect_Player__calls_in_progress__Mutex.lock();
 
       if (l__GameMap!.#m__isClosing) {
         l__GameMap__wasAlreadyClosed = true;
-        l__GameMap__connect_Player__calls_in_progress__mutex__unlock!();
+        l__GameMap__connect_Player__calls_in_progress__Mutex__unlock!();
       }
     } catch(err) {
       console.warn(`The following error could occur when "l__GameMap" is closed (undefined). It might be unrelated:\n${err}`);
       l__GameMap__wasAlreadyClosed = true;
       if (
-        l__GameMap__connect_Player__calls_in_progress__mutex__unlock != undefined
+        l__GameMap__connect_Player__calls_in_progress__Mutex__unlock != undefined
       ) {
-        l__GameMap__connect_Player__calls_in_progress__mutex__unlock!();
+        l__GameMap__connect_Player__calls_in_progress__Mutex__unlock!();
       }
     }
 
@@ -166,9 +204,9 @@ export class GameMap
       });
     } else {
       ++l__GameMap!.#connect_Player__calls_in_progress;
-      l__GameMap__connect_Player__calls_in_progress__mutex__unlock!();
+      l__GameMap__connect_Player__calls_in_progress__Mutex__unlock!();
 
-      l__GameMap!.#m__Players_BufferIn.pass(player);
+      l__GameMap!.#m__Players_Buffer_In.pass(player);
 
       --l__GameMap!.#connect_Player__calls_in_progress;
       return ({
@@ -180,7 +218,7 @@ export class GameMap
   }
 
   #disconnect_Player__calls_in_progress = 0;
-  #disconnect_Player__calls_in_progress__mutex = new Mutex();
+  #disconnect_Player__calls_in_progress__Mutex = new Mutex();
   static async disconnect_Player(
     g__GameMaps: Map<GameMap__ID, GameMap>,
     eeID: number,
@@ -196,29 +234,29 @@ export class GameMap
     while ((found == false) && (i < l__GameMap__IDs.length)) {
       let l__GameMap__wasAlreadyClosed = false;
 
-      let l__GameMap__disconnect_Player__calls_in_progress__mutex__unlock :
+      let l__GameMap__disconnect_Player__calls_in_progress__Mutex__unlock :
         ((() => void) | undefined) = undefined;
 
       try {
         l__GameMap = g__GameMaps.get(l__GameMap__IDs[i]);
 
-        l__GameMap__disconnect_Player__calls_in_progress__mutex__unlock =
-          await l__GameMap!.#disconnect_Player__calls_in_progress__mutex.lock();
+        l__GameMap__disconnect_Player__calls_in_progress__Mutex__unlock =
+          await l__GameMap!.#disconnect_Player__calls_in_progress__Mutex.lock();
 
         if (l__GameMap!.#m__isClosing) {
           l__GameMap__wasAlreadyClosed = true;
-          l__GameMap__disconnect_Player__calls_in_progress__mutex__unlock!();
-          l__GameMap__disconnect_Player__calls_in_progress__mutex__unlock = undefined;
+          l__GameMap__disconnect_Player__calls_in_progress__Mutex__unlock!();
+          l__GameMap__disconnect_Player__calls_in_progress__Mutex__unlock = undefined;
         }
       } catch(err) {
         console.warn(`The following error could occur when "l__GameMap" is closed (undefined). It might be unrelated:\n${err}`);
         l__GameMap__wasAlreadyClosed = true;
         if (
-          l__GameMap__disconnect_Player__calls_in_progress__mutex__unlock !=
+          l__GameMap__disconnect_Player__calls_in_progress__Mutex__unlock !=
             undefined
         ) {
-          l__GameMap__disconnect_Player__calls_in_progress__mutex__unlock!();
-          l__GameMap__disconnect_Player__calls_in_progress__mutex__unlock =
+          l__GameMap__disconnect_Player__calls_in_progress__Mutex__unlock!();
+          l__GameMap__disconnect_Player__calls_in_progress__Mutex__unlock =
             undefined;
         }
       }
@@ -227,7 +265,7 @@ export class GameMap
         i++;
       } else {
         ++l__GameMap!.#disconnect_Player__calls_in_progress;
-        l__GameMap__disconnect_Player__calls_in_progress__mutex__unlock!();
+        l__GameMap__disconnect_Player__calls_in_progress__Mutex__unlock!();
 
         if (l__GameMap!.#m__Players.get(eeID) == undefined) {
           i++;
@@ -357,13 +395,13 @@ export class GameMap
 
           if (!l__PetitionToDisconnectPlayer.hasBeenDisconnected)
           {
-            const l__Player__to_be_disconnected = this.#m__Players.get(eeID)!;
-            console.log(l__Player__to_be_disconnected + "");
+            const Player_to_be_disconnected = this.#m__Players.get(eeID)!;
+            
             this.#m__Players.delete(eeID);
-            console.log(l__Player__to_be_disconnected + "");
-            this.#m__Players_BufferOut.pass(
-              new GameMap.Players_BufferOut__data__Ty(
-                l__Player__to_be_disconnected,
+            
+            this.#m__Players_Buffer_Out.pass(
+              new GameMap.Players_Buffer_Out__data__value__Ty(
+                Player_to_be_disconnected,
                 true,
                 undefined,
               ),
@@ -396,24 +434,25 @@ export class GameMap
     iterate_through_Players_and_handle_GameEntityEvent(GameEntityEvent__ID.steer_left);
     iterate_through_Players_and_handle_GameEntityEvent(GameEntityEvent__ID.steer_right);
 
-    this.#m__Players.forEach((l__Player__source : Player) => {
-      this.#m__Players.forEach((l__Player__target : Player) => {
-        if (l__Player__target.eeID != l__Player__source.eeID) {
+    this.#m__Players.forEach((Player_source : Player) => {
+      this.#m__Players.forEach((Player_target : Player) => {
+        if (Player_target.eeID != Player_source.eeID) {
           WS_msg_Player.send__Sighting(
-            l__Player__source,
-            l__Player__target,
+            Player_source,
+            Player_target,
           );
         }
       });
     });
 
     {
-      let m__Players_BufferIn__take__ReVa : (Player | undefined);
+      let m__Players_Buffer_In__take__ReVa : (Player | undefined);
       while (
-        (m__Players_BufferIn__take__ReVa = this.#m__Players_BufferIn.take()) !=
-          undefined
+        (m__Players_Buffer_In__take__ReVa = this.#m__Players_Buffer_In.take())
+        !=
+        undefined
       ) {
-        const player_that_arrives = m__Players_BufferIn__take__ReVa!;
+        const player_that_arrives = m__Players_Buffer_In__take__ReVa!;
 
         this.#m__Players.set(
           player_that_arrives.eeID,
@@ -452,7 +491,7 @@ export class GameMap
   }
   private async update__stop() {
     if (this.#update__isLoopRunning) {
-      await sleep(8000); // Wait for this.#m__Players_BufferIn and this.#m__Players_BufferOut to be empty.
+      await sleep(8000); // Wait for this.#m__Players_Buffer_In and this.#m__Players_Buffer_Out to be empty.
 
       this.#update__isLoopRunning = false;
 
@@ -503,7 +542,7 @@ export class GameMap
   /**
    * 
    * Could collapse if several parts of the program try to close the same GameMap at the same time.
-   * To fix, add a Mutex GameMap.#m__isClosing__mutex.
+   * To fix, add a Mutex GameMap.#m__isClosing__Mutex.
    * I don't think it's necessary as of yet.
    * 
   **/
@@ -515,13 +554,13 @@ export class GameMap
 
     l__GameMap.#m__isClosing = true;
 
-    await l__GameMap.#connect_Player__calls_in_progress__mutex.lock();
+    await l__GameMap.#connect_Player__calls_in_progress__Mutex.lock();
     while (l__GameMap.#connect_Player__calls_in_progress > 0) await sleep(20);
-    while (l__GameMap.#m__Players_BufferIn.length > 0) await sleep(20);
+    while (l__GameMap.#m__Players_Buffer_In.length > 0) await sleep(20);
 
-    await l__GameMap.#disconnect_Player__calls_in_progress__mutex.lock();
+    await l__GameMap.#disconnect_Player__calls_in_progress__Mutex.lock();
     while (l__GameMap.#disconnect_Player__calls_in_progress > 0) await sleep(20);
-    while (l__GameMap.#m__Players_BufferOut.length > 0) await sleep(20);
+    while (l__GameMap.#m__Players_Buffer_Out.length > 0) await sleep(20);
 
     await l__GameMap.update__stop();
 
@@ -529,8 +568,8 @@ export class GameMap
   }
 
   static async g__GameMaps__handler(
-    g__GameMaps: Map<GameMap__ID, GameMap>,
-    g__server__isRunning: boolean,
+    g__GameMaps : Map<GameMap__ID, GameMap>,
+    g__server__isRunning : boolean,
   ) : Promise<void> {
     (async () : Promise<void> =>
     {
@@ -545,31 +584,31 @@ export class GameMap
         };
 
 
-        g__GameMaps.forEach((l__GameMap: GameMap) => {
-          let l__GameMap__Players_BufferOut__take__ReVa :
+        g__GameMaps.forEach((l__GameMap : GameMap) => {
+          let l__GameMap__Players_Buffer_Out__take__ReVa :
             // @ts-ignore
-            (GameMap.Players_BufferOut__data__Ty | undefined);
+            (GameMap.Players_Buffer_Out__data__value__Ty | undefined);
           while (
-            (l__GameMap__Players_BufferOut__take__ReVa = l__GameMap.#m__Players_BufferOut.take()) != undefined
+            (l__GameMap__Players_Buffer_Out__take__ReVa = l__GameMap.#m__Players_Buffer_Out.take()) != undefined
           ) {
             if (
-              l__GameMap__Players_BufferOut__take__ReVa.isToBeDisconnected
+              l__GameMap__Players_Buffer_Out__take__ReVa.isToBeDisconnected
             ) {
               console.log(
-                `The Player with eeID ${l__GameMap__Players_BufferOut__take__ReVa.Player.eeID} is to be disconnected from g__GameMaps. This option needs to be implemented.`,
+                `The Player with eeID ${l__GameMap__Players_Buffer_Out__take__ReVa.Player.eeID} is to be disconnected from g__GameMaps. This option needs to be implemented.`,
               );
             } else {
               if (
                 g__GameMaps.get(
-                  l__GameMap__Players_BufferOut__take__ReVa
+                  l__GameMap__Players_Buffer_Out__take__ReVa
                     .GameMap__ID__target!,
                 )! != undefined
               ) {
                 g__GameMaps.get(
-                  l__GameMap__Players_BufferOut__take__ReVa
+                  l__GameMap__Players_Buffer_Out__take__ReVa
                     .GameMap__ID__target!,
-                )!.#m__Players_BufferIn.pass(
-                  l__GameMap__Players_BufferOut__take__ReVa.Player,
+                )!.#m__Players_Buffer_In.pass(
+                  l__GameMap__Players_Buffer_Out__take__ReVa.Player,
                 );
               }
             }

@@ -1,20 +1,24 @@
 /**
  *
- * const mutex_unlock = await mutex.lock();
+ * const __Mutex__unlock = await __Mutex.lock();
  * // do stuff here
- * mutex_unlock();
+ * __Mutex__unlock();
  *
 **/
-export class Mutex {
-  #current: Promise<void> = Promise.resolve();
+export class Mutex
+{
+  #current : Promise<void> = Promise.resolve();
 
-  constructor() {}
+  constructor() {};
 
-  public async lock(): Promise<() => void> {
-    let _resolve: () => void;
-    const promise = new Promise<void>((resolve) => {
-      _resolve = () => resolve(void 0);
-    });
+  public async lock() : Promise<() => void>
+  {
+    let _resolve : () => void;
+
+    const promise =
+      new Promise<void>((resolve) => {
+        _resolve = () => resolve(void 0);
+      });
 
     const unlock = this.#current.then(() => _resolve);
     this.#current = promise;

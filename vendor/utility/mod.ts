@@ -2,6 +2,9 @@
 export * from "./deno_file_manager.ts";
 
 // @ts-ignore
+export * from "./MakeFuncThatReturnsRef.ts";
+
+// @ts-ignore
 export * from "./Mutex.ts";
 
 // @ts-ignore
