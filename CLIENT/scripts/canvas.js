@@ -4,7 +4,8 @@ export const g__ctx = g__cvs.getContext("2d");
 export let g__half_canvas_sizeX;
 export let g__half_canvas_sizeY;
 
-export function g__canvas__set() {
+export function g__canvas__set()
+{
   g__cvs.width = window.innerWidth;
   g__cvs.height = window.innerHeight;
 

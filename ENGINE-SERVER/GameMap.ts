@@ -596,18 +596,23 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
 
     this.#update__isLoopCompleted = true;
 
-    return (elapsed_ms() - previous_loop_elapsed_ms);
+    return (-previous_loop_elapsed_ms + elapsed_ms());
   }
-  private async update__start() {
-    if (this.#update__isLoopRunning) {
-      return;
-    } else {
-      this.#update__isLoopRunning = true;
-    }
+  /**
+   * 
+   * Must only be called from within "GameMap.open_GameMap()".
+   * 
+  **/
+  private async update__start()
+  {
+    this.#update__isLoopRunning = true;
 
     let this__update__previous_loop_elapsed_ms = 20;
-    while (this.#update__isLoopRunning) {
-      this__update__previous_loop_elapsed_ms = await this.update__loop(this__update__previous_loop_elapsed_ms);
+
+    while (this.#update__isLoopRunning)
+    {
+      this__update__previous_loop_elapsed_ms =
+        await this.update__loop(this__update__previous_loop_elapsed_ms);
     }
   }
   /**
@@ -615,25 +620,20 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
    * Must only be called from within "GameMap.close_GameMap()".
    * 
   **/
-  private async update__stop() {
-    if (this.#update__isLoopRunning)
-    {
-      while (Object.keys(this.#PetitionsToDisconnectPlayer_by_eeID).length > 0) await sleep(40);
+  private async update__stop()
+  {
+    while (Object.keys(this.#PetitionsToDisconnectPlayer_by_eeID).length > 0) await sleep(40);
 
-      this.#update__isLoopRunning = false;
+    this.#update__isLoopRunning = false;
 
-      while (!this.#update__isLoopCompleted) await sleep(40);
-    }
-    else
-    {
-      return;
-    }
+    while (!this.#update__isLoopCompleted) await sleep(40);
   }
 
   private static async open_GameMap(
     g__GameMaps : Map_by_num<GameMap>,
     GameMap_to_open__ID : GameMap__ID,
-  ) : Promise<void>
+  )
+  : Promise<void>
   {
     const g__GameMaps__ks = [...g__GameMaps.keys()];
 
@@ -676,7 +676,8 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
   private static async close_GameMap(
     g__GameMaps : Map_by_num<GameMap>,
     GameMap_to_close__ID : GameMap__ID,
-  ) : Promise<void>
+  )
+  : Promise<void>
   {
     const GameMap_to_close = g__GameMaps.get(GameMap_to_close__ID)!;
 
