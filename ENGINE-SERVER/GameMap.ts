@@ -108,7 +108,7 @@ class GameMap__Players_Buffer_Out
 
 export interface GameMap__Args
 {
-  GameMap__ID : GameMap__ID;
+  ID : GameMap__ID;
 }
 
 export class GameMap
@@ -129,7 +129,7 @@ export class GameMap
 
 
   private constructor(p__GameMap__Args : GameMap__Args) {
-    this.ID = p__GameMap__Args.GameMap__ID;
+    this.ID = p__GameMap__Args.ID;
     
     this.Size = { X: 3600, Y: 3600 };
   }
@@ -612,17 +612,17 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
   }
   /**
    * 
-   * Must only be called from within "GameMap.g__GameMaps__close()".
+   * Must only be called from within "GameMap.close_GameMap()".
    * 
   **/
   private async update__stop() {
     if (this.#update__isLoopRunning)
     {
-      while (Object.keys(this.#PetitionsToDisconnectPlayer_by_eeID).length > 0) await sleep(20);
+      while (Object.keys(this.#PetitionsToDisconnectPlayer_by_eeID).length > 0) await sleep(40);
 
       this.#update__isLoopRunning = false;
 
-      while (!this.#update__isLoopCompleted) await sleep(20);
+      while (!this.#update__isLoopCompleted) await sleep(40);
     }
     else
     {
@@ -630,20 +630,21 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
     }
   }
 
-  private static async g__GameMaps__open(
+  private static async open_GameMap(
     g__GameMaps : Map_by_num<GameMap>,
-    p__GameMap__ID : GameMap__ID,
+    GameMap_to_open__ID : GameMap__ID,
   ) : Promise<void>
   {
     const g__GameMaps__ks = [...g__GameMaps.keys()];
 
-    const p__GameMap__ID__str = p__GameMap__ID + "";
+    const GameMap_to_open__ID__str = GameMap_to_open__ID + "";
 
     let found = false;
     let i = 0;
 
-    while ((!found) && (i < g__GameMaps__ks.length)) {
-      if (g__GameMaps__ks[i] == p__GameMap__ID__str) {
+    while ((!found) && (i < g__GameMaps__ks.length))
+    {
+      if (g__GameMaps__ks[i] == GameMap_to_open__ID__str) {
         found = true;
         break;
       } else {
@@ -651,22 +652,15 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
       }
     }
 
-    if (found) {
-      try {
-        throw new TypeError(
-          `Invalid GameMap.open() argument { p__GameMap__ID: ${p__GameMap__ID}\
- } ~ Only one GameMap with the same ID can exist at the same time.`,
-        );
-      } catch (err) {
-        console.error(err);
-      }
-    } else {
-      g__GameMaps.set(
-        p__GameMap__ID,
-        new GameMap({ GameMap__ID: p__GameMap__ID }),
-      );
+    if (found)
+    {
+      console.warn(`The GameMap with ID ${GameMap_to_open__ID} was already open.`);
+    }
+    else
+    {
+      g__GameMaps.set(GameMap_to_open__ID, new GameMap({ ID: GameMap_to_open__ID }));
 
-      g__GameMaps.get(p__GameMap__ID)!.update__start();
+      g__GameMaps.get(GameMap_to_open__ID)!.update__start();
     }
   }
 
@@ -679,25 +673,25 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
    * Though I don't think it's necessary to overcomplicate it any further.
    * 
   **/
-  private static async g__GameMaps__close(
+  private static async close_GameMap(
     g__GameMaps : Map_by_num<GameMap>,
-    p__GameMap__ID : GameMap__ID,
+    GameMap_to_close__ID : GameMap__ID,
   ) : Promise<void>
   {
-    const GameMap_to_close = g__GameMaps.get(p__GameMap__ID)!;
+    const GameMap_to_close = g__GameMaps.get(GameMap_to_close__ID)!;
 
     const GameMap_to_close__closing_Mutex__unlock = await GameMap_to_close.#closing_Mutex.lock();
 
-    while (GameMap_to_close.#connect_Player__calls_in_progress > 0) await sleep(20);
-    while (GameMap_to_close.#Players_Buffer_In.length() > 0) await sleep(20);
+    while (GameMap_to_close.#connect_Player__calls_in_progress > 0) await sleep(40);
+    while (GameMap_to_close.#Players_Buffer_In.length() > 0) await sleep(40);
 
-    while (GameMap_to_close.#disconnect_Player__calls_in_progress > 0) await sleep(20);
-    while (GameMap_to_close.#handle_WS_messages__calls_in_progress > 0) await sleep(20);
-    while (GameMap_to_close.#Players_Buffer_Out.length() > 0) await sleep(20);
+    while (GameMap_to_close.#disconnect_Player__calls_in_progress > 0) await sleep(40);
+    while (GameMap_to_close.#handle_WS_messages__calls_in_progress > 0) await sleep(40);
+    while (GameMap_to_close.#Players_Buffer_Out.length() > 0) await sleep(40);
 
     await GameMap_to_close.update__stop();
 
-    g__GameMaps.delete(p__GameMap__ID);
+    g__GameMaps.delete(GameMap_to_close__ID);
 
     GameMap_to_close__closing_Mutex__unlock();
   }
@@ -705,8 +699,10 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
   static async g__GameMaps__handler(
     g__GameMaps : Map_by_num<GameMap>,
     g__server__isRunning : boolean,
-  ) : Promise<void> {
-    (async () : Promise<void> =>
+  )
+  : Promise<void>
+  {
+    (async () =>
     {
       while (g__server__isRunning)
       {
@@ -748,16 +744,12 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
         }
       }
 
-
-      // Should do this in a for loop for all opened GameMaps.
-      await Promise.all([
-        GameMap.g__GameMaps__close(g__GameMaps, GameMap__ID.Sandbox_A),
-        GameMap.g__GameMaps__close(g__GameMaps, GameMap__ID.Sandbox_B)
-      ])
+      g__GameMaps.for_each((GameMap_to_close : GameMap) => {
+        GameMap.close_GameMap(g__GameMaps, GameMap_to_close.ID);
+      });
     })();
 
-
-    GameMap.g__GameMaps__open(g__GameMaps, GameMap__ID.Sandbox_A);
-    GameMap.g__GameMaps__open(g__GameMaps, GameMap__ID.Sandbox_B);
+    GameMap.open_GameMap(g__GameMaps, GameMap__ID.Sandbox_A);
+    GameMap.open_GameMap(g__GameMaps, GameMap__ID.Sandbox_B);
   }
 }
