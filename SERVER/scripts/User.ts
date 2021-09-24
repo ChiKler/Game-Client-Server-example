@@ -15,24 +15,43 @@ import { v4 } from "https://deno.land/std@0.106.0/uuid/mod.ts";
 import { WebSocket } from "https://deno.land/std@0.106.0/ws/mod.ts";
 
 // @ts-ignore
-import { Mutex } from "../../vendor/utility/mod.ts";
+import { Map_by_num, Map_by_str, Mutex, sleep } from "../../vendor/utility/mod.ts";
 
 
 
 
 
-const g__Users__connection_handler_functions__Mutex_by_ID
-:
+type g__Users__User_conn__Mutex_by_uuID__Ty =
 {
-  m__Mutex_by_ID : { [ key : string ] : Mutex },
+  Mutex_by_ID : { [ key : string ] : Mutex },
   lock : ((uuID : string) => (Promise<() => void>))
-}
-=
+};
+
+const g__Users__User_conn__Mutex_by_uuID : g__Users__User_conn__Mutex_by_uuID__Ty =
 {
-  m__Mutex_by_ID: {},
-  lock: async function(uuID : string) : Promise<() => void> {
-    if (this.m__Mutex_by_ID[uuID] == undefined) this.m__Mutex_by_ID[uuID] = new Mutex();
-    return (await this.m__Mutex_by_ID[uuID].lock());
+  Mutex_by_ID: {},
+  lock: async function(uuID : string) : Promise<() => void>
+  {
+    if (this.Mutex_by_ID[uuID] == undefined) this.Mutex_by_ID[uuID] = new Mutex();
+    
+    return (await this.Mutex_by_ID[uuID].lock());
+  }
+};
+
+export type g__Users__Player_conn__Mutex_by_uuID__Ty =
+{
+  Mutex_by_ID : { [ key : string ] : Mutex },
+  lock : ((uuID : string) => (Promise<() => void>))
+};
+
+const g__Users__Player_conn__Mutex_by_uuID : g__Users__Player_conn__Mutex_by_uuID__Ty =
+{
+  Mutex_by_ID: {},
+  lock: async function(uuID : string) : Promise<() => void>
+  {
+    if (this.Mutex_by_ID[uuID] == undefined) this.Mutex_by_ID[uuID] = new Mutex();
+
+    return (await this.Mutex_by_ID[uuID].lock());
   }
 };
 
@@ -57,17 +76,27 @@ export class User
     this.#m__Player = p__Player;
   }
 
-  static async connect_User(
-    g__Users : Map<string, User>,
+  public static async connect_User(
+    g__Users : Map_by_str<User>,
     uuID : string,
   ) : Promise<{ status : Status; statusText : string; }> {
-    const unlock = await g__Users__connection_handler_functions__Mutex_by_ID.lock(uuID);
+    const g__Users__User_conn__Mutex_by_uuID__unlock =
+      await g__Users__User_conn__Mutex_by_uuID.lock(uuID);
 
     const wasUserAlreadyConnected = !(g__Users.get(uuID) == undefined);
 
-    g__Users.set(uuID, new User(uuID, v4.generate(), (wasUserAlreadyConnected ? g__Users.get(uuID)!.#m__Player! : undefined)));
+    const ssID = v4.generate();
 
-    unlock();
+    g__Users.set(
+      uuID,
+      new User(
+        uuID,
+        ssID,
+        (wasUserAlreadyConnected ? g__Users.get(uuID)!.#m__Player! : undefined)
+      )
+    );
+
+    g__Users__User_conn__Mutex_by_uuID__unlock();
 
     if (wasUserAlreadyConnected) {
       return ({
@@ -82,61 +111,105 @@ export class User
     }
   }
 
-  static async ws_player__set(
-    g__Users : Map<string, User>,
+  public static async ws_player__set(
+    g__Users : Map_by_str<User>,
     uuID : string,
     ws_player__new : WebSocket,
   ) : Promise<{ status : Status; statusText : string }> {
-    const unlock = await g__Users__connection_handler_functions__Mutex_by_ID.lock(uuID);
+    const g__Users__User_conn__Mutex_by_uuID__unlock =
+      await g__Users__User_conn__Mutex_by_uuID.lock(uuID);
 
-    const l__User = g__Users.get(uuID);
+    const User_owner = g__Users.get(uuID);
 
-    if (l__User == undefined) {
-      unlock();
+    if (User_owner == undefined) {
+      g__Users__User_conn__Mutex_by_uuID__unlock();
       return ({
         status: Status.Conflict,
         statusText: `The User with uuID ${uuID} wasn't connected.`,
       });
     } else {
-      l__User!.#ws_player = ws_player__new;
+      User_owner!.#ws_player = ws_player__new;
 
-      unlock();
+      g__Users__User_conn__Mutex_by_uuID__unlock();
       return ({
         status: Status.OK,
         statusText:
-          `The User with uuID ${uuID} has been assigned a WebSocket to its "ws_player" property.`,
+          `The User with uuID ${uuID} has been assigned a WebSocket for their Player.`,
       });
     }
   }
-  static async connect_Player(
-    g__GameMaps : Map<GameMap__ID, GameMap>,
-    p__GameMap__ID : GameMap__ID,
-    g__Users : Map<string, User>,
+
+  private static async handle_WS_messages_for_Player_to_be_connected(
+    g__GameMaps : Map_by_num<GameMap>,
+    Player_to_be_connected : Player,
+    User_owner__ws_player : WebSocket,
+    uuID : string
+  )
+  : Promise<{ success__value : boolean, status?: Status, statusText?: string }>
+  {
+    const success : { value : (boolean | undefined) } = { value: undefined };
+
+    const GameMap__handle_WS_messages__ReVa = GameMap.handle_WS_messages(
+      g__GameMaps,
+      Player_to_be_connected,
+      success,
+      User_owner__ws_player,
+      uuID,
+      g__Users__Player_conn__Mutex_by_uuID
+    );
+
+    while (success.value == undefined) await sleep(20);
+
+    if (success.value)
+    {
+      return ({ success__value: true });
+    }
+    else
+    {
+      const GameMap__handle_WS_messages__ReVa__resolved = await GameMap__handle_WS_messages__ReVa;
+
+      return ({
+        success__value: false,
+        status: GameMap__handle_WS_messages__ReVa__resolved!.status,
+        statusText: GameMap__handle_WS_messages__ReVa__resolved!.statusText
+      });
+    }
+  }
+
+  public static async connect_Player(
+    g__GameMaps : Map_by_num<GameMap>,
+    g__Users : Map_by_str<User>,
     uuID : string,
   ) : Promise<{ status : Status; statusText : string }> {
-    const unlock = await g__Users__connection_handler_functions__Mutex_by_ID.lock(uuID);
+    const g__Users__User_conn__Mutex_by_uuID__unlock =
+      await g__Users__User_conn__Mutex_by_uuID.lock(uuID);
 
-    const l__User = g__Users.get(uuID);
+    const User_owner = g__Users.get(uuID);
 
-    if (l__User == undefined) {
-      unlock();
+    if (User_owner == undefined)
+    {
+      g__Users__User_conn__Mutex_by_uuID__unlock();
       return ({
         status: Status.Conflict,
         statusText: `The User with uuID ${uuID} wasn't connected.`,
       });
-    } else if (l__User!.#ws_player == undefined) {
-      unlock();
+    }
+    else
+    if (User_owner!.#ws_player == undefined)
+    {
+      g__Users__User_conn__Mutex_by_uuID__unlock();
       return ({
         status: Status.Conflict,
         statusText:
           `The User with uuID ${uuID} doesn't have a WebSocket for their Player.`,
       });
-    } else {
-      const l__GameMap = g__GameMaps.get(GameMap__ID.Sandbox)!;
-
-      if (l__User!.#m__Player == undefined)
+    }
+    else
+    {
+      if (User_owner!.#m__Player == undefined)
       {
-        l__User!.#m__Player = new Player(
+        // Should get from DB.
+        const Player_to_be_connected = new Player(
           {
             eeID: (await GameEntity.eeID__generate(1)),
             GameObject: new Character(
@@ -153,61 +226,112 @@ export class User
             ),
           },
           {
-            ws_player: l__User!.#ws_player!,
+            ws_player: User_owner!.#ws_player!,
+
+            GameMap_origin__ID: GameMap__ID.Sandbox_A,
           },
         );
 
-        const l__GameMap__connect_Player__ReVa = await GameMap
-          .connect_Player(
-            g__GameMaps,
-            p__GameMap__ID,
-            l__User!.#m__Player!,
-          );
+        User_owner!.#m__Player = Player_to_be_connected;
 
-        if (l__GameMap__connect_Player__ReVa.status == Status.OK) {
-          l__GameMap.handle_WS_messages(
-            g__GameMaps,
-            l__User!.#m__Player!,
-            l__User!.#ws_player!,
-          );
-        }
-
-        unlock();
-        return ({
-          status: l__GameMap__connect_Player__ReVa.status,
-          statusText: l__GameMap__connect_Player__ReVa.statusText,
-        });
-      } else {
-        l__User!.#m__Player!.ws_player = l__User!.#ws_player!;
-
-        l__GameMap.handle_WS_messages(
+        const GameMap__connect_Player__ReVa = await GameMap.connect_Player(
           g__GameMaps,
-          l__User!.#m__Player!,
-          l__User!.#ws_player!,
+          Player_to_be_connected
         );
 
-        unlock();
-        return ({
-          status: Status.OK,
-          statusText:
-            `The User with uuID ${uuID} already had their Player connected.`,
-        });
+        const GameMap__connect_Player__ReVa__status = GameMap__connect_Player__ReVa.status;
+        const GameMap__connect_Player__ReVa__statusText = GameMap__connect_Player__ReVa.statusText;
+
+        if (GameMap__connect_Player__ReVa__status == Status.OK)
+        {
+          const User__handle_WS_messages_for_Player_to_be_connected__ReVa =
+            await User.handle_WS_messages_for_Player_to_be_connected(
+              g__GameMaps,
+              Player_to_be_connected,
+              User_owner!.#ws_player!,
+              uuID
+            )
+
+          g__Users__User_conn__Mutex_by_uuID__unlock();
+
+          if (User__handle_WS_messages_for_Player_to_be_connected__ReVa.success__value)
+          {
+            return ({
+              status: GameMap__connect_Player__ReVa__status,
+              statusText: GameMap__connect_Player__ReVa__statusText,
+            });
+          }
+          else
+          {
+            return ({
+              status: User__handle_WS_messages_for_Player_to_be_connected__ReVa.status!,
+              statusText: User__handle_WS_messages_for_Player_to_be_connected__ReVa.statusText!,
+            });
+          }
+        }
+        else
+        {
+          return ({
+            status: GameMap__connect_Player__ReVa__status,
+            statusText: GameMap__connect_Player__ReVa__statusText,
+          });
+        }
+      }
+      else
+      {
+        const Player_to_be_connected = User_owner!.#m__Player!;
+
+        const User_owner__ws_player = User_owner!.#ws_player!;
+
+        Player_to_be_connected.ws_player = User_owner__ws_player;
+
+        const User__handle_WS_messages_for_Player_to_be_connected__ReVa =
+          await User.handle_WS_messages_for_Player_to_be_connected(
+            g__GameMaps,
+            Player_to_be_connected,
+            User_owner__ws_player,
+            uuID
+          )
+
+        g__Users__User_conn__Mutex_by_uuID__unlock();
+
+        if (User__handle_WS_messages_for_Player_to_be_connected__ReVa.success__value)
+        {
+          return ({
+            status: Status.OK,
+            statusText: `The User with uuID ${uuID} already had their Player connected.`,
+          });
+        }
+        else
+        {
+          return ({
+            status: User__handle_WS_messages_for_Player_to_be_connected__ReVa.status!,
+            statusText: User__handle_WS_messages_for_Player_to_be_connected__ReVa.statusText!,
+          });
+        }
       }
     }
   }
 
-  static async disconnect_Player(
-    g__GameMaps : Map<GameMap__ID, GameMap>,
-    g__Users : Map<string, User>,
+  public static async disconnect_Player(
+    g__GameMaps : Map_by_num<GameMap>,
+    g__Users : Map_by_str<User>,
     uuID : string,
-    user_is_connected_and_mutex_locked? : boolean,
-  ) : Promise<{ status : Status; statusText : string }> {
-    const handle_disconnect_Player = async (p__User : User, unlock? : (() => void))
+    User_is_connected_and_Mutex_locked? : boolean,
+  )
+  : Promise<{ status : Status; statusText : string }>
+  {
+    const handle_disconnect_Player = async (
+      User_owner : User,
+      g__Users__User_conn__Mutex_by_uuID__unlock? : (() => void)
+    )
     : Promise<{ status : Status; statusText : string }> =>
     {
-      if (p__User!.#m__Player == undefined)
+      if (User_owner!.#m__Player == undefined)
       {
-        if (unlock != undefined) unlock();
+        if (g__Users__User_conn__Mutex_by_uuID__unlock != undefined)
+          g__Users__User_conn__Mutex_by_uuID__unlock();
+
         return ({
           status: Status.Conflict,
           statusText: `The Player of the User with uuID ${uuID} wasn't connected.`,
@@ -215,33 +339,36 @@ export class User
       }
       else
       {
-        const l__GameMap__disconnect_Player__ReVa =
+        const GameMap__disconnect_Player__ReVa =
           await GameMap.disconnect_Player(
             g__GameMaps,
-            p__User!.#m__Player!.eeID,
+            User_owner!.#m__Player!
           );
 
-        if (unlock != undefined) unlock();
+        if (g__Users__User_conn__Mutex_by_uuID__unlock != undefined)
+          g__Users__User_conn__Mutex_by_uuID__unlock();
+
         return ({
-          status: l__GameMap__disconnect_Player__ReVa.status,
-          statusText: l__GameMap__disconnect_Player__ReVa.statusText,
+          status: GameMap__disconnect_Player__ReVa.status,
+          statusText: GameMap__disconnect_Player__ReVa.statusText,
         });
       }
     }
 
-    if (user_is_connected_and_mutex_locked)
+    if (User_is_connected_and_Mutex_locked)
     {
       return (await handle_disconnect_Player(g__Users.get(uuID)!));
     }
     else
     {
-      const unlock = await g__Users__connection_handler_functions__Mutex_by_ID.lock(uuID);
+      const g__Users__User_conn__Mutex_by_uuID__unlock =
+        await g__Users__User_conn__Mutex_by_uuID.lock(uuID);
 
-      const l__User = g__Users.get(uuID);
+      const User_owner = g__Users.get(uuID);
   
-      if (l__User == undefined)
+      if (User_owner == undefined)
       {
-        unlock();
+        g__Users__User_conn__Mutex_by_uuID__unlock();
         return ({
           status: Status.Conflict,
           statusText: `The User with uuID ${uuID} wasn't connected.`,
@@ -249,27 +376,28 @@ export class User
       }
       else
       {
-        return (await handle_disconnect_Player(l__User, unlock));
+        return (await handle_disconnect_Player(User_owner, g__Users__User_conn__Mutex_by_uuID__unlock));
       }
     }
   }
-  static async disconnect_User(
-    g__GameMaps : Map<GameMap__ID, GameMap>,
-    g__Users : Map<string, User>,
+  public static async disconnect_User(
+    g__GameMaps : Map_by_num<GameMap>,
+    g__Users : Map_by_str<User>,
     uuID : string,
   ) : Promise<{ status : Status; statusText : string }> {
-    const unlock = await g__Users__connection_handler_functions__Mutex_by_ID.lock(uuID);
+    const g__Users__User_conn__Mutex_by_uuID__unlock =
+      await g__Users__User_conn__Mutex_by_uuID.lock(uuID);
 
-    const l__User = g__Users.get(uuID);
+    const User_to_disconnect = g__Users.get(uuID);
 
-    if (l__User == undefined) {
-      unlock();
+    if (User_to_disconnect == undefined) {
+      g__Users__User_conn__Mutex_by_uuID__unlock();
       return ({
         status: Status.Conflict,
         statusText: `The User with uuID ${uuID} wasn't connected.`,
       });
     } else {
-      const l__User__disconnect_Player__ReVa = await User.disconnect_Player(
+      const User__disconnect_Player__ReVa = await User.disconnect_Player(
         g__GameMaps,
         g__Users,
         uuID,
@@ -277,20 +405,21 @@ export class User
       );
 
       if (
-        (l__User__disconnect_Player__ReVa.status == Status.OK) ||
-        (l__User__disconnect_Player__ReVa.status == Status.Conflict)
+        (User__disconnect_Player__ReVa.status == Status.OK)
+        ||
+        (User__disconnect_Player__ReVa.status == Status.Conflict)
       ) {
         g__Users.delete(uuID);
-        unlock();
+        g__Users__User_conn__Mutex_by_uuID__unlock();
         return ({
           status: Status.OK,
           statusText: `The User with uuID ${uuID} has been disconnected.`,
         });
       } else {
-        unlock();
+        g__Users__User_conn__Mutex_by_uuID__unlock();
         return ({
-          status: l__User__disconnect_Player__ReVa.status,
-          statusText: l__User__disconnect_Player__ReVa.statusText,
+          status: User__disconnect_Player__ReVa.status,
+          statusText: User__disconnect_Player__ReVa.statusText,
         });
       }
     }

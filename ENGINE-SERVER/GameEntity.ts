@@ -71,6 +71,7 @@ export abstract class GameEntity
     this.m__GameObject = p__GameEntity__Args.GameObject;
   }
 
+
   private Event__move_forward__handle_fn__condt__begin = (
     args: GameEntityEvent__move_forward__Args,
     delta_time: number,
@@ -449,6 +450,23 @@ export abstract class GameEntity
       }
     }
   }
+
+
+  public get_coords() : { X : number, Y : number }
+  {
+    return ({
+      X: this.m__GameObject.Pos.X,
+      Y: this.m__GameObject.Pos.Y
+    });
+  }
+
+
+  public teleport(coords_target : { X : number, Y : number })
+  {
+    this.m__GameObject.Pos.X = coords_target.X;
+    this.m__GameObject.Pos.Y = coords_target.Y;
+  }
+
 
   private static eeID__count = 0;
   private static eeID__mutex = new Mutex();

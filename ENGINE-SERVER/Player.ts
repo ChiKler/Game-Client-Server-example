@@ -2,6 +2,9 @@
 import { GameEntity, GameEntity__Args } from "./GameEntity.ts";
 
 // @ts-ignore
+import { GameMap__ID } from "./GameMap.ts";
+
+// @ts-ignore
 import { WebSocket } from "https://deno.land/std@0.106.0/ws/mod.ts";
 
 
@@ -10,24 +13,25 @@ import { WebSocket } from "https://deno.land/std@0.106.0/ws/mod.ts";
 
 export interface Player__Args
 {
-  ws_player : WebSocket;
+  ws_player : WebSocket,
+
+  GameMap_origin__ID : GameMap__ID
 }
 
+/**
+ * 
+ * Must be created from within the "User" class.
+ * 
+**/
 export class Player extends GameEntity
 {
-  #ws_player : WebSocket;
-
-  get ws_player(): WebSocket {
-    return this.#ws_player;
-  }
   /**
-   * 
-   * USE ONLY FROM WITHIN THE "User" CLASS.
-   * 
+   * Only the owning User must write to this property.
   **/
-  set ws_player(ws_player : WebSocket) {
-    this.#ws_player = ws_player;
-  }
+  ws_player : WebSocket;
+
+  GameMap_origin__ID : GameMap__ID;
+
 
   constructor(
     p__GameEntity__Args : GameEntity__Args,
@@ -35,6 +39,8 @@ export class Player extends GameEntity
   ) {
     super(p__GameEntity__Args);
 
-    this.#ws_player = p__Player__Args.ws_player;
+    this.ws_player = p__Player__Args.ws_player;
+
+    this.GameMap_origin__ID = p__Player__Args.GameMap_origin__ID;
   }
 }

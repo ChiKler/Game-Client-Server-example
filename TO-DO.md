@@ -4,6 +4,7 @@
 - When a Player is disconnected from the GameMap, the CLIENT isn't updated (use WS_msg_Player_Disconnection to fix this).
 
 
+- Remove nested classes.
 - Rename all the variables to something readable.
 
 

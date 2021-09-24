@@ -19,9 +19,16 @@ import {
   // @ts-ignore
 } from "https://deno.land/std@0.106.0/ws/mod.ts";
 
-const g__Users = new Map<string, User>();
+// @ts-ignore
+import { Map_by_num, Map_by_str } from "../../vendor/utility/mod.ts";
 
-const g__GameMaps = new Map<GameMap__ID, GameMap>();
+
+
+
+
+const g__Users = new Map_by_str<User>();
+
+const g__GameMaps = new Map_by_num<GameMap>();
 
 const g__server = serve({ port: 3000 });
 const g__server__isRunning = true;
@@ -85,7 +92,6 @@ async function g__server__handle_requests() {
 
     const l__User__connect_Player__ReVa = await User.connect_Player(
       g__GameMaps,
-      GameMap__ID.Sandbox,
       g__Users,
       uuID,
     );
