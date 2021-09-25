@@ -438,6 +438,22 @@ async function g__server__handle_requests() {
         "../ENGINE-CLIENT/WS_msg_Player.js",
       );
     } else if (
+      (req.method === "GET") && (req.url === "/vendor/utility/Map_by_num.js")
+    ) {
+      handle_req__GET__file(
+        req,
+        "text/javascript",
+        "../vendor/utility/Map_by_num.js",
+      );
+    } else if (
+      (req.method === "GET") && (req.url === "/vendor/utility/Map_by_str.js")
+    ) {
+      handle_req__GET__file(
+        req,
+        "text/javascript",
+        "../vendor/utility/Map_by_str.js",
+      );
+    } else if (
       (req.method === "GET") && (req.url === "/vendor/utility/mod.js")
     ) {
       handle_req__GET__file(

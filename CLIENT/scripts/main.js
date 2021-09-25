@@ -1,102 +1,119 @@
-import { GameMap, GameMap_ID, Player } from "../../ENGINE-CLIENT/mod.js";
-
 import { g__ctx, g__cvs } from "./canvas.js";
 import { WS__make } from "./websockets.js";
 import { WS_msg_Player } from "../../ENGINE-CLIENT/WS_msg_Player.js";
 
+
+
+
+
 export const g__uuID = window.prompt("uuID", "Jane,John");
 
-export const g__server_address = "localhost:3000";
+export const g__server__address = "localhost:3000";
 
-export const g__GameMap = {
-  m__instance: undefined,
-  get: function () {
-    return this.m__instance;
-  },
-  set: function (p__instance) {
-    this.m__instance = p__instance;
-  },
-};
+
+let g__GameMap = undefined;
+export function g__GameMap__get()
+{
+  return (g__GameMap);
+}
+export function g__GameMap__set(p__GameMap)
+{
+  g__GameMap = p__GameMap;
+}
+
+// Debugging purposes.
 globalThis.g__GameMap = g__GameMap;
 
-export const g__Player = {
-  m__instance: undefined,
-  get: function () {
-    return this.m__instance;
-  },
-  set: function (p__instance) {
-    this.m__instance = p__instance;
-  },
-};
+
+let g__Player = undefined;
+export function g__Player__get()
+{
+  return (g__Player);
+}
+export function g__Player__set(p__Player)
+{
+  g__Player = p__Player;
+}
+
+// Debugging purposes.
 globalThis.g__Player = g__Player;
 
-export const g__ws_player = {
-  m__instance: undefined,
-  get: function () {
-    return this.m__instance;
-  },
-  set: async function (p__instance) {
-    this.m__instance = WS__make(g__server_address, g__uuID, "player");
 
-    await WS_msg_Player.recv__WS_msg_Player__Disconnection(
-      g__ws_player,
+let g__ws_player = undefined;
+export function g__ws_player__get()
+{
+  return (g__ws_player);
+}
+export async function g__ws_player__set()
+{
+  g__ws_player = WS__make(g__server__address, g__uuID, "player");
+
+  await Promise.all
+  ([
+    WS_msg_Player.recv_Connection(
+      g__ws_player__get,
+      g__GameMap__get,
+      g__GameMap__set,
+      g__Player__get,
+      g__Player__set,
       g__cvs,
-      g__ctx,
-      g__GameMap,
-      g__Player,
-    );
-    await WS_msg_Player.recv__WS_msg_Player__Connection(
-      g__ws_player,
-      g__cvs,
-      g__ctx,
-      g__GameMap,
-      g__Player,
-    );
-    await WS_msg_Player.recv__WS_msg_Player__Sighting(
-      g__ws_player,
-      g__GameMap,
-    );
-    await WS_msg_Player.recv__WS_msg_Player__Vanishing(
-      g__ws_player,
-      g__GameMap,
-    );
-    await WS_msg_Player.recv__WS_msg_Player__Takedown(
-      g__ws_player,
-      g__GameMap,
-    );
-  },
-};
+      g__ctx
+    ),
+    WS_msg_Player.recv_Disconnection(
+      g__ws_player__get,
+      g__GameMap__get,
+      g__GameMap__set,
+      g__Player__set
+    ),
+    WS_msg_Player.recv_Sighting(
+      g__ws_player__get,
+      g__GameMap__get
+    ),
+    WS_msg_Player.recv_Vanishing(
+      g__ws_player__get,
+      g__GameMap__get
+    ),
+    WS_msg_Player.recv_Takedown(
+      g__ws_player__get,
+      g__GameMap__get
+    )
+  ]);
+}
 
-export const g__ws_chat = {
-  m__instance: undefined,
-  get: function () {
-    return this.m__instance;
-  },
-  set: function (p__instance) {
-    this.m__instance = WS__make(g__server_address, g__uuID, "chat");
 
-    //WS_msg_Chat.recv__WS_msg_Chat__Message(g__ws_chat);
-  },
-};
+let g__ws_chat = undefined;
+export function g__ws_chat__get()
+{
+  return (g__ws_chat);
+}
+export async function g__ws_chat__set()
+{
+  g__Player = WS__make(g__server__address, g__uuID, "chat");
+}
 
-export async function g__connect_User() {
+
+export async function g__connect_User()
+{
   return (await fetch(
-    `http://${g__server_address}/connect_User?uuID=${g__uuID}`,
+    `http://${g__server__address}/connect_User?uuID=${g__uuID}`,
   ));
 }
-export async function g__connect_Player() {
+export async function g__connect_Player()
+{
   return (await fetch(
-    `http://${g__server_address}/connect_Player?uuID=${g__uuID}`,
+    `http://${g__server__address}/connect_Player?uuID=${g__uuID}`,
   ));
 }
-export async function g__disconnect_Player() {
+export async function g__disconnect_Player()
+{
   return (await fetch(
-    `http://${g__server_address}/disconnect_Player?uuID=${g__uuID}`,
+    `http://${g__server__address}/disconnect_Player?uuID=${g__uuID}`,
   ));
 }
-export async function g__disconnect_User() {
+export async function g__disconnect_User()
+{
   const res = await fetch(
-    `http://${g__server_address}/disconnect_User?uuID=${g__uuID}`,
+    `http://${g__server__address}/disconnect_User?uuID=${g__uuID}`,
   );
 
   if (res.status == 200) window.close();
@@ -104,27 +121,38 @@ export async function g__disconnect_User() {
   return (res);
 }
 
+
 // --- BLOCK DRAG --- //
 
-document.oncontextmenu = function () {
-  return false;
+document.oncontextmenu = function()
+{
+  return (false);
 };
 // --- BLOCK DRAG --- //
 
 // --- BLOCK RIGHT CLICK --- //
-document.onmousedown = function () {
-  // return event.preventDefault ? event.preventDefault()
-  //                             : event.returnValue = false;
-  return false;
+document.onmousedown = function()
+{
+  // return (
+  //   event.preventDefault
+  //     ? event.preventDefault()
+  //     : (event.returnValue = false)
+  // );
+  return (false);
 };
 // --- BLOCK RIGHT CLICK --- //
 
 // --- ALERT ON WINDOW CLOSING --- //
-window.onbeforeunload = function () {
+window.onbeforeunload = function()
+{
   return ("");
 };
-window.addEventListener("beforeunload", function (evt) {
-  evt.preventDefault();
-  evt.returnValue = "";
-});
+window.addEventListener(
+  "beforeunload",
+  function(evt)
+  {
+    evt.preventDefault();
+    evt.returnValue = "";
+  }
+);
 // --- ALERT ON WINDOW CLOSING --- //

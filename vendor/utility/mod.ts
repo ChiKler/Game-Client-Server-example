@@ -8,16 +8,10 @@ export * from "./Map_by_num.ts";
 export * from "./Map_by_str.ts";
 
 // @ts-ignore
-export * from "./Ref.ts";
-
-// @ts-ignore
 export * from "./Mutex.ts";
 
 // @ts-ignore
 export * from "./rand_int_between_range.ts";
-
-// @ts-ignore
-export * from "./Ref.ts";
 
 // @ts-ignore
 export * from "./sleep.ts";

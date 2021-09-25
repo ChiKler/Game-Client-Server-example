@@ -22,101 +22,106 @@ export var WS_msg_Player_ID;
 })(WS_msg_Player_ID || (WS_msg_Player_ID = {}));
 
 export class WS_msg_Player {
-  static async recv__WS_msg_Player__Connection(
-    g__ws_player,
+  static async recv_Connection(
+    g__ws_player__get,
+    g__GameMap__get,
+    g__GameMap__set,
+    g__Player__get,
+    g__Player__set,
     g__cvs,
-    g__ctx,
-    g__GameMap,
-    g__Player,
+    g__ctx
   ) {
     WS_msg.recv(
-      g__ws_player.get(),
+      g__ws_player__get(),
       "WS_msg_Player",
       WS_msg_Player_ID.Connection,
-      (msg__body) => {
-        GameMap.g__GameMap__open(
+      (msg__body) =>
+      {
+        GameMap.open_g__GameMap(
+          g__GameMap__get,
+          g__GameMap__set,
+          g__Player__set,
+          g__Player__get,
           g__cvs,
           g__ctx,
-          g__GameMap,
-          g__Player,
-          msg__body.m__GameMap_ID,
-          Player__from_SERVER_msg(msg__body.m__Player__source),
+          msg__body.GameMap_origin__ID,
+          Player__from_SERVER_msg(msg__body.Player_source)
         );
       },
     );
   }
 
-  static async recv__WS_msg_Player__Disconnection(
-    g__ws_player,
-    g__cvs,
-    g__ctx,
-    g__GameMap,
-    g__Player,
+  static async recv_Disconnection(
+    g__ws_player__get,
+    g__GameMap__get,
+    g__GameMap__set,
+    g__Player__set
   ) {
     WS_msg.recv(
-      g__ws_player.get(),
+      g__ws_player__get(),
       "WS_msg_Player",
       WS_msg_Player_ID.Disconnection,
-      (msg__body) => {
-        GameMap.g__GameMap__close(
-          g__cvs,
-          g__ctx,
-          g__GameMap,
-          g__Player,
-          msg__body.m__GameMap_ID,
+      (msg__body) =>
+      {
+        GameMap.close_g__GameMap(
+          g__GameMap__get,
+          g__GameMap__set,
+          g__Player__set
         );
       },
     );
   }
 
-  static async recv__WS_msg_Player__Sighting(
-    g__ws_player,
-    g__GameMap,
-  ) {
-    WS_msg.recv(
-      g__ws_player.get(),
-      "WS_msg_Player",
-      WS_msg_Player_ID.Sighting,
-      (msg__body) => {
-        const l__GameEntity__source = GameEntity__from_SERVER_msg(
-          msg__body.m__GameEntity__source,
-        );
-        if (l__GameEntity__source instanceof Player) {
-          g__GameMap.get().connect_Player(l__GameEntity__source);
-        } else {
-          throw new TypeError();
-        }
-      },
-    );
-  }
-
-  static async recv__WS_msg_Player__Vanishing(
-    g__ws_player,
-    g__GameMap,
-  ) {
-    WS_msg.recv(
-      g__ws_player.get(),
-      "WS_msg_Player",
-      WS_msg_Player_ID.Vanishing,
-      (msg__body) => {
-        const l__GameEntity__source = GameEntity__from_SERVER_msg(
-          msg__body.m__GameEntity__source,
-        );
-        if (l__GameEntity__source instanceof Player) {
-          g__GameMap.get().disconnect_Player(l__GameEntity__source);
-        } else {
-          throw new TypeError();
-        }
-      },
-    );
-  }
-
-  static async recv__WS_msg_Player__Takedown(
-    g__ws_player,
+  static async recv_Sighting(
+    g__ws_player__get,
     g__GameMap__get,
   ) {
     WS_msg.recv(
-      g__ws_player.get(),
+      g__ws_player__get(),
+      "WS_msg_Player",
+      WS_msg_Player_ID.Sighting,
+      (msg__body) =>
+      {
+        const GameEntity_source =
+          GameEntity__from_SERVER_msg(msg__body.GameEntity_source);
+        
+        if (GameEntity_source instanceof Player) {
+          g__GameMap__get().connect_Player(GameEntity_source);
+        } else {
+          throw (new TypeError());
+        }
+      },
+    );
+  }
+
+  static async recv_Vanishing(
+    g__ws_player__get,
+    g__GameMap__get,
+  ) {
+    WS_msg.recv(
+      g__ws_player__get(),
+      "WS_msg_Player",
+      WS_msg_Player_ID.Vanishing,
+      (msg__body) =>
+      {
+        const GameEntity_source =
+          GameEntity__from_SERVER_msg(msg__body.GameEntity_source);
+
+        if (GameEntity_source instanceof Player) {
+          g__GameMap__get().disconnect_Player(GameEntity_source);
+        } else {
+          throw (new TypeError());
+        }
+      },
+    );
+  }
+
+  static async recv_Takedown(
+    g__ws_player__get,
+    g__GameMap__get,
+  ) {
+    WS_msg.recv(
+      g__ws_player__get(),
       "WS_msg_Player",
       WS_msg_Player_ID.Takedown,
       (msg__body) => {

@@ -1,6 +1,6 @@
 import { g__canvas__set } from "./canvas.js";
 
-import { g__connect_Player, g__connect_User, g__ws_player } from "./main.js";
+import { g__connect_Player, g__connect_User, g__ws_player__set } from "./main.js";
 
 import { sleep } from "../../vendor/utility/mod.js";
 
@@ -15,17 +15,19 @@ async function init()
   
   while (true)
   {
-    const l__g__connect_User__ReVa = await g__connect_User();
+    const g__connect_User__ReVa = await g__connect_User();
 
-    if (l__g__connect_User__ReVa.status == 200) {
+    if (g__connect_User__ReVa.status == 200)
+    {
       break;
-    } else {
-      console.log(l__g__connect_User__ReVa);
+    }
+    else
+    {
       console.warn(
         `"g__connect_User" failed with status: `,
         {
-          code: l__g__connect_User__ReVa.status,
-          text: l__g__connect_User__ReVa.body.statusText,
+          code: g__connect_User__ReVa.status,
+          text: g__connect_User__ReVa.body.statusText,
         },
       );
 
@@ -33,20 +35,23 @@ async function init()
     }
   }
   
-  await g__ws_player.set();
+  await g__ws_player__set();
   
   while (true)
   {
-    const l__g__connect_Player__ReVa = await g__connect_Player();
+    const g__connect_Player__ReVa = await g__connect_Player();
 
-    if (l__g__connect_Player__ReVa.status == 200) {
+    if (g__connect_Player__ReVa.status == 200)
+    {
       break;
-    } else {
+    }
+    else
+    {
       console.warn(
-        `"g__connect_User" failed with status: `,
+        `"g__connect_Player" failed with status: `,
         {
-          code: l__g__connect_Player__ReVa.status,
-          text: l__g__connect_Player__ReVa.statusText,
+          code: g__connect_Player__ReVa.status,
+          text: g__connect_Player__ReVa.statusText,
         },
       );
 

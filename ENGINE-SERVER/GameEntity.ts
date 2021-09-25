@@ -46,7 +46,7 @@ import { Mutex } from "../vendor/utility/mod.ts";
 
 
 
-type GameEntityEvents__Ty = { [ key : string ] : GameEntityEvent<GameEntityEvent__Data__Args> };
+type GameEntityEvents__Ty = { [ key : number ] : GameEntityEvent<GameEntityEvent__Data__Args> };
 
 
 export interface GameEntity__Args
@@ -61,10 +61,10 @@ export abstract class GameEntity
   readonly eeID : number;
   protected m__GameObject : GameObject;
 
-  m__GameEntityEvents : GameEntityEvents__Ty = {};
+  readonly GameEntityEvents_by_ID : GameEntityEvents__Ty = {};
 
 
-  constructor(p__GameEntity__Args: GameEntity__Args)
+  constructor(p__GameEntity__Args : GameEntity__Args)
   {
     this.eeID = p__GameEntity__Args.eeID;
 
@@ -73,9 +73,9 @@ export abstract class GameEntity
 
 
   private Event__move_forward__handle_fn__condt__begin = (
-    args: GameEntityEvent__move_forward__Args,
-    delta_time: number,
-  ): {
+    args : GameEntityEvent__move_forward__Args,
+    delta_time : number,
+  ) : {
     success: boolean;
     status: GameEntityEvent__move_forward__begin__Status;
   } => {
@@ -94,9 +94,9 @@ export abstract class GameEntity
     });
   };
   private Event__move_forward__handle_fn__condt__close = (
-    args: GameEntityEvent__move_forward__Args,
-    delta_time: number,
-  ): {
+    args : GameEntityEvent__move_forward__Args,
+    delta_time : number,
+  ) : {
     success: boolean;
     status: GameEntityEvent__move_forward__close__Status;
   } => {
@@ -106,9 +106,9 @@ export abstract class GameEntity
     });
   };
   private Event__move_forward__handle_fn__logic = (
-    args: GameEntityEvent__move_forward__Args,
-    delta_time: number,
-  ): GameEntityEvent__move_forward__ReTy => {
+    args : GameEntityEvent__move_forward__Args,
+    delta_time : number,
+  ) : GameEntityEvent__move_forward__ReTy => {
     this.m__GameObject.move_forward(
       delta_time,
       args.Stat_MovementSpeed,
@@ -120,9 +120,9 @@ export abstract class GameEntity
   };
 
   private Event__move_backward__handle_fn__condt__begin = (
-    args: GameEntityEvent__move_backward__Args,
-    delta_time: number,
-  ): {
+    args : GameEntityEvent__move_backward__Args,
+    delta_time : number,
+  ) : {
     success: boolean;
     status: GameEntityEvent__move_backward__begin__Status;
   } => {
@@ -141,9 +141,9 @@ export abstract class GameEntity
     });
   };
   private Event__move_backward__handle_fn__condt__close = (
-    args: GameEntityEvent__move_backward__Args,
-    delta_time: number,
-  ): {
+    args : GameEntityEvent__move_backward__Args,
+    delta_time : number,
+  ) : {
     success: boolean;
     status: GameEntityEvent__move_backward__close__Status;
   } => {
@@ -153,9 +153,9 @@ export abstract class GameEntity
     });
   };
   private Event__move_backward__handle_fn__logic = (
-    args: GameEntityEvent__move_backward__Args,
-    delta_time: number,
-  ): GameEntityEvent__move_backward__ReTy => {
+    args : GameEntityEvent__move_backward__Args,
+    delta_time : number,
+  ) : GameEntityEvent__move_backward__ReTy => {
     this.m__GameObject.move_backward(
       delta_time,
       args.Stat_MovementSpeed,
@@ -167,9 +167,9 @@ export abstract class GameEntity
   };
 
   private Event__move_left__handle_fn__condt__begin = (
-    args: GameEntityEvent__move_left__Args,
-    delta_time: number,
-  ): {
+    args : GameEntityEvent__move_left__Args,
+    delta_time : number,
+  ) : {
     success: boolean;
     status: GameEntityEvent__move_left__begin__Status;
   } => {
@@ -188,9 +188,9 @@ export abstract class GameEntity
     });
   };
   private Event__move_left__handle_fn__condt__close = (
-    args: GameEntityEvent__move_left__Args,
-    delta_time: number,
-  ): {
+    args : GameEntityEvent__move_left__Args,
+    delta_time : number,
+  ) : {
     success: boolean;
     status: GameEntityEvent__move_left__close__Status;
   } => {
@@ -200,9 +200,9 @@ export abstract class GameEntity
     });
   };
   private Event__move_left__handle_fn__logic = (
-    args: GameEntityEvent__move_left__Args,
-    delta_time: number,
-  ): GameEntityEvent__move_left__ReTy => {
+    args : GameEntityEvent__move_left__Args,
+    delta_time : number,
+  ) : GameEntityEvent__move_left__ReTy => {
     this.m__GameObject.move_left(
       delta_time,
       args.Stat_MovementSpeed,
@@ -214,9 +214,9 @@ export abstract class GameEntity
   };
 
   private Event__move_right__handle_fn__condt__begin = (
-    args: GameEntityEvent__move_right__Args,
-    delta_time: number,
-  ): {
+    args : GameEntityEvent__move_right__Args,
+    delta_time : number,
+  ) : {
     success: boolean;
     status: GameEntityEvent__move_right__begin__Status;
   } => {
@@ -235,9 +235,9 @@ export abstract class GameEntity
     });
   };
   private Event__move_right__handle_fn__condt__close = (
-    args: GameEntityEvent__move_right__Args,
-    delta_time: number,
-  ): {
+    args : GameEntityEvent__move_right__Args,
+    delta_time : number,
+  ) : {
     success: boolean;
     status: GameEntityEvent__move_right__close__Status;
   } => {
@@ -247,9 +247,9 @@ export abstract class GameEntity
     });
   };
   private Event__move_right__handle_fn__logic = (
-    args: GameEntityEvent__move_right__Args,
-    delta_time: number,
-  ): GameEntityEvent__move_right__ReTy => {
+    args : GameEntityEvent__move_right__Args,
+    delta_time : number,
+  ) : GameEntityEvent__move_right__ReTy => {
     this.m__GameObject.move_right(
       delta_time,
       args.Stat_MovementSpeed,
@@ -261,9 +261,9 @@ export abstract class GameEntity
   };
 
   private Event__steer_left__handle_fn__condt__begin = (
-    args: GameEntityEvent__steer_left__Args,
-    delta_time: number,
-  ): {
+    args : GameEntityEvent__steer_left__Args,
+    delta_time : number,
+  ) : {
     success: boolean;
     status: GameEntityEvent__steer_left__begin__Status;
   } => {
@@ -282,9 +282,9 @@ export abstract class GameEntity
     });
   };
   private Event__steer_left__handle_fn__condt__close = (
-    args: GameEntityEvent__steer_left__Args,
-    delta_time: number,
-  ): {
+    args : GameEntityEvent__steer_left__Args,
+    delta_time : number,
+  ) : {
     success: boolean;
     status: GameEntityEvent__steer_left__close__Status;
   } => {
@@ -294,9 +294,9 @@ export abstract class GameEntity
     });
   };
   private Event__steer_left__handle_fn__logic = (
-    args: GameEntityEvent__steer_left__Args,
-    delta_time: number,
-  ): GameEntityEvent__steer_left__ReTy => {
+    args : GameEntityEvent__steer_left__Args,
+    delta_time : number,
+  ) : GameEntityEvent__steer_left__ReTy => {
     this.m__GameObject.steer_left(
       delta_time,
       args.Stat_SteeringSpeed,
@@ -308,9 +308,9 @@ export abstract class GameEntity
   };
 
   private Event__steer_right__handle_fn__condt__begin = (
-    args: GameEntityEvent__steer_right__Args,
-    delta_time: number,
-  ): {
+    args : GameEntityEvent__steer_right__Args,
+    delta_time : number,
+  ) : {
     success: boolean;
     status: GameEntityEvent__steer_right__begin__Status;
   } => {
@@ -329,9 +329,9 @@ export abstract class GameEntity
     });
   };
   private Event__steer_right__handle_fn__condt__close = (
-    args: GameEntityEvent__steer_right__Args,
-    delta_time: number,
-  ): {
+    args : GameEntityEvent__steer_right__Args,
+    delta_time : number,
+  ) : {
     success: boolean;
     status: GameEntityEvent__steer_right__close__Status;
   } => {
@@ -341,9 +341,9 @@ export abstract class GameEntity
     });
   };
   private Event__steer_right__handle_fn__logic = (
-    args: GameEntityEvent__steer_right__Args,
-    delta_time: number,
-  ): GameEntityEvent__steer_right__ReTy => {
+    args : GameEntityEvent__steer_right__Args,
+    delta_time : number,
+  ) : GameEntityEvent__steer_right__ReTy => {
     this.m__GameObject.steer_right(
       delta_time,
       args.Stat_SteeringSpeed,
@@ -356,28 +356,26 @@ export abstract class GameEntity
 
   public GameEntityEvents__handle(p__GameEntityEvent__ID : GameEntityEvent__ID, delta_time : number) : void
   {
-    const this__m__GameEntityEvents__k = p__GameEntityEvent__ID + "";
-
-    const l__GameEntityEvent = this.m__GameEntityEvents[this__m__GameEntityEvents__k];
-    if (l__GameEntityEvent != undefined)
+    const GameEntityEvent_to_handle = this.GameEntityEvents_by_ID[p__GameEntityEvent__ID];
+    if (GameEntityEvent_to_handle != undefined)
     {
       let found = false;
-      const this__m__GameEntityEvents__vs = Object.values(this.m__GameEntityEvents);
-      for (let i = 0; i < this__m__GameEntityEvents__vs.length; i++)
+      const this__GameEntityEvents_by_ID__vs = Object.values(this.GameEntityEvents_by_ID);
+      for (let i = 0; i < this__GameEntityEvents_by_ID__vs.length; i++)
       {
-        if (this__m__GameEntityEvents__vs[i].ID = p__GameEntityEvent__ID) found = true; break;
+        if (this__GameEntityEvents_by_ID__vs[i].ID = p__GameEntityEvent__ID) found = true; break;
       }
 
       if (found)
       {
-        let l__GameEntityEvent__handle_fn__ReVa : (GameEntityEvent__ReTy | null | undefined);
+        let GameEntityEvent__handle_fn__ReVa : (GameEntityEvent__ReTy | null | undefined);
 
         switch (p__GameEntityEvent__ID)
         {
           case (GameEntityEvent__ID.move_forward)
           :
-            l__GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
-              l__GameEntityEvent.data,
+            GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
+              GameEntityEvent_to_handle.data,
               this.Event__move_forward__handle_fn__condt__begin,
               this.Event__move_forward__handle_fn__condt__close,
               this.Event__move_forward__handle_fn__logic,
@@ -386,8 +384,8 @@ export abstract class GameEntity
           break;
           case (GameEntityEvent__ID.move_backward)
           :
-            l__GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
-              l__GameEntityEvent.data,
+            GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
+              GameEntityEvent_to_handle.data,
               this.Event__move_backward__handle_fn__condt__begin,
               this.Event__move_backward__handle_fn__condt__close,
               this.Event__move_backward__handle_fn__logic,
@@ -396,8 +394,8 @@ export abstract class GameEntity
           break;
           case (GameEntityEvent__ID.move_left)
           :
-            l__GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
-              l__GameEntityEvent.data,
+            GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
+              GameEntityEvent_to_handle.data,
               this.Event__move_left__handle_fn__condt__begin,
               this.Event__move_left__handle_fn__condt__close,
               this.Event__move_left__handle_fn__logic,
@@ -406,8 +404,8 @@ export abstract class GameEntity
           break;
           case (GameEntityEvent__ID.move_right)
           :
-            l__GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
-              l__GameEntityEvent.data,
+            GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
+              GameEntityEvent_to_handle.data,
               this.Event__move_right__handle_fn__condt__begin,
               this.Event__move_right__handle_fn__condt__close,
               this.Event__move_right__handle_fn__logic,
@@ -416,8 +414,8 @@ export abstract class GameEntity
           break;
           case (GameEntityEvent__ID.steer_left)
           :
-            l__GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
-              l__GameEntityEvent.data,
+            GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
+              GameEntityEvent_to_handle.data,
               this.Event__steer_left__handle_fn__condt__begin,
               this.Event__steer_left__handle_fn__condt__close,
               this.Event__steer_left__handle_fn__logic,
@@ -426,8 +424,8 @@ export abstract class GameEntity
           break;
           case (GameEntityEvent__ID.steer_right)
           :
-            l__GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
-              l__GameEntityEvent.data,
+            GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
+              GameEntityEvent_to_handle.data,
               this.Event__steer_right__handle_fn__condt__begin,
               this.Event__steer_right__handle_fn__condt__close,
               this.Event__steer_right__handle_fn__logic,
@@ -436,15 +434,15 @@ export abstract class GameEntity
           break;
           default
           :
-            l__GameEntityEvent__handle_fn__ReVa = undefined;
+            GameEntityEvent__handle_fn__ReVa = undefined;
           break;
         }
   
-        if (l__GameEntityEvent__handle_fn__ReVa !== undefined) {
-          // Send return value to the corresponding GameEntity (be it a Player or an AI_npe).
+        if (GameEntityEvent__handle_fn__ReVa !== undefined) {
+          // Send return value to the corresponding GameEntity (be it a Player or a Non_Player).
   
-          if (l__GameEntityEvent__handle_fn__ReVa == null) {
-            delete this.m__GameEntityEvents[this__m__GameEntityEvents__k];
+          if (GameEntityEvent__handle_fn__ReVa == null) {
+            delete this.GameEntityEvents_by_ID[p__GameEntityEvent__ID];
           }
         }
       }
@@ -470,7 +468,7 @@ export abstract class GameEntity
 
   private static eeID__count = 0;
   private static eeID__mutex = new Mutex();
-  static async eeID__generate(amount: number): Promise<number> {
+  static async eeID__generate(amount: number) : Promise<number> {
     const eeID__mutex__unlock = await GameEntity.eeID__mutex.lock();
     const eeID__count__old = GameEntity.eeID__count;
     GameEntity.eeID__count += amount;

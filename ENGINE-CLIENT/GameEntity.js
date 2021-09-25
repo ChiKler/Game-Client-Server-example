@@ -22,15 +22,19 @@ import {
 } from "./GameEntityEvent.js";
 
 export /*abstract */ class GameEntity {
-  eeID;
-  m__GameObject;
+  /*readonly */eeID;
+  /*protected */m__GameObject;
 
-  m__GameEntityEvents = {};
-  constructor(p__GameEntity__Args) {
+  /*readonly */GameEntityEvents_by_ID = {};
+
+
+  constructor(p__GameEntity__Args)
+  {
     this.eeID = p__GameEntity__Args.eeID;
 
     this.m__GameObject = p__GameEntity__Args.GameObject;
   }
+  
 
   /*private */ Event__move_forward__handle_fn__condt__begin = (
     args,
@@ -281,28 +285,26 @@ export /*abstract */ class GameEntity {
 
   /*public */GameEntityEvents__handle(p__GameEntityEvent__ID, delta_time)
   {
-    const this__m__GameEntityEvents__k = p__GameEntityEvent__ID + "";
-
-    const l__GameEntityEvent = this.m__GameEntityEvents[this__m__GameEntityEvents__k];
-    if (l__GameEntityEvent != undefined)
+    const GameEntityEvent_to_handle = this.GameEntityEvents_by_ID[p__GameEntityEvent__ID];
+    if (GameEntityEvent_to_handle != undefined)
     {
       let found = false;
-      const this__m__GameEntityEvents__vs = Object.values(this.m__GameEntityEvents);
-      for (let i = 0; i < this__m__GameEntityEvents__vs.length; i++)
+      const this__GameEntityEvents_by_ID__vs = Object.values(this.GameEntityEvents_by_ID);
+      for (let i = 0; i < this__GameEntityEvents_by_ID__vs.length; i++)
       {
-        if (this__m__GameEntityEvents__vs[i].ID = p__GameEntityEvent__ID) found = true; break;
+        if (this__GameEntityEvents_by_ID__vs[i].ID = p__GameEntityEvent__ID) found = true; break;
       }
 
       if (found)
       {
-        let l__GameEntityEvent__handle_fn__ReVa;
+        let GameEntityEvent__handle_fn__ReVa;
 
         switch (p__GameEntityEvent__ID)
         {
           case (GameEntityEvent__ID.move_forward)
           :
-            l__GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
-              l__GameEntityEvent.data,
+            GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
+              GameEntityEvent_to_handle.data,
               this.Event__move_forward__handle_fn__condt__begin,
               this.Event__move_forward__handle_fn__condt__close,
               this.Event__move_forward__handle_fn__logic,
@@ -311,8 +313,8 @@ export /*abstract */ class GameEntity {
           break;
           case (GameEntityEvent__ID.move_backward)
           :
-            l__GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
-              l__GameEntityEvent.data,
+            GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
+              GameEntityEvent_to_handle.data,
               this.Event__move_backward__handle_fn__condt__begin,
               this.Event__move_backward__handle_fn__condt__close,
               this.Event__move_backward__handle_fn__logic,
@@ -321,8 +323,8 @@ export /*abstract */ class GameEntity {
           break;
           case (GameEntityEvent__ID.move_left)
           :
-            l__GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
-              l__GameEntityEvent.data,
+            GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
+              GameEntityEvent_to_handle.data,
               this.Event__move_left__handle_fn__condt__begin,
               this.Event__move_left__handle_fn__condt__close,
               this.Event__move_left__handle_fn__logic,
@@ -331,8 +333,8 @@ export /*abstract */ class GameEntity {
           break;
           case (GameEntityEvent__ID.move_right)
           :
-            l__GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
-              l__GameEntityEvent.data,
+            GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
+              GameEntityEvent_to_handle.data,
               this.Event__move_right__handle_fn__condt__begin,
               this.Event__move_right__handle_fn__condt__close,
               this.Event__move_right__handle_fn__logic,
@@ -341,8 +343,8 @@ export /*abstract */ class GameEntity {
           break;
           case (GameEntityEvent__ID.steer_left)
           :
-            l__GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
-              l__GameEntityEvent.data,
+            GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
+              GameEntityEvent_to_handle.data,
               this.Event__steer_left__handle_fn__condt__begin,
               this.Event__steer_left__handle_fn__condt__close,
               this.Event__steer_left__handle_fn__logic,
@@ -351,8 +353,8 @@ export /*abstract */ class GameEntity {
           break;
           case (GameEntityEvent__ID.steer_right)
           :
-            l__GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
-              l__GameEntityEvent.data,
+            GameEntityEvent__handle_fn__ReVa = GameEntityEvent__handle_fn(
+              GameEntityEvent_to_handle.data,
               this.Event__steer_right__handle_fn__condt__begin,
               this.Event__steer_right__handle_fn__condt__close,
               this.Event__steer_right__handle_fn__logic,
@@ -361,15 +363,15 @@ export /*abstract */ class GameEntity {
           break;
           default
           :
-            l__GameEntityEvent__handle_fn__ReVa = undefined;
+            GameEntityEvent__handle_fn__ReVa = undefined;
           break;
         }
   
-        if (l__GameEntityEvent__handle_fn__ReVa !== undefined) {
-          // Send return value to the corresponding GameEntity (be it a Player or an AI_npc).
+        if (GameEntityEvent__handle_fn__ReVa !== undefined) {
+          // Send return value to the corresponding GameEntity (be it a Player or a Non_Player).
   
-          if (l__GameEntityEvent__handle_fn__ReVa == null) {
-            delete this.m__GameEntityEvents[this__m__GameEntityEvents__k];
+          if (GameEntityEvent__handle_fn__ReVa == null) {
+            delete this.GameEntityEvents_by_ID[p__GameEntityEvent__ID];
           }
         }
       }

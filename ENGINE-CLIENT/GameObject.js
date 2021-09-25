@@ -1,4 +1,5 @@
-export /*abstract */ class GameObject {
+export /*abstract */ class GameObject
+{
   Pos;
   
   HitBox;
@@ -12,7 +13,8 @@ export /*abstract */ class GameObject {
   sprite;
   img;
 
-  constructor(p__GameObject__Args) {
+  constructor(p__GameObject__Args)
+  {
     this.Pos = p__GameObject__Args.Pos;
     
     this.HitBox = p__GameObject__Args.HitBox;
@@ -29,8 +31,8 @@ export /*abstract */ class GameObject {
   }
 
   draw(g__cvs, g__ctx, g__Player) {
-    const adjustX = (g__Player.get().m__GameObject).img.width / 2;
-    const adjustY = (g__Player.get().m__GameObject).img.height / 2;
+    const adjustX = (g__Player.m__GameObject).img.width / 2;
+    const adjustY = (g__Player.m__GameObject).img.height / 2;
 
     g__ctx.save();
 

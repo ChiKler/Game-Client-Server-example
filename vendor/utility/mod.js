@@ -1,3 +1,7 @@
+export * from "./Map_by_num.js";
+
+export * from "./Map_by_str.js";
+
 export * from "./Mutex.js";
 
 export * from "./number_to_formatted_string.js";

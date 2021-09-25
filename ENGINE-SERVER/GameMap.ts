@@ -123,9 +123,9 @@ export class GameMap
   #Players_Buffer_Out = new GameMap__Players_Buffer_Out();
   
   #PetitionsToDisconnectPlayer_by_eeID :
-    { [ key : number ] : GameMap__PetitionToDisconnectPlayer } = {};
+    { [ eeID : number ] : GameMap__PetitionToDisconnectPlayer } = {};
   #PetitionsToWarpPlayer_by_eeID :
-    { [ key : number ] : GameMap__PetitionToDisconnectPlayer } = {};
+    { [ eeID : number ] : GameMap__PetitionToDisconnectPlayer } = {};
 
 
   private constructor(p__GameMap__Args : GameMap__Args) {
@@ -249,6 +249,9 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
 
       delete GameMap_origin!.#PetitionsToDisconnectPlayer_by_eeID[Player_to_disconnect__eeID];
 
+      GameMap_origin!.#handle_WS_messages__mustCallFinish[Player_to_disconnect__eeID] = true;
+      // handle_WS_messages won't close until for await loop receives a message. How to fix this?
+
       const PetitionToDisconnectPlayer__status = PetitionToDisconnectPlayer.status!;
       const PetitionToDisconnectPlayer__statusText = PetitionToDisconnectPlayer.statusText;
       
@@ -359,17 +362,14 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
     }
   }
 
-  #handle_WS_messages__calls_in_progress = 0;
+  #handle_WS_messages__mustCallFinish : { [ eeID : number ] : boolean } = {};
   public static async handle_WS_messages(
     g__GameMaps : Map_by_num<GameMap>,
     Player_source : Player,
-    success : { value : (boolean | undefined) },
     ws_player : WebSocket,
     uuID : string,
     g__Users__Player_conn__Mutex_by_uuID : g__Users__Player_conn__Mutex_by_uuID__Ty
-  )
-  : Promise<({ status: Status, statusText: string } | void)>
-  {
+  ) {
     const GameMap_origin__ID = Player_source.GameMap_origin__ID;
     
     const GameMap_origin = g__GameMaps.get(GameMap_origin__ID);
@@ -378,57 +378,59 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
 
     try
     {
-      // Expected possible error on the following line.
-      const GameMap_target__closing_Mutex__unlock =
-        // @ts-ignore
-        await GameMap_origin.#closing_Mutex.lock();
-
-      ++GameMap_origin!.#handle_WS_messages__calls_in_progress;
-
-      GameMap_target__closing_Mutex__unlock!();
-
-      success.value = true;
-    }
-    catch (err)
-    {
-      success.value = false;
-
-      console.warn(
-        `The following error could occur when "GameMap_origin" is closed (undefined). It might be unrelated:\n${err}`
-      );
-
-      return ({
-        status: Status.NotFound,
-        statusText:
-          `Could not handle the WebSocket "ws_player" for the Player with eeID ${Player_source__eeID}\
-. The GameMap with ID ${GameMap_origin__ID} was closed (undefined).`,
-      });
-    }
-    
-    try
-    {
-      WS_msg_Player.send__Connection(
+      while (
+        (GameMap_origin!.#Players_Map_by_num.get(Player_source__eeID) == undefined)
+        &&
+        (!GameMap_origin!.#isClosing)
+      ) {
+        await sleep(40);
+      }
+      
+      WS_msg_Player.send_Connection(
         Player_source,
-        GameMap_origin__ID,
+        GameMap_origin__ID
       );
-
-      GameMap_origin!.#Players_Map_by_num.for_each((Player_target : Player) => {
+  
+      GameMap_origin!.#Players_Map_by_num.for_each((Player_target : Player) =>
+      {
         if (Player_target.eeID != Player_source__eeID)
         {
-          WS_msg_Player.send__Sighting(
+          WS_msg_Player.send_Sighting(
             Player_source,
-            Player_target,
+            Player_target
           );
         }
       });
     }
     catch (err)
     {
-      console.warn(`The following error could occur when either WebSockets are closed. It might be unrelated:\n${err}`);
+      console.warn(
+        `The following error could occur when "GameMap_origin" is closed (undefined). It might be unrelated:\n${err}`
+      );
+
+      return;
     }
 
     for await (const msg_str of ws_player)
     {
+      try
+      {
+        if (GameMap_origin!.#handle_WS_messages__mustCallFinish[Player_source__eeID])
+        {
+          delete GameMap_origin!.#handle_WS_messages__mustCallFinish[Player_source__eeID];
+
+          break;
+        }
+      }
+      catch (err)
+      {
+        console.warn(
+          `The following error could occur when "GameMap_origin" is closed (undefined). It might be unrelated:\n${err}`
+        );
+
+        break;
+      }
+
       if (isWebSocketCloseEvent(msg_str))
       {
         const g__Users__Player_conn__Mutex_by_uuID__unlock =
@@ -447,27 +449,27 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
       {
         try
         {
-          WS_msg_GameEntity.recv__move_forward(
+          WS_msg_GameEntity.recv_move_forward(
             Player_source,
             <string> msg_str,
           );
-          WS_msg_GameEntity.recv__move_backward(
+          WS_msg_GameEntity.recv_move_backward(
             Player_source,
             <string> msg_str,
           );
-          WS_msg_GameEntity.recv__move_left(
+          WS_msg_GameEntity.recv_move_left(
             Player_source,
             <string> msg_str,
           );
-          WS_msg_GameEntity.recv__move_right(
+          WS_msg_GameEntity.recv_move_right(
             Player_source,
             <string> msg_str,
           );
-          WS_msg_GameEntity.recv__steer_left(
+          WS_msg_GameEntity.recv_steer_left(
             Player_source,
             <string> msg_str,
           );
-          WS_msg_GameEntity.recv__steer_right(
+          WS_msg_GameEntity.recv_steer_right(
             Player_source,
             <string> msg_str,
           );
@@ -478,13 +480,12 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
         }
       }
     }
-
-    --GameMap_origin!.#handle_WS_messages__calls_in_progress;
   };
 
   #update__isLoopRunning = false;
   #update__isLoopCompleted = true;
-  private async update__loop(previous_loop_elapsed_ms : number) {
+  private async update__loop(previous_loop_elapsed_ms : number)
+  {
     this.#update__isLoopCompleted = false;
 
     const begin_ms = time_stamp();
@@ -492,7 +493,7 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
     const max_ms = 40;
 
     const elapsed_ms = () : number => {
-      return ((time_stamp() - begin_ms) + previous_loop_elapsed_ms);
+      return (- begin_ms + previous_loop_elapsed_ms + time_stamp());
     };
     const delta_time = () : number => {
       return (elapsed_ms() * 0.001);
@@ -536,10 +537,11 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
       }
     }
 
-    const iterate_through_Players_and_handle_GameEntityEvent = (p__GameEntityEvent__ID : GameEntityEvent__ID) =>
+    const iterate_through_Players_and_handle_GameEntityEvent = (GameEntityEvent_to_handle__ID : GameEntityEvent__ID) =>
     {
-      this.#Players_Map_by_num.for_each((Player_i : Player) => {
-        Player_i.GameEntityEvents__handle(p__GameEntityEvent__ID, delta_time());
+      this.#Players_Map_by_num.for_each((Player_i : Player) =>
+      {
+        Player_i.GameEntityEvents__handle(GameEntityEvent_to_handle__ID, delta_time());
       });
     }
 
@@ -550,10 +552,12 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
     iterate_through_Players_and_handle_GameEntityEvent(GameEntityEvent__ID.steer_left);
     iterate_through_Players_and_handle_GameEntityEvent(GameEntityEvent__ID.steer_right);
 
-    this.#Players_Map_by_num.for_each((Player_source : Player) => {
-      this.#Players_Map_by_num.for_each((Player_target : Player) => {
+    this.#Players_Map_by_num.for_each((Player_source : Player) =>
+    {
+      this.#Players_Map_by_num.for_each((Player_target : Player) =>
+      {
         if (Player_target.eeID != Player_source.eeID) {
-          WS_msg_Player.send__Sighting(
+          WS_msg_Player.send_Sighting(
             Player_source,
             Player_target,
           );
@@ -596,7 +600,7 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
 
     this.#update__isLoopCompleted = true;
 
-    return (-previous_loop_elapsed_ms + elapsed_ms());
+    return (- previous_loop_elapsed_ms + elapsed_ms());
   }
   /**
    * 
@@ -607,12 +611,12 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
   {
     this.#update__isLoopRunning = true;
 
-    let this__update__previous_loop_elapsed_ms = 20;
+    let previous_loop_elapsed_ms = 20;
 
     while (this.#update__isLoopRunning)
     {
-      this__update__previous_loop_elapsed_ms =
-        await this.update__loop(this__update__previous_loop_elapsed_ms);
+      previous_loop_elapsed_ms =
+        await this.update__loop(previous_loop_elapsed_ms);
     }
   }
   /**
@@ -631,7 +635,7 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
 
   private static async open_GameMap(
     g__GameMaps : Map_by_num<GameMap>,
-    GameMap_to_open__ID : GameMap__ID,
+    GameMap_to_open__ID : GameMap__ID
   )
   : Promise<void>
   {
@@ -664,7 +668,7 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
     }
   }
 
-
+  #isClosing = false;
   #closing_Mutex = new Mutex();
   /**
    * 
@@ -675,11 +679,13 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
   **/
   private static async close_GameMap(
     g__GameMaps : Map_by_num<GameMap>,
-    GameMap_to_close__ID : GameMap__ID,
+    GameMap_to_close__ID : GameMap__ID
   )
   : Promise<void>
   {
     const GameMap_to_close = g__GameMaps.get(GameMap_to_close__ID)!;
+
+    GameMap_to_close.#isClosing = true;
 
     const GameMap_to_close__closing_Mutex__unlock = await GameMap_to_close.#closing_Mutex.lock();
 
@@ -687,7 +693,6 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
     while (GameMap_to_close.#Players_Buffer_In.length() > 0) await sleep(40);
 
     while (GameMap_to_close.#disconnect_Player__calls_in_progress > 0) await sleep(40);
-    while (GameMap_to_close.#handle_WS_messages__calls_in_progress > 0) await sleep(40);
     while (GameMap_to_close.#Players_Buffer_Out.length() > 0) await sleep(40);
 
     await GameMap_to_close.update__stop();
@@ -745,7 +750,8 @@ was already disconnected from the GameMap with ID ${GameMap_origin__ID}`,
         }
       }
 
-      g__GameMaps.for_each((GameMap_to_close : GameMap) => {
+      g__GameMaps.for_each((GameMap_to_close : GameMap) =>
+      {
         GameMap.close_GameMap(g__GameMaps, GameMap_to_close.ID);
       });
     })();

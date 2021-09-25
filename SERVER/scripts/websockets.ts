@@ -4,18 +4,25 @@ import {
   // @ts-ignore
 } from "https://deno.land/std@0.106.0/ws/mod.ts";
 
+
+
+
+
 /**
  *
  * EACH DESCENDANT CLASS MUST IMPLEMENT A STATIC FUNCTION "check_props" AND CALL THEIR PARENT'S.
  *
 **/
-export class WS_msg__body {
-  static check_props(msg_obj__body: any): msg_obj__body is WS_msg__body {
+export class WS_msg__body
+{
+  static check_props(msg_obj__body : any) : msg_obj__body is WS_msg__body
+  {
     return (true);
   }
 }
 
-export class WS_msg<WS_msg__body__Ty extends WS_msg__body> {
+export class WS_msg<WS_msg__body__Ty extends WS_msg__body>
+{
   kind: string;
   id: number;
   body: WS_msg__body__Ty;
@@ -26,7 +33,8 @@ export class WS_msg<WS_msg__body__Ty extends WS_msg__body> {
     this.body = body;
   }
 
-  static parse(msg_str: string): (WS_msg<object> | undefined) {
+  static parse(msg_str : string) : (WS_msg<object> | undefined)
+  {
     try {
       const msg_obj = JSON.parse(msg_str);
 
@@ -63,8 +71,10 @@ export class WS_msg<WS_msg__body__Ty extends WS_msg__body> {
     id: number,
     msg_str: string,
     check_props: (msg_obj__body: any) => msg_obj__body is WS_msg__body__Ty,
-    callback: (msg__body: WS_msg__body__Ty) => void,
-  ): Promise<void> {
+    callback: (msg__body: WS_msg__body__Ty) => void
+  )
+  : Promise<void>
+  {
     const msg_obj = WS_msg.parse(msg_str);
 
     if ((msg_obj!.kind == kind) && (msg_obj!.id == id)) {
@@ -83,8 +93,10 @@ export class WS_msg<WS_msg__body__Ty extends WS_msg__body> {
     WS_msg__Ty extends WS_msg<WS_msg__body__Ty>,
   >(
     ws: WebSocket,
-    msg: WS_msg__Ty,
-  ): Promise<void> {
+    msg: WS_msg__Ty
+  )
+  : Promise<void>
+  {
     if (ws.isClosed) return;
     try {
       await ws.send(JSON.stringify(msg));

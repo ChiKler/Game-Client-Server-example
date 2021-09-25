@@ -9,7 +9,7 @@ import {
 from "./GameEntity__to_SERVER_msg.ts";
 
 // @ts-ignore
-import { GameMap_ID } from "./GameMap.ts";
+import { GameMap__ID } from "./GameMap.ts";
 
 // @ts-ignore
 import { Player } from "./Player.ts";
@@ -39,58 +39,61 @@ export enum WS_msg_Player_ID {
 interface WS_msg_Player__body extends WS_msg__body {}
 
 interface WS_msg_Player__body__Connection extends WS_msg_Player__body {
-  m__Player__source: Player__SERVER_msg;
-  m__GameMap_ID: GameMap_ID;
+  Player_source : Player__SERVER_msg,
+  GameMap_origin__ID : GameMap__ID
 }
-interface WS_msg_Player__body__Disconnection extends WS_msg_Player__body {
-  m__GameMap_ID?: GameMap_ID;
-}
+interface WS_msg_Player__body__Disconnection extends WS_msg_Player__body {}
 interface WS_msg_Player__body__Sighting extends WS_msg_Player__body {
-  m__GameEntity__source: GameEntity__SERVER_msg;
+  GameEntity_source : GameEntity__SERVER_msg
 }
 interface WS_msg_Player__body__Vanishing extends WS_msg_Player__body {
-  m__GameEntity__source: GameEntity__SERVER_msg;
+  GameEntity_source : GameEntity__SERVER_msg
 }
 interface WS_msg_Player__body__Takedown extends WS_msg_Player__body {
-  m__GameEntity__source: GameEntity__SERVER_msg;
+  GameEntity_source : GameEntity__SERVER_msg
 }
 
 export class WS_msg_Player<WS_msg_Player__body__Ty extends WS_msg_Player__body>
-  extends WS_msg<WS_msg_Player__body__Ty> {
-  static async send__Connection(
-    p__Player__source: Player,
-    p__GameMap_ID: GameMap_ID,
-  ): Promise<void> {
+  extends WS_msg<WS_msg_Player__body__Ty>
+{
+  static async send_Connection(
+    Player_source : Player,
+    GameMap_origin__ID : GameMap__ID,
+  )
+  : Promise<void>
+  {
     WS_msg.send<
       WS_msg_Player__body__Connection,
       WS_msg_Player<WS_msg_Player__body__Connection>
-    >(p__Player__source.ws_player, {
+    >(Player_source.ws_player, {
       kind: "WS_msg_Player",
       id: WS_msg_Player_ID.Connection,
       body: {
-        m__Player__source: Player__to_SERVER_msg(
-          p__Player__source,
+        Player_source: Player__to_SERVER_msg(
+          Player_source,
         ),
-        m__GameMap_ID: p__GameMap_ID,
+        GameMap_origin__ID,
       },
     });
   }
-  static async send__Disconnection(
-    p__Player__source: Player,
-    p__GameMap_ID?: GameMap_ID,
+  static async send_Disconnection(
+    Player_source : Player
   ): Promise<void> {
     WS_msg.send<
       WS_msg_Player__body__Disconnection,
       WS_msg_Player<WS_msg_Player__body__Disconnection>
-    >(p__Player__source.ws_player, {
-      kind: "WS_msg_Player",
-      id: WS_msg_Player_ID.Disconnection,
-      body: { m__GameMap_ID: p__GameMap_ID },
-    });
+    >(
+      Player_source.ws_player,
+      {
+        kind: "WS_msg_Player",
+        id: WS_msg_Player_ID.Disconnection,
+        body: {}
+      }
+    );
   }
 
-  static async send__Sighting(
-    p__GameEntity__source: GameEntity,
+  static async send_Sighting(
+    GameEntity_source: GameEntity,
     p__Player__target: Player,
   ): Promise<void> {
     WS_msg.send<
@@ -99,47 +102,41 @@ export class WS_msg_Player<WS_msg_Player__body__Ty extends WS_msg_Player__body>
     >(p__Player__target.ws_player, {
       kind: "WS_msg_Player",
       id: WS_msg_Player_ID.Sighting,
-      body: {
-        m__GameEntity__source: GameEntity__to_SERVER_msg(
-          p__GameEntity__source,
-        ),
-      },
+      body: { GameEntity_source: GameEntity__to_SERVER_msg(GameEntity_source) }
     });
   }
 
-  static async send__Vanishing(
-    p__GameEntity__source: GameEntity,
+  static async send_Vanishing(
+    GameEntity_source: GameEntity,
     p__Player__target: Player,
   ): Promise<void> {
     WS_msg.send<
       WS_msg_Player__body__Vanishing,
       WS_msg_Player<WS_msg_Player__body__Vanishing>
-    >(p__Player__target.ws_player, {
-      kind: "WS_msg_Player",
-      id: WS_msg_Player_ID.Vanishing,
-      body: {
-        m__GameEntity__source: GameEntity__to_SERVER_msg(
-          p__GameEntity__source,
-        ),
-      },
-    });
+    >(
+      p__Player__target.ws_player,
+      {
+        kind: "WS_msg_Player",
+        id: WS_msg_Player_ID.Vanishing,
+        body: { GameEntity_source: GameEntity__to_SERVER_msg(GameEntity_source) }
+      }
+    );
   }
 
-  static async send__Takedown(
-    p__GameEntity__source: GameEntity,
+  static async send_Takedown(
+    GameEntity_source: GameEntity,
     p__Player__target: Player,
   ): Promise<void> {
     WS_msg.send<
       WS_msg_Player__body__Takedown,
       WS_msg_Player<WS_msg_Player__body__Takedown>
-    >(p__Player__target.ws_player, {
-      kind: "WS_msg_Player",
-      id: WS_msg_Player_ID.Takedown,
-      body: {
-        m__GameEntity__source: GameEntity__to_SERVER_msg(
-          p__GameEntity__source,
-        ),
-      },
-    });
+    >(
+      p__Player__target.ws_player,
+      {
+        kind: "WS_msg_Player",
+        id: WS_msg_Player_ID.Takedown,
+        body: { GameEntity_source: GameEntity__to_SERVER_msg(GameEntity_source) }
+      }
+    );
   }
 }
